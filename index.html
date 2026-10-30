@@ -724,26 +724,26 @@
         <!-- VIEW 3: TRANSAKSI -->
         <div id="view-transactions" class="hidden">
           <div class="bg-white rounded-[24px] border border-slate-200/60 shadow-[0_4px_24px_-6px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col h-[calc(100dvh-140px)]">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 border-b border-slate-100 shrink-0">
-              <div>
+            <div class="flex flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-b border-slate-100 shrink-0">
+              <div class="min-w-0">
                 <h3 class="font-black text-slate-800 text-lg flex items-center space-x-2">
                   <svg class="ico w-[1em] h-[1em] shrink-0 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
                   <span>Riwayat Transaksi</span>
                 </h3>
                 <p class="text-xs text-slate-500 font-medium mt-1">Catatan pemasukan dan pengeluaran.</p>
               </div>
-              <button type="button" onclick="flashPrint(this); printTabReport('HISTORY')" class="print-btn no-print font-bold text-xs px-4 py-2.5 rounded-[12px] transition-all flex items-center justify-center w-full sm:w-auto">
+              <button type="button" onclick="flashPrint(this); printTabReport('HISTORY')" class="print-btn no-print font-bold text-xs px-2 py-1 sm:px-4 sm:py-2.5 rounded-[12px] transition-all flex items-center justify-center shrink-0 w-auto">
                 <span class="print-badge inline-flex items-center justify-center w-9 h-9 rounded-full mr-2 shrink-0"><svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2" width="11" height="7" rx="2" fill="currentColor"/><rect x="2.5" y="7.5" width="19" height="10" rx="3.5" fill="currentColor"/><rect x="6.5" y="13" width="11" height="8.5" rx="2" fill="currentColor" stroke="var(--pb)" stroke-width="1.6"/><path d="M9 16.2h6M9 18.8h4" stroke="var(--pb)" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="11.2" r="1.15" fill="var(--pb)"/></svg></span> Cetak PDF
               </button>
             </div>
 
             <!-- Filters -->
-            <div class="bg-slate-50/50 p-4 border-b border-slate-100 flex flex-wrap items-center gap-3 shrink-0">
-              <span class="text-xs font-bold text-slate-500 mr-1"><svg class="ico w-[1em] h-[1em] shrink-0 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>Filter:</span>
-              <select id="filterTxYear" onchange="renderEmbeddedTransactionsTable()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+            <div class="filter-bar bg-slate-50/50 p-3 sm:p-4 border-b border-slate-100 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 shrink-0">
+              <span class="hidden sm:inline-flex items-center text-xs font-bold text-slate-500 mr-1"><svg class="ico w-[1em] h-[1em] shrink-0 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>Filter:</span>
+              <select id="filterTxYear" onchange="renderEmbeddedTransactionsTable()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Tahun</option>
               </select>
-              <select id="filterTxMonth" onchange="renderEmbeddedTransactionsTable()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+              <select id="filterTxMonth" onchange="renderEmbeddedTransactionsTable()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Bulan</option>
                 <option value="1">Januari</option>
                 <option value="2">Februari</option>
@@ -785,25 +785,25 @@
         <!-- VIEW: PENGELUARAN -->
         <div id="view-expenses" class="hidden">
           <div class="bg-white rounded-[24px] border border-slate-200/60 shadow-[0_4px_24px_-6px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col h-[calc(100dvh-140px)]">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 border-b border-slate-100 shrink-0">
-              <div>
+            <div class="flex flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-b border-slate-100 shrink-0">
+              <div class="min-w-0">
                 <h3 class="font-black text-slate-800 text-lg flex items-center space-x-2">
                   <svg class="ico w-[1em] h-[1em] shrink-0 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>
                   <span>Pengeluaran</span>
                 </h3>
                 <p class="text-xs text-slate-500 font-medium mt-1">Daftar pengeluaran kas dan WiFi.</p>
               </div>
-              <button type="button" onclick="flashPrint(this); printTabReport('EXPENSE')" class="print-btn no-print no-print font-bold text-xs px-4 py-2.5 rounded-[12px] transition-all flex items-center justify-center w-full sm:w-auto">
+              <button type="button" onclick="flashPrint(this); printTabReport('EXPENSE')" class="print-btn no-print no-print font-bold text-xs px-2 py-1 sm:px-4 sm:py-2.5 rounded-[12px] transition-all flex items-center justify-center shrink-0 w-auto">
                 <span class="print-badge inline-flex items-center justify-center w-9 h-9 rounded-full mr-2 shrink-0"><svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2" width="11" height="7" rx="2" fill="currentColor"/><rect x="2.5" y="7.5" width="19" height="10" rx="3.5" fill="currentColor"/><rect x="6.5" y="13" width="11" height="8.5" rx="2" fill="currentColor" stroke="var(--pb)" stroke-width="1.6"/><path d="M9 16.2h6M9 18.8h4" stroke="var(--pb)" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="11.2" r="1.15" fill="var(--pb)"/></svg></span> Cetak PDF
               </button><span id="expenseTotalBadge" class="hidden">Total: Rp 0</span>
             </div>
 
-            <div class="no-print bg-slate-50/50 p-4 border-b border-slate-100 flex flex-wrap items-center gap-3 shrink-0">
-              <span class="text-xs font-bold text-slate-500 mr-1"><svg class="ico w-[1em] h-[1em] shrink-0 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>Filter:</span>
-              <select id="filterExpYear" onchange="renderExpensesView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+            <div class="no-print filter-bar bg-slate-50/50 p-3 sm:p-4 border-b border-slate-100 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 shrink-0">
+              <span class="hidden sm:inline-flex items-center text-xs font-bold text-slate-500 mr-1"><svg class="ico w-[1em] h-[1em] shrink-0 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>Filter:</span>
+              <select id="filterExpYear" onchange="renderExpensesView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Tahun</option>
               </select>
-              <select id="filterExpMonth" onchange="renderExpensesView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+              <select id="filterExpMonth" onchange="renderExpensesView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Bulan</option>
                 <option value="1">Januari</option>
                 <option value="2">Februari</option>
@@ -818,7 +818,7 @@
                 <option value="11">November</option>
                 <option value="12">Desember</option>
               </select>
-              <select id="filterExpType" onchange="renderExpensesView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+              <select id="filterExpType" onchange="renderExpensesView()" class="col-span-2 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Jenis</option>
                 <option value="Pengeluaran Kas">Keluar Kas</option>
                 <option value="Pengeluaran WiFi">Keluar WiFi</option>
@@ -846,25 +846,25 @@
         <!-- VIEW: PEMASUKAN -->
         <div id="view-income" class="hidden">
           <div class="bg-white rounded-[24px] border border-slate-200/60 shadow-[0_4px_24px_-6px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col h-[calc(100dvh-140px)]">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 border-b border-slate-100 shrink-0">
-              <div>
+            <div class="flex flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-b border-slate-100 shrink-0">
+              <div class="min-w-0">
                 <h3 class="font-black text-slate-800 text-lg flex items-center space-x-2">
                   <svg class="ico w-[1em] h-[1em] shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
                   <span>Pemasukan</span>
                 </h3>
                 <p class="text-xs text-slate-500 font-medium mt-1">Daftar pemasukan kas dan WiFi.</p>
               </div>
-              <button type="button" onclick="flashPrint(this); printTabReport('INCOME')" class="print-btn no-print no-print font-bold text-xs px-4 py-2.5 rounded-[12px] transition-all flex items-center justify-center w-full sm:w-auto">
+              <button type="button" onclick="flashPrint(this); printTabReport('INCOME')" class="print-btn no-print no-print font-bold text-xs px-2 py-1 sm:px-4 sm:py-2.5 rounded-[12px] transition-all flex items-center justify-center shrink-0 w-auto">
                 <span class="print-badge inline-flex items-center justify-center w-9 h-9 rounded-full mr-2 shrink-0"><svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2" width="11" height="7" rx="2" fill="currentColor"/><rect x="2.5" y="7.5" width="19" height="10" rx="3.5" fill="currentColor"/><rect x="6.5" y="13" width="11" height="8.5" rx="2" fill="currentColor" stroke="var(--pb)" stroke-width="1.6"/><path d="M9 16.2h6M9 18.8h4" stroke="var(--pb)" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="11.2" r="1.15" fill="var(--pb)"/></svg></span> Cetak PDF
               </button><span id="incomeTotalBadge" class="hidden">Total: Rp 0</span>
             </div>
 
-            <div class="no-print bg-slate-50/50 p-4 border-b border-slate-100 flex flex-wrap items-center gap-3 shrink-0">
-              <span class="text-xs font-bold text-slate-500 mr-1"><svg class="ico w-[1em] h-[1em] shrink-0 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>Filter:</span>
-              <select id="filterIncYear" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+            <div class="no-print filter-bar bg-slate-50/50 p-3 sm:p-4 border-b border-slate-100 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 shrink-0">
+              <span class="hidden sm:inline-flex items-center text-xs font-bold text-slate-500 mr-1"><svg class="ico w-[1em] h-[1em] shrink-0 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>Filter:</span>
+              <select id="filterIncYear" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Tahun</option>
               </select>
-              <select id="filterIncMonth" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+              <select id="filterIncMonth" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Bulan</option>
                 <option value="1">Januari</option>
                 <option value="2">Februari</option>
@@ -879,12 +879,12 @@
                 <option value="11">November</option>
                 <option value="12">Desember</option>
               </select>
-              <select id="filterIncType" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+              <select id="filterIncType" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Jenis</option>
                 <option value="Pemasukan Kas">Masuk Kas</option>
                 <option value="Pemasukan WiFi">Masuk WiFi</option>
               </select>
-              <select id="filterIncMember" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+              <select id="filterIncMember" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Orang</option>
               </select>
             </div>
