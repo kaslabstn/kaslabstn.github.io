@@ -1503,6 +1503,8 @@
 
       var currentRole = 'VIEWER';
       var currentView = 'dashboard';
+      var currentTitle = 'Dashboard';
+      var appInitialized = false; // true setelah data pertama kali dimuat
       var modalDetailType = 'PAID';
       
       var chartVisibility = {
@@ -1834,6 +1836,7 @@
 
       function navigateTo(viewId, title) {
         currentView = viewId;
+        currentTitle = title;
         // Hide all views
         document.getElementById('view-dashboard').classList.add('hidden');
         document.getElementById('view-status').classList.add('hidden');
@@ -3500,13 +3503,26 @@
       }
 
       function initAppView() {
+        // Simpan posisi scroll agar tidak lompat ke atas setelah data dimuat ulang
+        var mainEl = document.querySelector('main');
+        var keepScroll = (appInitialized && mainEl) ? mainEl.scrollTop : 0;
+
         populateMemberFilterOptions();
         populateTxYearOptions();
         updateYearOptions();
         populateStatusMonthOptions();
         renderChartsAndTables();
         applyRolePermissions();
-        navigateTo('dashboard', 'Dashboard');
+
+        if (appInitialized) {
+          // Setelah tambah/edit/hapus: tetap di halaman yang sedang dibuka
+          navigateTo(currentView, currentTitle);
+          if (mainEl) mainEl.scrollTop = keepScroll;
+        } else {
+          // Pertama kali aplikasi dibuka: tampilkan Dashboard
+          navigateTo('dashboard', 'Dashboard');
+          appInitialized = true;
+        }
       }
 
       window.onload = function() {
