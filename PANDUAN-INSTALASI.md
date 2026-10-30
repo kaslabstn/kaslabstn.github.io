@@ -57,6 +57,11 @@ Tunggu 1–2 menit. Alamat situs akan muncul: `https://USERNAME.github.io/NAMA-R
 - PIN tersimpan di sheet Pengaturan. Setelah ganti PIN di aplikasi, sel itu ikut berubah dan PIN baru langsung berlaku.
 - Nomor rekening BCA tertulis di `index.html` dan akan terlihat di repo publik.
 
+## Cara kerja kecepatan
+- Saat dibuka, situs langsung menampilkan data terakhir yang tersimpan di browser, lalu mengambil data terbaru dari server di latar belakang.
+- Saat menambah, mengedit, atau menghapus, perubahan langsung tampil. Pengiriman ke Google Sheets berjalan di latar belakang, ditandai tulisan **"Menyimpan ke Google Sheets…"** di pojok kanan bawah. Jangan tutup halaman sebelum tulisan itu hilang.
+- Server menyimpan cache data selama 5 menit dan menghapusnya setiap kali ada perubahan dari aplikasi.
+
 ## Jika ada masalah
 | Gejala | Penyebab | Solusi |
 |---|---|---|
@@ -65,3 +70,5 @@ Tunggu 1–2 menit. Alamat situs akan muncul: `https://USERNAME.github.io/NAMA-R
 | Login selalu ditolak | Sel `ADMIN_PIN` di sheet Pengaturan kosong | Isi PIN di kolom Nilai baris `ADMIN_PIN` |
 | Halaman 404 di GitHub Pages | `index.html` bukan di root repo | Lihat Langkah 2 |
 | Perubahan kode backend tidak terasa | Deployment belum diperbarui | Deploy → Kelola deployment → Versi baru |
+| Data yang diedit langsung di Google Sheets belum muncul di situs | Server menyimpan cache data selama 5 menit | Tunggu maks. 5 menit, atau jalankan fungsi `clearCache` di editor Apps Script |
+| Muncul "Perubahan gagal disimpan" | Server menolak (mis. PIN berubah, koneksi putus) | Data di layar otomatis dikembalikan seperti di server. Login ulang lalu coba lagi |

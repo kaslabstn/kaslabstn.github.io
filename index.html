@@ -369,6 +369,7 @@
         input, select, textarea { font-size: 16px !important; }
       }
       .print-btn { -webkit-tap-highlight-color: transparent; }
+      @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex bg-slate-50 md:overflow-hidden">
@@ -1396,63 +1397,91 @@
 
       window.google = { script: { get run() { return makeGasRunner(); } } };
 
-      window.addEventListener('DOMContentLoaded', function() {
-        var observer = new MutationObserver(function(mutations) {
-          var allElements = document.querySelectorAll('div, span, p, iframe');
-          allElements.forEach(function(el) {
-            var text = el.textContent || '';
-            if (
-              text.indexOf('Aplikasi ini dibuat oleh') !== -1 ||
-              text.indexOf('Google Apps Script') !== -1 ||
-              text.indexOf('Laporkan penyalahgunaan') !== -1 ||
-              text.indexOf('Pelajari lebih lanjut') !== -1
-            ) {
-              var parent = el.closest('iframe, div[style*="position: fixed"], div[style*="z-index"]') || el.parentElement;
-              if (parent && parent !== document.body && parent !== document.documentElement) {
-                parent.style.setProperty('display', 'none', 'important');
-                parent.style.setProperty('visibility', 'hidden', 'important');
-                parent.style.setProperty('opacity', '0', 'important');
-                parent.remove();
-              } else {
-                el.style.setProperty('display', 'none', 'important');
-              }
-            }
+      // ============================================================
+      // INSTANT UX: data lokal + simpan di latar belakang
+      // ============================================================
+      // Data dashboard disimpan di localStorage (data ini memang publik),
+      // supaya saat dibuka lagi aplikasi langsung tampil tanpa menunggu server.
+      var LOCAL_CACHE_KEY = 'kaslabstn_data_v1';
+      var pendingWrites = 0;                 // jumlah perubahan yang belum tersimpan di server
+      var writeQueue = Promise.resolve();    // perubahan dikirim berurutan, tidak bertabrakan
+      var silentRefreshTimer = null;
+
+      function saveLocalCache() {
+        try {
+          localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify({
+            members: appState.members,
+            categories: appState.categories,
+            transactions: appState.transactions,
+            savedAt: Date.now()
+          }));
+        } catch (e) { /* penyimpanan lokal tidak tersedia: abaikan */ }
+      }
+
+      function loadLocalCache() {
+        try {
+          var c = JSON.parse(localStorage.getItem(LOCAL_CACHE_KEY) || 'null');
+          if (c && Array.isArray(c.members) && Array.isArray(c.transactions)) return c;
+        } catch (e) {}
+        return null;
+      }
+
+      // Penanda kecil di pojok kanan bawah saat ada perubahan yang sedang dikirim
+      function updateSyncIndicator() {
+        var el = document.getElementById('syncIndicator');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'syncIndicator';
+          el.className = 'no-print';
+          el.style.cssText = 'position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:90;' +
+            'display:none;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#ffffff;' +
+            'border:1px solid #e2e8f0;box-shadow:0 6px 20px -6px rgba(15,23,42,.25);font:600 12px "Plus Jakarta Sans",sans-serif;color:#475569;';
+          el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#32599C" stroke-width="2.5" stroke-linecap="round" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg><span>Menyimpan ke Google Sheets…</span>';
+          document.body.appendChild(el);
+        }
+        el.style.display = pendingWrites > 0 ? 'flex' : 'none';
+      }
+
+      // Kirim perubahan ke server di latar belakang.
+      // Tampilan SUDAH diperbarui sebelum fungsi ini dipanggil (optimistic UI).
+      function syncWrite(action, args) {
+        saveLocalCache();
+        initAppView(); // tampilkan perubahan di semua halaman, tetap di halaman aktif
+        pendingWrites++;
+        updateSyncIndicator();
+
+        writeQueue = writeQueue
+          .then(function() { return gasCall(action, args); })
+          .then(function(res) {
+            if (!res || !res.success) throw new Error((res && res.message) || 'Server menolak perubahan');
+            pendingWrites--;
+            updateSyncIndicator();
+            scheduleSilentRefresh();
+          })
+          .catch(function(err) {
+            pendingWrites--;
+            updateSyncIndicator();
+            // Gagal: ambil ulang data asli dari server agar tampilan kembali benar
+            showCustomToast('Perubahan gagal disimpan: ' + err.message + '. Data dikembalikan seperti di server.', false);
+            fetchData({ silent: true, force: true });
           });
+      }
 
-          var bodyChildren = document.body.children;
-          if (bodyChildren.length > 0) {
-            for (var i = 0; i < bodyChildren.length; i++) {
-              var el = bodyChildren[i];
-              if (el && (el.tagName === 'DIV' || el.tagName === 'IFRAME')) {
-                var htmlContent = el.innerHTML || '';
-                var textContent = el.textContent || '';
-                if (
-                  textContent.indexOf('Apps Script') !== -1 ||
-                  textContent.indexOf('penyalahgunaan') !== -1 ||
-                  htmlContent.indexOf('script.google.com') !== -1 ||
-                  (el.style && (el.style.position === 'fixed' || el.style.position === 'absolute') && el.offsetHeight < 80)
-                ) {
-                  el.style.setProperty('display', 'none', 'important');
-                  el.remove();
-                }
-              }
-            }
-          }
-        });
+      // Setelah semua perubahan tersimpan, cocokkan data dengan server tanpa layar loading
+      function scheduleSilentRefresh() {
+        clearTimeout(silentRefreshTimer);
+        silentRefreshTimer = setTimeout(function() {
+          if (pendingWrites === 0) fetchData({ silent: true });
+        }, 1500);
+      }
 
-        observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
-
-        setInterval(function() {
-          var unwanted = document.querySelectorAll('iframe, div');
-          unwanted.forEach(function(el) {
-            var txt = el.textContent || '';
-            if (txt.indexOf('Apps Script') !== -1 || txt.indexOf('penyalahgunaan') !== -1 || txt.indexOf('Pelajari lebih lanjut') !== -1) {
-              el.style.setProperty('display', 'none', 'important');
-              el.remove();
-            }
-          });
-        }, 150);
+      // Peringatkan jika halaman ditutup saat masih ada perubahan yang dikirim
+      window.addEventListener('beforeunload', function(e) {
+        if (pendingWrites > 0) { e.preventDefault(); e.returnValue = ''; }
       });
+
+      // (Dihapus: pembersih banner Google Apps Script. Tidak diperlukan di GitHub Pages,
+      //  dan sebelumnya memindai seluruh halaman setiap 150 ms sehingga membebani browser.)
 
       var ICON_SVG = {
         'circle-notch': '<svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg>',
@@ -1576,6 +1605,10 @@
           }
           toastEl.classList.remove('hidden');
           toastEl.classList.add('flex');
+          clearTimeout(window.__toastTimer);
+          if (isSuccess !== false && !callback) {
+            window.__toastTimer = setTimeout(closeCustomToast, 1200);
+          }
         }
       }
 
@@ -1893,10 +1926,8 @@
             }
         }
         
-        // Ensure charts render correctly if they were hidden
-        if(viewId === 'charts' || viewId === 'dashboard') {
-           setTimeout(renderChartsAndTables, 50);
-        }
+        // Grafik & tabel sudah digambar saat data/filter berubah (initAppView, filter onchange),
+        // jadi tidak perlu digambar ulang setiap pindah halaman.
         if(viewId === 'expenses') renderExpensesView();
         if(viewId === 'income') renderIncomeView();
 
@@ -1954,36 +1985,38 @@
         if (selectModalMember) selectModalMember.innerHTML = modalOptionsHtml;
       }
 
-      function fetchData() {
-        showLoader(true);
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          google.script.run
-            .withSuccessHandler(function(data) {
-              showLoader(false);
-              appState.members = data.members || [];
-              appState.categories = data.categories || [];
-              appState.transactions = data.transactions || [];
-              initAppView();
-            })
-            .withFailureHandler(function(err) {
-              showLoader(false);
-              showCustomToast('Gagal mengambil data dari Google Sheets: ' + err.message, false);
-            })
-            .getAppData();
-        } else {
-          setTimeout(function() {
+      function fetchData(opts) {
+        opts = opts || {};
+        // Layar loading hanya saat pertama kali dan belum ada data sama sekali
+        if (!appInitialized && !opts.silent) showLoader(true);
+
+        gasCall('getAppData', [])
+          .then(function(data) {
             showLoader(false);
-            appState.members = [
-              { id: "1", name: "Firman Muttaqin", feeKas: 30000, feeWifi: 30000, joinedMonth: "2026-01", status: "AKTIF", resignedMonth: "" }
-            ];
-            appState.categories = [
-              { id: "1", type: "Pemasukan Kas", name: "Iuran Kas Bulanan" },
-              { id: "2", type: "Pemasukan WiFi", name: "Iuran WiFi Bulanan" }
-            ];
-            appState.transactions = [];
-            initAppView();
-          }, 300);
-        }
+            if (!data || data.success === false || !Array.isArray(data.members)) {
+              throw new Error((data && data.message) || 'Respons server tidak valid');
+            }
+            // Jangan timpa perubahan yang masih dalam perjalanan ke server
+            if (pendingWrites > 0 && !opts.force) return;
+
+            var before = JSON.stringify([appState.members, appState.categories, appState.transactions]);
+            appState.members = data.members || [];
+            appState.categories = data.categories || [];
+            appState.transactions = data.transactions || [];
+            saveLocalCache();
+
+            var after = JSON.stringify([appState.members, appState.categories, appState.transactions]);
+            // Render ulang hanya jika data benar-benar berubah
+            if (!appInitialized || before !== after) initAppView();
+          })
+          .catch(function(err) {
+            showLoader(false);
+            if (!appInitialized) {
+              showCustomToast('Gagal mengambil data dari Google Sheets: ' + err.message, false);
+            } else {
+              console.warn('Sinkronisasi latar belakang gagal:', err);
+            }
+          });
       }
 
       function getYearsFromMonthPaid(monthPaidStr, fallbackDateStr) {
@@ -3171,24 +3204,16 @@
           note: document.getElementById('txNote').value || ''
         };
 
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          showLoader(true);
-          if (id) {
-            google.script.run.withSuccessHandler(onTxSuccess).updateTransaction(data);
-          } else {
-            google.script.run.withSuccessHandler(onTxSuccess).addTransaction(data);
-          }
+        // Optimistic UI: perbarui tampilan dulu
+        if (id) {
+          var idx = appState.transactions.findIndex(function(t) { return t.id === id; });
+          if (idx !== -1) appState.transactions[idx] = data;
         } else {
-          if (id) {
-            var idx = appState.transactions.findIndex(function(t) { return t.id === id; });
-            if (idx !== -1) appState.transactions[idx] = data;
-          } else {
-            appState.transactions.push(data);
-          }
-          closeModal('modalTx');
-          renderChartsAndTables();
-          showCustomToast('Transaksi berhasil disimpan!', true);
+          appState.transactions.push(data);
         }
+        closeModal('modalTx');
+        showCustomToast(id ? 'Transaksi berhasil diperbarui!' : 'Transaksi berhasil ditambahkan!', true);
+        syncWrite(id ? 'updateTransaction' : 'addTransaction', [data]);
       }
 
       function onTxSuccess(res) {
@@ -3236,24 +3261,9 @@
 
       function deleteTx(id) {
         showCustomConfirm('Apakah Anda yakin ingin menghapus transaksi ini?', function() {
-          if (typeof google !== 'undefined' && google.script && google.script.run) {
-            showLoader(true);
-            google.script.run
-              .withSuccessHandler(function(res) {
-                showLoader(false);
-                if (res.success) {
-                  showCustomToast(res.message, true);
-                  fetchData();
-                } else {
-                  showCustomToast(res.message, false);
-                }
-              })
-              .deleteTransaction(id);
-          } else {
-            appState.transactions = appState.transactions.filter(function(t) { return t.id !== id; });
-            renderChartsAndTables();
-            showCustomToast('Transaksi dihapus.', true);
-          }
+          appState.transactions = appState.transactions.filter(function(t) { return t.id !== id; });
+          showCustomToast('Transaksi berhasil dihapus!', true);
+          syncWrite('deleteTransaction', [id]);
         });
       }
 
@@ -3298,32 +3308,23 @@
           resignedMonth: document.getElementById('memberResignedMonth').value
         };
 
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          showLoader(true);
-          if (id) {
-            google.script.run.withSuccessHandler(onMemberSuccess).updateMember(data);
-          } else {
-            google.script.run.withSuccessHandler(onMemberSuccess).addMember(data);
+        // Optimistic UI: perbarui tampilan dulu
+        if (id) {
+          var idx = appState.members.findIndex(function(m) { return m.id === id; });
+          if (idx !== -1) {
+            appState.members[idx] = data;
+            if (oldName && oldName !== newName) {
+              appState.transactions.forEach(function(tx) {
+                if (tx.memberName === oldName) tx.memberName = newName;
+              });
+            }
           }
         } else {
-          if (id) {
-            var idx = appState.members.findIndex(function(m) { return m.id === id; });
-            if (idx !== -1) {
-              appState.members[idx] = data;
-              if (oldName && oldName !== newName) {
-                appState.transactions.forEach(function(tx) {
-                  if (tx.memberName === oldName) tx.memberName = newName;
-                });
-              }
-            }
-          } else {
-            appState.members.push(data);
-          }
-          closeModal('modalMember');
-          renderChartsAndTables();
-          populateMemberFilterOptions();
-          showCustomToast('Data orang berhasil disimpan!', true);
+          appState.members.push(data);
         }
+        closeModal('modalMember');
+        showCustomToast(id ? 'Data orang berhasil diperbarui!' : 'Orang baru berhasil ditambahkan!', true);
+        syncWrite(id ? 'updateMember' : 'addMember', [data]);
       }
 
       function onMemberSuccess(res) {
@@ -3354,25 +3355,9 @@
 
       function deleteMember(id) {
         showCustomConfirm('Apakah Anda yakin ingin menghapus orang ini?', function() {
-          if (typeof google !== 'undefined' && google.script && google.script.run) {
-            showLoader(true);
-            google.script.run
-              .withSuccessHandler(function(res) {
-                showLoader(false);
-                if (res.success) {
-                  showCustomToast(res.message, true);
-                  fetchData();
-                } else {
-                  showCustomToast(res.message, false);
-                }
-              })
-              .deleteMember(id);
-          } else {
-            appState.members = appState.members.filter(function(m) { return m.id !== id; });
-            renderChartsAndTables();
-            populateMemberFilterOptions();
-            showCustomToast('Orang dihapus.', true);
-          }
+          appState.members = appState.members.filter(function(m) { return m.id !== id; });
+          showCustomToast('Orang berhasil dihapus!', true);
+          syncWrite('deleteMember', [id]);
         });
       }
 
@@ -3482,24 +3467,14 @@
       function handleCategorySubmit(e) {
         e.preventDefault();
         var data = {
+          id: 'CAT-' + new Date().getTime(),
           type: document.getElementById('catType').value,
           name: document.getElementById('catName').value
         };
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          showLoader(true);
-          google.script.run
-            .withSuccessHandler(function(value) {
-              showLoader(false);
-              showCustomToast(value.message, true);
-              closeModal('modalCategory');
-              fetchData();
-            })
-            .addCategory(data);
-        } else {
-          appState.categories.push({ id: 'CAT-' + new Date().getTime(), type: data.type, name: data.name });
-          closeModal('modalCategory');
-          showCustomToast('Kategori ditambahkan!', true);
-        }
+        appState.categories.push({ id: data.id, type: data.type, name: data.name });
+        closeModal('modalCategory');
+        showCustomToast('Kategori baru berhasil ditambahkan!', true);
+        syncWrite('addCategory', [data]);
       }
 
       function initAppView() {
@@ -3525,9 +3500,19 @@
         }
       }
 
-      window.onload = function() {
-        fetchData();
-      };
+      (function startApp() {
+        var cached = loadLocalCache();
+        if (cached) {
+          appState.members = cached.members || [];
+          appState.categories = cached.categories || [];
+          appState.transactions = cached.transactions || [];
+          showLoader(false);
+          initAppView();               // tampil seketika dari data terakhir
+          fetchData({ silent: true }); // segarkan dari server di latar belakang
+        } else {
+          fetchData();                 // kunjungan pertama: tunggu server sekali
+        }
+      })();
     </script>
 </body>
 </html>
