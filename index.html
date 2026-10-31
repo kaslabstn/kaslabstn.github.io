@@ -382,6 +382,27 @@
         .add-btn:hover .add-badge { background: #ffffff; color: var(--ab); box-shadow: 0 8px 16px -6px color-mix(in srgb, var(--ab) 40%, transparent); transform: translateY(-2px) rotate(90deg); }
       }
       .add-btn:focus-visible .add-badge { outline: 2px solid var(--ab); outline-offset: 2px; }
+      /* Penanda fokus saat memakai keyboard */
+      button:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+      /* Tabel di HP tampil sebagai kartu agar semua kolom terbaca tanpa geser. Hanya layar; hasil cetak tetap tabel. */
+      @media screen and (max-width: 640px) {
+        table.m-cards { display: block; min-width: 0; }
+        table.m-cards thead { display: none; }
+        table.m-cards tbody { display: block; }
+        table.m-cards tr { display: block; padding: 10px 0; }
+        table.m-cards td:not(.hidden) { display: block; max-width: none; padding: 5px 16px; white-space: normal; overflow: visible; }
+        table.m-cards td[data-label] { text-align: right; }
+        table.m-cards td[data-label]::before {
+          content: attr(data-label);
+          float: left;
+          margin-right: 12px;
+          font-size: 11px;
+          font-weight: 700;
+          font-style: normal;
+          color: #94a3b8;
+        }
+        table.m-cards td .flex { justify-content: flex-end; }
+      }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex bg-slate-50 md:overflow-hidden">
@@ -438,7 +459,7 @@
     <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200/80 shadow-[4px_0_24px_rgba(0,0,0,0.02)] flex flex-col z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shrink-0">
       <!-- Logo Area -->
       <div class="h-20 flex items-center px-6 border-b border-slate-100">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('dashboard', 'Dashboard')">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('dashboard', 'Beranda')">
           <svg class="w-14 h-14 shrink-0" style="overflow:visible" viewBox="0 0 36 36" aria-hidden="true"><rect x="16" y="19" width="16" height="9" rx="1.5" fill="#85C226" transform="rotate(-14 24 23)"/><rect x="15" y="23" width="15" height="8" rx="1.5" fill="#6FA81C" transform="rotate(-14 22 27)"/><rect x="17" y="4" width="15" height="10" rx="2" fill="#DA251C" transform="rotate(14 24 9)"/><rect x="19" y="7" width="8" height="1.6" rx=".8" fill="#ffffff" fill-opacity=".7" transform="rotate(14 24 9)"/><rect x="3" y="9" width="22" height="22" rx="4" fill="#32599C"/><rect x="5" y="11.5" width="10" height="1.8" rx=".9" fill="#ffffff" fill-opacity=".7"/><rect x="15" y="22" width="8" height="10" rx="3" fill="#1C3560"/><circle cx="19" cy="25.5" r="1.6" fill="#ffffff"/></svg>
           <span class="font-black text-xl text-slate-800 tracking-tight">Kas LabSTN</span>
         </div>
@@ -448,9 +469,9 @@
       <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
         <p class="px-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Menu Utama</p>
         
-        <button id="nav-dashboard" onclick="navigateTo('dashboard', 'Dashboard')" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-[12px] text-sm font-bold bg-blue-50 text-blue-600 transition-all group">
+        <button id="nav-dashboard" onclick="navigateTo('dashboard', 'Beranda')" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-[12px] text-sm font-bold bg-blue-50 text-blue-600 transition-all group">
           <svg class="ico w-[1em] h-[1em] shrink-0 w-5 text-center text-blue-600 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
-          <span>Dashboard</span>
+          <span>Beranda</span>
         </button>
 
         <button id="nav-status" onclick="navigateTo('status', 'Status Pembayaran')" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-[12px] text-sm font-semibold text-slate-500 hover:bg-slate-50 transition-all group">
@@ -473,13 +494,13 @@
           <span>Riwayat Transaksi</span>
         </button>
 
-        <button id="nav-charts" onclick="navigateTo('charts', 'Grafik Trend')" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-[12px] text-sm font-semibold text-slate-500 hover:bg-slate-50 transition-all group">
+        <button id="nav-charts" onclick="navigateTo('charts', 'Grafik Tren')" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-[12px] text-sm font-semibold text-slate-500 hover:bg-slate-50 transition-all group">
           <svg class="ico w-[1em] h-[1em] shrink-0 w-5 text-center text-slate-400 group-hover:text-blue-500 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12A9 9 0 1 1 12 3v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg>
-          <span>Grafik Trend</span>
+          <span>Grafik Tren</span>
         </button>
 
         <div id="nav-settings-container" class="pt-4 admin-only-cell">
-          <p class="px-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Manajemen</p>
+          <p class="px-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Kelola Data</p>
           <button id="nav-settings" onclick="navigateTo('settings', 'Pengaturan Admin')" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-[12px] text-sm font-semibold text-slate-500 hover:bg-slate-50 transition-all group">
             <svg class="ico w-[1em] h-[1em] shrink-0 w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
             <span>Pengaturan</span>
@@ -501,12 +522,12 @@
       <!-- TOP HEADER -->
       <header class="h-20 bg-slate-50/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-8 shrink-0 z-20 sticky top-0 md:static border-b border-slate-200/50 md:border-none">
         <div class="flex items-center space-x-3">
-          <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 rounded-[12px] bg-white border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm">
+          <button onclick="toggleMobileMenu()" aria-label="Buka menu" class="md:hidden w-10 h-10 rounded-[12px] bg-white border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm">
             <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
           <div>
-            <h2 id="pageTitle" class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">Dashboard</h2>
-            <p id="pageSubtitle" class="text-xs font-semibold text-slate-500 hidden sm:block">Ringkasan finansial kas dan wifi lab.</p>
+            <h2 id="pageTitle" class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">Beranda</h2>
+            <p id="pageSubtitle" class="text-xs font-semibold text-slate-500 hidden sm:block">Ringkasan keuangan kas dan WiFi lab.</p>
           </div>
         </div>
         
@@ -535,7 +556,7 @@
               <svg class="w-9 h-9 shrink-0" style="overflow:visible" viewBox="0 0 36 36" aria-hidden="true"><rect x="16" y="19" width="16" height="9" rx="1.5" fill="#85C226" transform="rotate(-14 24 23)"/><rect x="15" y="23" width="15" height="8" rx="1.5" fill="#6FA81C" transform="rotate(-14 22 27)"/><rect x="17" y="4" width="15" height="10" rx="2" fill="#DA251C" transform="rotate(14 24 9)"/><rect x="19" y="7" width="8" height="1.6" rx=".8" fill="#ffffff" fill-opacity=".7" transform="rotate(14 24 9)"/><rect x="3" y="9" width="22" height="22" rx="4" fill="#32599C"/><rect x="5" y="11.5" width="10" height="1.8" rx=".9" fill="#ffffff" fill-opacity=".7"/><rect x="15" y="22" width="8" height="10" rx="3" fill="#1C3560"/><circle cx="19" cy="25.5" r="1.6" fill="#ffffff"/></svg>
               <span class="font-black text-base text-slate-800 tracking-tight">Kas LabSTN</span>
             </div>
-            <h2 id="printReportTitle" class="text-base font-black text-slate-900">Laporan Progress Pembayaran Iuran Lab Santan</h2>
+            <h2 id="printReportTitle" class="text-base font-black text-slate-900">Laporan Pembayaran Iuran Lab Santan</h2>
             <p class="text-[9px] text-slate-600 font-semibold mt-0.5">Transfer: <strong class="text-slate-900">BCA Digital - 001107061987 (a.n Rabatang)</strong></p>
           </div>
           <div class="bg-emerald-100 border border-emerald-300 text-emerald-900 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 shadow-xs">
@@ -558,7 +579,7 @@
               </div>
               <div>
                 <p class="text-xs font-extrabold text-blue-600/80 tracking-wider uppercase mb-1">
-                  Info Rekening Pembayaran
+                  Rekening Pembayaran Iuran
                 </p>
                 <h4 class="text-lg sm:text-xl font-black text-slate-800 leading-tight">BCA Digital - 001107061987</h4>
                 <p class="text-xs font-bold text-slate-500 mt-0.5">Atas Nama: <span class="text-slate-700">Rabatang</span></p>
@@ -566,12 +587,12 @@
             </div>
             
             <div class="relative z-10 bg-blue-50/80 border border-blue-200 px-5 py-2.5 rounded-[14px] flex items-center justify-center text-blue-700 font-bold text-sm group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-all duration-300 shadow-sm w-full sm:w-auto">
-              <svg class="ico w-[1em] h-[1em] shrink-0 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> Salin Rekening
+              <svg class="ico w-[1em] h-[1em] shrink-0 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> Salin Nomor Rekening
             </div>
           </div>
 
           <!-- 4 FINANCIAL MATRIX BOXES -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-6">
             
             <div onclick="showBreakdownModal('OPENING')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
               <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
@@ -585,7 +606,7 @@
               </div>
               <div class="relative z-10">
                 <p class="text-xs font-bold text-slate-500 mb-1">Saldo Awal</p>
-                <h4 class="cardOpeningBalance text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <h4 class="cardOpeningBalance whitespace-nowrap text-base sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
               </div>
             </div>
 
@@ -601,7 +622,7 @@
               </div>
               <div class="relative z-10">
                 <p class="text-xs font-bold text-slate-500 mb-1">Total Pemasukan</p>
-                <h4 class="cardTotalIncome text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <h4 class="cardTotalIncome whitespace-nowrap text-base sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
               </div>
             </div>
             
@@ -617,7 +638,7 @@
               </div>
               <div class="relative z-10">
                 <p class="text-xs font-bold text-slate-500 mb-1">Total Pengeluaran</p>
-                <h4 class="cardTotalExpense text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <h4 class="cardTotalExpense whitespace-nowrap text-base sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
               </div>
             </div>
 
@@ -633,7 +654,7 @@
               </div>
               <div class="relative z-10">
                 <p class="text-xs font-bold text-slate-500 mb-1">Saldo Akhir</p>
-                <h4 class="cardFinalBalance text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <h4 class="cardFinalBalance whitespace-nowrap text-base sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
               </div>
             </div>
           </div>
@@ -647,7 +668,7 @@
                 </div>
                 <div>
                   <p class="text-xs font-bold text-slate-500 mb-0.5">Anggota Lunas</p>
-                  <h4 id="statPaidMembersCount" class="text-lg font-black text-slate-800 leading-none">0 Orang</h4>
+                  <h4 id="statPaidMembersCount" class="text-lg font-black text-slate-800 leading-none">0 Orang</h4><p class="statMonthLabel text-[11px] font-semibold text-slate-400 mt-1"></p>
                 </div>
               </div>
               <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
@@ -662,7 +683,7 @@
                 </div>
                 <div>
                   <p class="text-xs font-bold text-slate-500 mb-0.5">Anggota Menunggak</p>
-                  <h4 id="statUnpaidMembersCount" class="text-lg font-black text-slate-800 leading-none">0 Orang</h4>
+                  <h4 id="statUnpaidMembersCount" class="text-lg font-black text-slate-800 leading-none">0 Orang</h4><p class="statMonthLabel text-[11px] font-semibold text-slate-400 mt-1"></p>
                 </div>
               </div>
               <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-rose-50 group-hover:text-rose-600 transition-colors">
@@ -671,16 +692,16 @@
             </div>
           </div>
 
-          <!-- AKTIVITAS TERAKHIR: 8 pemasukan & 8 pengeluaran terakhir -->
+          <!-- TRANSAKSI TERBARU: 6 pemasukan & 6 pengeluaran terakhir -->
           <div>
-            <h3 class="font-black text-slate-800 text-lg mb-5">Aktivitas Terakhir</h3>
+            <h3 class="font-black text-slate-800 text-lg mb-5">Transaksi Terbaru</h3>
             <div class="space-y-6">
               <div>
-                <span class="inline-flex items-center px-4 py-1.5 mb-3 rounded-full bg-[#85C226]/15 text-[#4E7A14] text-sm font-black">Pemasukan Terakhir</span>
+                <div class="flex items-center justify-between gap-3 mb-3"><span class="inline-flex items-center px-4 py-1.5 rounded-full bg-[#85C226]/15 text-[#4E7A14] text-sm font-black">Pemasukan Terbaru</span><button type="button" onclick="navigateTo('income', 'Pemasukan')" class="text-xs font-bold text-blue-600 hover:text-blue-700 px-1 py-2">Lihat semua</button></div>
                 <div id="recentIncomeGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 items-start"></div>
               </div>
               <div>
-                <span class="inline-flex items-center px-4 py-1.5 mb-3 rounded-full bg-[#DA251C]/10 text-[#DA251C] text-sm font-black">Pengeluaran Terakhir</span>
+                <div class="flex items-center justify-between gap-3 mb-3"><span class="inline-flex items-center px-4 py-1.5 rounded-full bg-[#DA251C]/10 text-[#DA251C] text-sm font-black">Pengeluaran Terbaru</span><button type="button" onclick="navigateTo('expenses', 'Pengeluaran')" class="text-xs font-bold text-blue-600 hover:text-blue-700 px-1 py-2">Lihat semua</button></div>
                 <div id="recentExpenseGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 items-start"></div>
               </div>
             </div>
@@ -694,31 +715,31 @@
               <div>
                 <h3 class="font-black text-slate-800 text-lg flex items-center space-x-2">
                   <svg class="ico w-[1em] h-[1em] shrink-0 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6h10M11 12h10M11 18h10"/><path d="m3 6 1.5 1.5L7 5"/><path d="m3 12 1.5 1.5L7 11"/><path d="M3 18h4"/></svg>
-                  <span id="statusViewTitle">Detail Status Pembayaran</span>
+                  <span id="statusViewTitle">Rincian Status Pembayaran</span>
                 </h3>
-                <p class="text-xs text-slate-500 font-medium mt-1">Rincian status pembayaran iuran tiap orang.</p>
+                <p class="text-xs text-slate-500 font-medium mt-1">Iuran kas dan WiFi tiap anggota sampai bulan yang dipilih.</p>
               </div>
               
               <!-- Print Button inside view header -->
               <div class="flex items-center gap-2 w-full sm:w-auto">
-              <div class="status-month-wrap no-print flex items-center space-x-2 bg-white px-3 py-2 rounded-[12px] border border-slate-200 shadow-sm w-full sm:w-auto">
+              <div class="status-month-wrap no-print flex items-center space-x-2 bg-white px-3 py-2 rounded-[12px] border border-slate-200 shadow-sm flex-1 min-w-0 sm:flex-none sm:w-auto">
                 <svg class="ico w-3.5 h-3.5 shrink-0 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                 <select id="statusMonthFilter" onchange="renderChartsAndTables()" class="bg-transparent border-none text-slate-700 text-xs font-bold focus:outline-none focus:ring-0 cursor-pointer w-full sm:w-auto"></select>
               </div>
-              <button type="button" onclick="flashPrint(this); printTabReport('TABLE')" class="print-btn no-print font-bold text-xs px-4 py-2.5 rounded-[12px] transition-all flex items-center justify-center w-full sm:w-auto">
+              <button type="button" onclick="flashPrint(this); printTabReport('TABLE')" class="print-btn no-print font-bold text-xs px-2 py-1 sm:px-4 sm:py-2.5 rounded-[12px] transition-all flex items-center justify-center shrink-0 w-auto">
                 <span class="print-badge inline-flex items-center justify-center w-9 h-9 rounded-full mr-2 shrink-0"><svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2" width="11" height="7" rx="2" fill="currentColor"/><rect x="2.5" y="7.5" width="19" height="10" rx="3.5" fill="currentColor"/><rect x="6.5" y="13" width="11" height="8.5" rx="2" fill="currentColor" stroke="var(--pb)" stroke-width="1.6"/><path d="M9 16.2h6M9 18.8h4" stroke="var(--pb)" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="11.2" r="1.15" fill="var(--pb)"/></svg></span> Cetak PDF
               </button>
               </div>
             </div>
 
             <div class="overflow-auto flex-1 p-0">
-              <table class="w-full text-left border-collapse min-w-[800px]">
+              <table class="m-cards w-full text-left border-collapse min-w-[800px]">
                 <thead class="sticky top-0 z-10">
                   <tr class="bg-slate-50 border-b border-slate-200/80 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
                     <th class="py-4 px-6 bg-slate-50">Nama</th>
-                    <th class="py-4 px-6 bg-slate-50">Tarif Kas/WiFi</th>
-                    <th class="py-4 px-6 bg-slate-50">Kas Terbayar</th>
-                    <th class="py-4 px-6 bg-slate-50">WiFi Terbayar</th>
+                    <th class="py-4 px-6 bg-slate-50">Iuran per Bulan</th>
+                    <th class="py-4 px-6 bg-slate-50">Kas Dibayar</th>
+                    <th class="py-4 px-6 bg-slate-50">WiFi Dibayar</th>
                     
                     <th id="statusColHeader" class="py-4 px-6 bg-slate-50">Status</th>
                     <th class="py-4 px-6 text-center admin-only-cell no-print bg-slate-50">Aksi</th>
@@ -773,7 +794,7 @@
             </div>
 
             <div class="overflow-auto flex-1 p-0">
-              <table class="w-full text-left border-collapse min-w-[800px]">
+              <table class="m-cards w-full text-left border-collapse min-w-[800px]">
                 <thead class="sticky top-0 z-10">
                   <tr class="bg-slate-50 border-b border-slate-200/80 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
                     <th class="py-4 px-6 bg-slate-50">Tanggal</th>
@@ -812,6 +833,7 @@
 
             <div class="no-print filter-bar bg-slate-50/50 p-3 sm:p-4 border-b border-slate-100 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 shrink-0">
               <span class="hidden sm:inline-flex items-center text-xs font-bold text-slate-500 mr-1"><svg class="ico w-[1em] h-[1em] shrink-0 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>Filter:</span>
+              <span id="expenseTotalView" class="order-last col-span-2 sm:ml-auto text-center text-xs font-black rounded-[10px] px-3 py-2 bg-rose-50 text-rose-700 border border-rose-100"></span>
               <select id="filterExpYear" onchange="renderExpensesView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Tahun</option>
               </select>
@@ -832,13 +854,13 @@
               </select>
               <select id="filterExpType" onchange="renderExpensesView()" class="col-span-2 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Jenis</option>
-                <option value="Pengeluaran Kas">Keluar Kas</option>
-                <option value="Pengeluaran WiFi">Keluar WiFi</option>
+                <option value="Pengeluaran Kas">Pengeluaran Kas</option>
+                <option value="Pengeluaran WiFi">Pengeluaran WiFi</option>
               </select>
             </div>
 
             <div class="overflow-auto flex-1 p-0">
-              <table class="w-full text-left border-collapse min-w-[640px]">
+              <table class="m-cards w-full text-left border-collapse min-w-[640px]">
                 <thead class="sticky top-0 z-10">
                   <tr class="bg-slate-50 border-b border-slate-200/80 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
                     <th class="py-4 px-6 bg-slate-50">Tanggal</th>
@@ -873,6 +895,7 @@
 
             <div class="no-print filter-bar bg-slate-50/50 p-3 sm:p-4 border-b border-slate-100 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 shrink-0">
               <span class="hidden sm:inline-flex items-center text-xs font-bold text-slate-500 mr-1"><svg class="ico w-[1em] h-[1em] shrink-0 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>Filter:</span>
+              <span id="incomeTotalView" class="order-last col-span-2 sm:ml-auto text-center text-xs font-black rounded-[10px] px-3 py-2 bg-emerald-50 text-emerald-700 border border-emerald-100"></span>
               <select id="filterIncYear" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Tahun</option>
               </select>
@@ -893,16 +916,16 @@
               </select>
               <select id="filterIncType" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
                 <option value="ALL">Semua Jenis</option>
-                <option value="Pemasukan Kas">Masuk Kas</option>
-                <option value="Pemasukan WiFi">Masuk WiFi</option>
+                <option value="Pemasukan Kas">Pemasukan Kas</option>
+                <option value="Pemasukan WiFi">Pemasukan WiFi</option>
               </select>
               <select id="filterIncMember" onchange="renderIncomeView()" class="bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-[10px] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm w-full sm:w-auto min-w-0 min-h-[44px] sm:min-h-0 truncate">
-                <option value="ALL">Semua Orang</option>
+                <option value="ALL">Semua Nama</option>
               </select>
             </div>
 
             <div class="overflow-auto flex-1 p-0">
-              <table class="w-full text-left border-collapse min-w-[800px]">
+              <table class="m-cards w-full text-left border-collapse min-w-[800px]">
                 <thead class="sticky top-0 z-10">
                   <tr class="bg-slate-50 border-b border-slate-200/80 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
                     <th class="py-4 px-6 bg-slate-50">Tanggal</th>
@@ -930,9 +953,9 @@
                 <div class="flex items-center justify-between mb-4">
                   <h3 class="font-black text-slate-800 text-base flex items-center space-x-2">
                     <svg class="ico w-[1em] h-[1em] shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>
-                    <span>Trend Kas</span>
+                    <span>Tren Kas</span>
                   </h3>
-                  <span id="totalKasCombinedBadge" class="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-[10px]">Net: Rp 0</span>
+                  <span id="totalKasCombinedBadge" class="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-[10px]">Selisih: Rp 0</span>
                 </div>
                 <div id="monthlyKasCombinedChartContainer" class="overflow-x-auto relative"></div>
               </div>
@@ -954,9 +977,9 @@
                 <div class="flex items-center justify-between mb-4">
                   <h3 class="font-black text-slate-800 text-base flex items-center space-x-2">
                     <svg class="ico w-[1em] h-[1em] shrink-0 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>
-                    <span>Trend WiFi</span>
+                    <span>Tren WiFi</span>
                   </h3>
-                  <span id="totalWifiCombinedBadge" class="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1 rounded-[10px]">Net: Rp 0</span>
+                  <span id="totalWifiCombinedBadge" class="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1 rounded-[10px]">Selisih: Rp 0</span>
                 </div>
                 <div id="monthlyWifiCombinedChartContainer" class="overflow-x-auto relative"></div>
               </div>
@@ -978,7 +1001,7 @@
         <div id="view-settings" class="hidden">
            <div class="bg-white rounded-[24px] border border-slate-200/60 shadow-sm p-6 sm:p-8 max-w-4xl mx-auto">
              <h3 class="font-black text-slate-800 text-xl mb-2">Pengaturan Admin</h3>
-             <p class="text-sm text-slate-500 mb-8">Kelola data anggota dan kategori. Tambah transaksi dilakukan dari halaman Pemasukan atau Pengeluaran.</p>
+             <p class="text-sm text-slate-500 mb-8">Kelola data anggota dan kategori. Transaksi ditambahkan dari halaman Pemasukan atau Pengeluaran.</p>
              
              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <!-- Card Tambah Orang -->
@@ -987,7 +1010,7 @@
                      <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg>
                    </div>
                    <h4 class="font-bold text-slate-800 text-base mb-2">Kelola Anggota</h4>
-                   <p class="text-xs text-slate-500 leading-relaxed">Tambah orang baru atau edit data anggota yang ada.</p>
+                   <p class="text-xs text-slate-500 leading-relaxed">Tambah atau hapus data anggota.</p>
                 </div>
 
                 <!-- Card Tambah Kategori -->
@@ -1011,7 +1034,7 @@
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <h3 class="font-black text-slate-800 text-base flex items-center space-x-2">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-[#32599C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M4 21a6 6 0 0 1 9-5.2"/><path d="M19 22s4-1.5 4-4.5v-3l-4-1.5-4 1.5v3c0 3 4 4.5 4 4.5z"/></svg>
-            <span>Login Admin / Pengurus</span>
+            <span>Masuk sebagai Admin</span>
           </h3>
           <button onclick="closeModal('modalLogin')" class="text-slate-400 hover:text-slate-600 rounded-lg p-1">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -1020,11 +1043,11 @@
 
         <form onsubmit="handleLoginSubmit(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">PIN Admin / Kata Sandi</label>
+            <div class="flex items-center justify-between mb-1"><label class="block text-xs font-bold text-slate-700">PIN Admin</label><button type="button" onclick="openModalResetPassword()" class="text-[11px] font-bold text-[#E60023] hover:underline">Lupa PIN?</button></div>
             <input type="password" id="inputAdminPin" required placeholder="Masukkan PIN Admin" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none font-bold" />
           </div>
           <button type="submit" class="w-full py-2.5 rounded-[12px] bg-[#32599C] hover:bg-[#264579] text-white font-bold text-xs shadow-md rounded-full transition-all">
-            Masuk Sebagai Admin
+            Masuk
           </button>
         </form>
 
@@ -1066,7 +1089,7 @@
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <h3 class="font-black text-slate-800 text-base flex items-center space-x-2">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-[#32599C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/><path d="m9 15 2 2 4-4"/></svg>
-            <span>Reset PIN via OTP Email</span>
+            <span>Atur Ulang PIN</span>
           </h3>
           <button onclick="closeModal('modalResetPassword')" class="text-slate-400 hover:text-slate-600 p-1">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -1074,14 +1097,14 @@
         </div>
 
         <div class="space-y-3">
-          <p class="text-xs text-slate-600">Klik tombol di bawah untuk mengirimkan kode OTP ke email Admin resmi.</p>
+          <p class="text-xs text-slate-600">Tekan tombol di bawah untuk mengirim kode verifikasi ke email admin.</p>
           <button type="button" onclick="requestResetOtpEmail()" class="w-full py-2.5 rounded-[12px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200">
-            Kirim Kode OTP Ke Email
+            Kirim Kode ke Email Admin
           </button>
 
           <form onsubmit="handleResetPasswordSubmit(event)" class="space-y-3 pt-2">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Kode OTP Email</label>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Kode Verifikasi</label>
               <input type="text" id="inputResetOtp" placeholder="6 digit angka" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none" />
             </div>
             <div>
@@ -1089,7 +1112,7 @@
               <input type="password" id="inputResetNewPin" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none" />
             </div>
             <button type="submit" class="w-full py-2.5 rounded-[12px] bg-[#32599C] hover:bg-[#264579] text-white font-bold text-xs shadow-md">
-              Reset PIN Admin
+              Simpan PIN Baru
             </button>
           </form>
         </div>
@@ -1115,7 +1138,7 @@
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Jenis Tipe</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Jenis Transaksi</label>
             <select id="txType" onchange="onTxTypeChange()" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <option value="Pemasukan Kas">Pemasukan Kas</option>
               <option value="Pemasukan WiFi">Pemasukan WiFi</option>
@@ -1132,14 +1155,14 @@
           </div>
 
           <div id="txMemberWrapper">
-            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Orang</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Anggota</label>
             <select id="txMember" onchange="calculateSuggestedAmount()" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <!-- Populated Dynamically -->
             </select>
           </div>
 
           <div id="txMonthWrapper" class="space-y-2">
-            <label class="block text-xs font-bold text-slate-700">Periode Bulan Dibayar</label>
+            <label class="block text-xs font-bold text-slate-700">Bulan yang Dibayar</label>
             <div class="grid grid-cols-2 gap-2">
               <div>
                 <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Dari Bulan</span>
@@ -1155,13 +1178,13 @@
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-bold text-slate-700">Jumlah (Rp)</label>
-              <span class="text-[10px] text-indigo-600 font-bold italic">Otomatis kalkulasi / bisa diubah manual</span>
+              <span class="text-[10px] text-indigo-600 font-bold italic">Dihitung otomatis, bisa diubah</span>
             </div>
             <input type="number" id="txAmount" required min="0" step="1000" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none font-bold text-indigo-700" />
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Keterangan Catatan</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Keterangan</label>
             <input type="text" id="txNote" placeholder="Catatan tambahan..." class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
           </div>
 
@@ -1176,7 +1199,7 @@
     <div id="modalMember" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
       <div class="bg-white rounded-[20px] max-w-sm w-full p-6 shadow-2xl border border-slate-100 relative space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 id="modalMemberTitle" class="font-black text-slate-800 text-base">Kelola Orang</h3>
+          <h3 id="modalMemberTitle" class="font-black text-slate-800 text-base">Kelola Anggota</h3>
           <button onclick="closeModal('modalMember')" class="text-slate-400 hover:text-slate-600 p-1">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
@@ -1186,40 +1209,40 @@
           <input type="hidden" id="memberId" />
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Orang</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Anggota</label>
             <input type="text" id="memberName" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold" />
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Tarif Kas Bulanan (Rp)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Iuran Kas per Bulan (Rp)</label>
             <input type="number" id="memberFeeKas" required value="30000" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Tarif WiFi Bulanan (Rp)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Iuran WiFi per Bulan (Rp)</label>
             <input type="number" id="memberFeeWifi" required value="30000" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Bulan Masuk (YYYY-MM)</label>
-            <input type="text" id="memberJoinedMonth" required placeholder="2026-01" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">Bulan Masuk</label>
+            <input type="month" id="memberJoinedMonth" required placeholder="2026-01" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
           </div>
 
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Status Keanggotaan</label>
             <select id="memberStatus" onchange="onMemberStatusChange()" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              <option value="AKTIF">AKTIF</option>
-              <option value="BERHENTI">BERHENTI</option>
+              <option value="AKTIF">Aktif</option>
+              <option value="BERHENTI">Berhenti</option>
             </select>
           </div>
 
           <div id="memberResignedWrapper" class="hidden">
-            <label class="block text-xs font-bold text-slate-700 mb-1">Bulan Keluar (YYYY-MM)</label>
-            <input type="text" id="memberResignedMonth" placeholder="2026-06" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">Bulan Keluar</label>
+            <input type="month" id="memberResignedMonth" placeholder="2026-06" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
           </div>
 
           <button type="submit" class="w-full py-2.5 rounded-[12px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md mt-2">
-            Simpan Orang
+            Simpan Data Anggota
           </button>
         </form>
       </div>
@@ -1237,7 +1260,7 @@
 
         <form onsubmit="handleCategorySubmit(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Jenis Tipe Kategori</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Jenis Transaksi</label>
             <select id="catType" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <option value="Pemasukan Kas">Pemasukan Kas</option>
               <option value="Pemasukan WiFi">Pemasukan WiFi</option>
@@ -1248,7 +1271,7 @@
 
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Nama Kategori Baru</label>
-            <input type="text" id="catName" required placeholder="misal: Maintenance Router" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            <input type="text" id="catName" required placeholder="misal: Perawatan Router" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
           </div>
 
           <button type="submit" class="w-full py-2.5 rounded-[12px] bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-md">
@@ -1271,7 +1294,7 @@
         </div>
 
         <div>
-          <input type="text" id="inputSearchMemberModal" onkeyup="filterMemberDetailListModal()" placeholder="Cari nama orang..." class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          <input type="text" id="inputSearchMemberModal" onkeyup="filterMemberDetailListModal()" placeholder="Cari nama anggota..." class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
         </div>
 
         <div id="modalMemberListDetailContainer" class="space-y-1.5 max-h-[60vh] overflow-y-auto pr-1">
@@ -1297,11 +1320,11 @@
         </div>
         <div class="space-y-2.5">
           <div class="bg-slate-50 border border-slate-100 p-4 rounded-[16px] flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-500">Saldo Kas</span>
+            <span class="text-xs font-bold text-slate-500">Kas</span>
             <span id="breakdownKas" class="text-sm font-black text-slate-900">Rp 0</span>
           </div>
           <div class="bg-slate-50 border border-slate-100 p-4 rounded-[16px] flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-500">Saldo WiFi</span>
+            <span class="text-xs font-bold text-slate-500">WiFi</span>
             <span id="breakdownWifi" class="text-sm font-black text-slate-900">Rp 0</span>
           </div>
         </div>
@@ -1426,7 +1449,7 @@
           el.style.cssText = 'position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:90;' +
             'display:none;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#ffffff;' +
             'border:1px solid #e2e8f0;box-shadow:0 6px 20px -6px rgba(15,23,42,.25);font:600 12px "Plus Jakarta Sans",sans-serif;color:#475569;';
-          el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#32599C" stroke-width="2.5" stroke-linecap="round" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg><span>Menyimpan ke Google Sheets…</span>';
+          el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#32599C" stroke-width="2.5" stroke-linecap="round" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg><span>Menyimpan perubahan…</span>';
           document.body.appendChild(el);
         }
         el.style.display = pendingWrites > 0 ? 'flex' : 'none';
@@ -1452,7 +1475,7 @@
             pendingWrites--;
             updateSyncIndicator();
             // Gagal: ambil ulang data asli dari server agar tampilan kembali benar
-            showCustomToast('Perubahan gagal disimpan: ' + err.message + '. Data dikembalikan seperti di server.', false);
+            showCustomToast('Perubahan gagal disimpan: ' + String(err.message).replace(/\.$/, '') + '. Data dikembalikan seperti semula.', false);
             fetchData({ silent: true, force: true });
           });
       }
@@ -1522,7 +1545,7 @@
 
       var currentRole = 'VIEWER';
       var currentView = 'dashboard';
-      var currentTitle = 'Dashboard';
+      var currentTitle = 'Beranda';
       var appInitialized = false; // true setelah data pertama kali dimuat
       var modalDetailType = 'PAID';
       
@@ -1581,7 +1604,7 @@
       var TOAST_TYPES = {
         success: { title: 'Berhasil',   icon: '#16A34A', iconBg: '#DCFCE7', btn: '#15803D', btnHover: '#166534', btnText: '#ffffff',
                    svg: '<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="m22 4-10 10-3-3"/>' },
-        notice:  { title: 'Himbauan',   icon: '#16A34A', iconBg: '#DCFCE7', btn: '#15803D', btnHover: '#166534', btnText: '#ffffff',
+        notice:  { title: 'Informasi', icon: '#16A34A', iconBg: '#DCFCE7', btn: '#15803D', btnHover: '#166534', btnText: '#ffffff',
                    svg: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>' },
         warning: { title: 'Peringatan', icon: '#CA8A04', iconBg: '#FEF9C3', btn: '#FACC15', btnHover: '#EAB308', btnText: '#422006',
                    svg: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>' },
@@ -1659,6 +1682,20 @@
         return 'Rp ' + n.toLocaleString('id-ID');
       }
 
+      // 2026-10-17 menjadi 17 Okt 2026 (hanya tampilan; data tetap YYYY-MM-DD)
+      function formatDateId(dateStr) {
+        var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr || '');
+        if (!m) return dateStr || '-';
+        return parseInt(m[3], 10) + ' ' + MONTH_SHORT_ID[parseInt(m[2], 10) - 1] + ' ' + m[1];
+      }
+
+      // 2026-01 menjadi Jan 2026 (hanya tampilan; data tetap YYYY-MM)
+      function formatMonthId(ym) {
+        var m = /^(\d{4})-(\d{2})/.exec(ym || '');
+        if (!m) return ym || '-';
+        return MONTH_SHORT_ID[parseInt(m[2], 10) - 1] + ' ' + m[1];
+      }
+
       function formatShortRupiah(num) {
         var n = Number(num) || 0;
         if (n >= 1000000) {
@@ -1680,7 +1717,7 @@
           document.execCommand('copy');
           document.body.removeChild(input);
         }
-        showCustomToast('Nomor Rekening BCA Digital (' + text + ') berhasil disalin!', true);
+        showCustomToast('Nomor rekening BCA Digital (' + text + ') berhasil disalin.', true);
       }
 
       function showLoader(show) {
@@ -1709,7 +1746,7 @@
 
       function tryOpenModalTx(mode) {
         if (currentRole !== 'ADMIN') {
-          showCustomToast('Hanya admin yang bisa menambahkan transaksi. Silakan login sebagai admin terlebih dahulu.', 'warning');
+          showCustomToast('Hanya admin yang dapat menambahkan transaksi. Silakan masuk sebagai admin terlebih dahulu.', 'warning');
           return;
         }
         openModalTx(mode);
@@ -1729,7 +1766,7 @@
 
       function tryOpenModalMember() {
         if (currentRole !== 'ADMIN') {
-          showCustomToast('hanya Admin yang boleh menambahkan Orang', 'warning');
+          showCustomToast('Hanya admin yang dapat menambahkan anggota.', 'warning');
           return;
         }
         openModalMember();
@@ -1737,7 +1774,7 @@
 
       function tryOpenModalCategory() {
         if (currentRole !== 'ADMIN') {
-          showCustomToast('hanya Admin yang boleh menambahkan Kategori', 'warning');
+          showCustomToast('Hanya admin yang dapat menambahkan kategori.', 'warning');
           return;
         }
         openModalCategory();
@@ -1755,10 +1792,12 @@
             applyRolePermissions();
             closeModal('modalLogin');
             document.getElementById('inputAdminPin').value = '';
-            showCustomToast('Berhasil masuk sebagai Admin!', true);
+            showCustomToast('Berhasil masuk sebagai admin.', true);
           } else {
             closeModal('modalLogin');
-            showCustomToast('Kamu Bukan ADMIN, Gak Usah Login, Percuma', false, function() {
+            // Pesan server dipakai untuk kasus khusus, mis. terlalu banyak percobaan salah
+            var loginMsg = (res && res.message && res.message !== 'PIN salah') ? res.message : 'PIN salah. Silakan coba lagi.';
+            showCustomToast(loginMsg, false, function() {
               openModal('modalLogin');
             });
           }
@@ -1778,12 +1817,12 @@
             .withSuccessHandler(function(res) {
               showLoader(false);
               if (res.success) {
-                showCustomToast(res.message, true);
+                showCustomToast('PIN admin berhasil diganti.', true);
                 closeModal('modalChangePassword');
                 document.getElementById('inputOldPin').value = '';
                 document.getElementById('inputNewPin').value = '';
               } else {
-                showCustomToast(res.message, false);
+                showCustomToast(String(res.message).replace('Password / PIN', 'PIN'), false);
               }
             })
             .withFailureHandler(function(err) {
@@ -1812,7 +1851,7 @@
             })
             .withFailureHandler(function(err) {
               showLoader(false);
-              showCustomToast('Gagal mengirim email OTP: ' + err.message, false);
+              showCustomToast('Gagal mengirim kode verifikasi: ' + err.message, false);
             })
             .sendResetPinEmail();
         } else {
@@ -1838,7 +1877,7 @@
             })
             .withFailureHandler(function(err) {
               showLoader(false);
-              showCustomToast('Gagal reset PIN: ' + err.message, false);
+              showCustomToast('Gagal mengatur ulang PIN: ' + err.message, false);
             })
             .resetAdminPinWithOtp({ otpCode: otpCode, newPin: newPin });
         } else {
@@ -1851,7 +1890,7 @@
         currentRole = 'VIEWER';
         sessionPin = '';
         applyRolePermissions();
-        showCustomToast('Anda telah keluar dari mode Admin.', 'notice');
+        showCustomToast('Anda telah keluar dari mode admin.', 'notice');
       }
 
       function applyRolePermissions() {
@@ -1859,10 +1898,10 @@
         var settingsNav = document.getElementById('nav-settings-container');
 
         if (currentRole === 'ADMIN') {
-          if (containerSidebar) containerSidebar.innerHTML = '<button onclick="logout()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm px-4 py-3 rounded-[12px] transition-all flex items-center justify-center space-x-2"><svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Keluar Admin</span></button>';
+          if (containerSidebar) containerSidebar.innerHTML = '<button onclick="openModal(\'modalChangePassword\')" class="w-full mb-2 px-3 py-2.5 rounded-[12px] bg-sky-100 hover:bg-sky-200 text-sky-700 font-bold text-sm transition-colors">Ganti PIN</button><button onclick="logout()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm px-4 py-3 rounded-[12px] transition-all flex items-center justify-center space-x-2"><svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Keluar Admin</span></button>';
           if (settingsNav) settingsNav.classList.remove('hidden');
         } else {
-          if (containerSidebar) containerSidebar.innerHTML = '<button onclick="openModal(\'modalLogin\')" class="w-full bg-[#85C226] hover:bg-[#6FA31C] text-white font-bold text-sm px-4 py-3 rounded-full shadow-md transition-all flex items-center justify-center space-x-2"><svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Login Admin</span></button><div class="mt-2.5 grid grid-cols-2 gap-2 text-xs font-bold"><button onclick="openModal(\'modalChangePassword\')" class="px-3 py-2 rounded-full bg-sky-100 hover:bg-sky-200 text-sky-700 transition-colors">Ganti PIN</button><button onclick="openModalResetPassword()" class="px-3 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-[#E60023] transition-colors">Lupa PIN?</button></div>';
+          if (containerSidebar) containerSidebar.innerHTML = '<button onclick="openModal(\'modalLogin\')" class="w-full bg-[#85C226] hover:bg-[#6FA31C] text-white font-bold text-sm px-4 py-3 rounded-full shadow-md transition-all flex items-center justify-center space-x-2"><svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Masuk Admin</span></button>';
           if (settingsNav) settingsNav.classList.remove('hidden');
         }
 
@@ -1910,13 +1949,13 @@
         if(titleEl) titleEl.textContent = title;
         if(subEl) {
             var subs = {
-                'dashboard': 'Ringkasan finansial kas dan wifi lab.',
-                'status': 'Detail progres pembayaran anggota.',
-                'income': 'Daftar pemasukan kas dan wifi.',
-                'expenses': 'Daftar pengeluaran kas dan wifi.',
-                'transactions': 'Daftar riwayat semua transaksi.',
-                'charts': 'Visualisasi pemasukan vs pengeluaran.',
-                'settings': 'Manajemen data sistem.'
+                'dashboard': 'Ringkasan keuangan kas dan WiFi lab.',
+                'status': 'Rincian pembayaran iuran tiap anggota.',
+                'income': 'Daftar pemasukan kas dan WiFi.',
+                'expenses': 'Daftar pengeluaran kas dan WiFi.',
+                'transactions': 'Semua catatan pemasukan dan pengeluaran.',
+                'charts': 'Perbandingan pemasukan dan pengeluaran per bulan.',
+                'settings': 'Kelola data anggota dan kategori.'
             };
             subEl.textContent = subs[viewId] || '';
         }
@@ -1995,8 +2034,8 @@
       function populateMemberFilterOptions() {
         var selectTxMember = document.getElementById('filterTxMember');
         var selectModalMember = document.getElementById('txMember');
-        var optionsHtml = '<option value="ALL">Semua Orang</option>';
-        var modalOptionsHtml = '<option value="-">-- Pilih Orang (Opsional) --</option>';
+        var optionsHtml = '<option value="ALL">Semua Anggota</option>';
+        var modalOptionsHtml = '<option value="-">-- Pilih Anggota (Opsional) --</option>';
 
         appState.members.forEach(function(m) {
           optionsHtml += '<option value="' + m.name + '">' + m.name + '</option>';
@@ -2373,6 +2412,7 @@
         var staticLists = currentStatusLists();
         document.getElementById('statPaidMembersCount').textContent = staticLists.paid.length + ' Orang';
         document.getElementById('statUnpaidMembersCount').textContent = staticLists.unpaid.length + ' Orang';
+        document.querySelectorAll('.statMonthLabel').forEach(function(el) { el.textContent = 'Sampai ' + monthLabel(indexToYm(getStatusMonthIndex())); });
 
         renderMemberStatusTable(memberStats);
         renderEmbeddedTransactionsTable();
@@ -2394,7 +2434,7 @@
             '<span class="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style="background:' + c + '1f;color:' + c + '">' + (isIn ? up : down) + '</span>' +
             '<div class="min-w-0 flex-1">' +
               '<div class="text-[11px] font-black text-slate-800 truncate">' + tx.category + '</div>' +
-              '<div class="text-[9px] font-semibold text-slate-500 truncate">' + (tx.memberName || '-') + ' · ' + tx.date + '</div>' +
+              '<div class="text-[9px] font-semibold text-slate-500 truncate">' + (tx.memberName || '-') + ' · ' + formatDateId(tx.date) + '</div>' +
             '</div>' +
             '<div class="text-[10px] font-black shrink-0" style="color:' + c + '">' + (isIn ? '+' : '-') + formatRupiah(tx.amount) + '</div>' +
           '</div>';
@@ -2541,12 +2581,12 @@
         var totalKasIncSum = kasIncArr.reduce(function(a, b) { return a + b; }, 0);
         var totalKasExpSum = kasExpArr.reduce(function(a, b) { return a + b; }, 0);
         var netKas = totalKasIncSum - totalKasExpSum;
-        document.getElementById('totalKasCombinedBadge').textContent = 'Net: ' + formatRupiah(netKas);
+        document.getElementById('totalKasCombinedBadge').textContent = 'Selisih: ' + formatRupiah(netKas);
 
         var totalWifiIncSum = wifiIncArr.reduce(function(a, b) { return a + b; }, 0);
         var totalWifiExpSum = wifiExpArr.reduce(function(a, b) { return a + b; }, 0);
         var netWifi = totalWifiIncSum - totalWifiExpSum;
-        document.getElementById('totalWifiCombinedBadge').textContent = 'Net: ' + formatRupiah(netWifi);
+        document.getElementById('totalWifiCombinedBadge').textContent = 'Selisih: ' + formatRupiah(netWifi);
 
         function buildAreaChartSvg(arrInc, arrExp, colorInc, colorExp, gradIncId, gradExpId, shadowIncId, shadowExpId, showInc, showExp) {
           var maxVal = 10000;
@@ -2560,6 +2600,12 @@
               if (arrExp[i] > maxVal) maxVal = arrExp[i];
             }
           }
+
+          // Bulatkan batas atas agar angka sumbu rapi (mis. 300rb, 600rb, 900rb)
+          var rawStep = maxVal / 4;
+          var mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
+          var niceStep = [1, 2, 2.5, 3, 4, 5, 10].map(function(s) { return s * mag; }).filter(function(s) { return s >= rawStep; })[0];
+          maxVal = niceStep * 4;
 
           var chartHeight = 180;
           var chartWidth = 460;
@@ -2593,7 +2639,7 @@
           var areaIncStr = pathIncStr + " L " + pointsInc[11].x + " " + baseY + " L " + pointsInc[0].x + " " + baseY + " Z";
           var areaExpStr = pathExpStr + " L " + pointsExp[11].x + " " + baseY + " L " + pointsExp[0].x + " " + baseY + " Z";
 
-          var svg = '<svg viewBox="0 0 ' + (chartWidth + 80) + ' ' + (chartHeight + 110) + '" class="w-full h-[260px] overflow-visible">';
+          var svg = '<svg viewBox="0 0 ' + (chartWidth + 80) + ' ' + (chartHeight + 110) + '" class="w-full min-w-[520px] sm:min-w-0 h-auto sm:h-[260px] overflow-visible">';
           svg += '<defs>';
           
           svg += '<linearGradient id="' + gradIncId + '" x1="0" y1="0" x2="0" y2="1">';
@@ -2612,7 +2658,7 @@
           for (var g = 0; g <= 4; g++) {
             var gy = 30 + ((chartHeight - 60) / 4) * g;
             var gVal = Math.round(maxVal - (maxVal / 4) * g);
-            var labelText = gVal >= 1000000 ? (gVal / 1000000).toFixed(1) + 'jt' : (gVal >= 1000 ? Math.round(gVal / 1000) + 'rb' : gVal);
+            var labelText = formatShortRupiah(gVal);
             svg += '<line x1="50" y1="' + gy + '" x2="' + (chartWidth + 50) + '" y2="' + gy + '" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>';
             svg += '<text x="42" y="' + (gy + 3) + '" fill="#94a3b8" font-size="9" font-weight="700" text-anchor="end" font-family="Plus Jakarta Sans, sans-serif">' + labelText + '</text>';
           }
@@ -2665,7 +2711,7 @@
         return total;
       }
 
-      // Label bulan lunas pada tahun filter, contoh: Bln 2/6 atau Bln 12/12
+      // Label bulan lunas pada tahun filter, contoh: 2/6 bulan atau 12/12 bulan
       // - Sudah ada bulan berhenti: penyebut = bulan aktif dari max(bulan masuk, Januari) s.d. bulan berhenti
       // - Belum ada bulan berhenti: penyebut = bulan aktif dari max(bulan masuk, Januari) s.d. Desember
       // Pembayaran dihitung berurutan (FIFO) mulai dari bulan masuk
@@ -2684,7 +2730,7 @@
         var covered = fee > 0 ? Math.floor(sumPaidByType(m, type) / fee) : 0;
         var paidIdxEnd = joined + covered - 1;
         var paid = Math.max(0, Math.min(denom, paidIdxEnd - winStart + 1));
-        return 'Bln ' + paid + '/' + denom;
+        return paid + '/' + denom + ' bulan';
       }
 
       function renderMemberStatusTable(memberStats) {
@@ -2693,7 +2739,7 @@
         var selIdx = getStatusMonthIndex();
         memberStats = memberStats.filter(function(st) { return isActiveAt(st.member, selIdx); });
         if (memberStats.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-400 font-bold">Tidak ada data orang.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-400 font-bold">Belum ada data anggota.</td></tr>';
           return;
         }
         var hdr = document.getElementById('statusColHeader');
@@ -2703,13 +2749,13 @@
           var m = stat.member;
           var editBtnClass = (currentRole === 'ADMIN') ? '' : 'hidden';
           html += '<tr class="hover:bg-slate-50/90 transition-colors">' +
-            '<td class="py-4 px-5"><div class="font-black text-slate-800 text-sm whitespace-normal break-words">' + m.name + '</div><div class="text-[11px] text-slate-400 font-semibold">Masuk: ' + m.joinedMonth + '</div></td>' +
-            '<td class="py-4 px-5 font-semibold text-slate-600 leading-snug"><div>Kas: ' + formatRupiah(m.feeKas) + '</div><div>WiFi: ' + formatRupiah(m.feeWifi) + '</div></td>' +
-            '<td class="py-4 px-5 font-black text-emerald-600">' + formatRupiah(stat.paidKasAmount) + '<div class="text-[11px] font-bold text-slate-400 mt-0.5">' + paidThroughMonthText(m, 'Pemasukan Kas', Number(m.feeKas) || 30000) + '</div></td>' +
-            '<td class="py-4 px-5 font-black text-sky-600">' + formatRupiah(stat.paidWifiAmount) + '<div class="text-[11px] font-bold text-slate-400 mt-0.5">' + paidThroughMonthText(m, 'Pemasukan WiFi', Number(m.feeWifi) || 30000) + '</div></td>' +
+            '<td class="py-4 px-5"><div class="font-black text-slate-800 text-sm whitespace-normal break-words">' + m.name + '</div><div class="text-[11px] text-slate-400 font-semibold">Masuk: ' + formatMonthId(m.joinedMonth) + '</div></td>' +
+            '<td data-label="Iuran per Bulan" class="py-4 px-5 font-semibold text-slate-600 leading-snug"><div>Kas: ' + formatRupiah(m.feeKas) + '</div><div>WiFi: ' + formatRupiah(m.feeWifi) + '</div></td>' +
+            '<td data-label="Kas Dibayar" class="py-4 px-5 font-black text-emerald-600">' + formatRupiah(stat.paidKasAmount) + '<div class="text-[11px] font-bold text-slate-400 mt-0.5">' + paidThroughMonthText(m, 'Pemasukan Kas', Number(m.feeKas) || 30000) + '</div></td>' +
+            '<td data-label="WiFi Dibayar" class="py-4 px-5 font-black text-sky-600">' + formatRupiah(stat.paidWifiAmount) + '<div class="text-[11px] font-bold text-slate-400 mt-0.5">' + paidThroughMonthText(m, 'Pemasukan WiFi', Number(m.feeWifi) || 30000) + '</div></td>' +
             
-            '<td class="py-4 px-5 leading-tight">' + statusCellHtml(m, getStatusMonthIndex()) + '</td>' +
-            '<td class="py-4 px-5 text-center admin-only-cell no-print ' + editBtnClass + '"><div class="flex items-center justify-center space-x-2"><button onclick="editMember(\'' + m.id + '\')" class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button><button onclick="deleteMember(\'' + m.id + '\')" class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div></td>' +
+            '<td data-label="Status" class="py-4 px-5 leading-tight">' + statusCellHtml(m, getStatusMonthIndex()) + '</td>' +
+            '<td data-label="Aksi" class="py-4 px-5 text-center admin-only-cell no-print ' + editBtnClass + '"><div class="flex items-center justify-center space-x-2"><button onclick="editMember(\'' + m.id + '\')" title="Ubah" aria-label="Ubah data anggota" class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button><button onclick="deleteMember(\'' + m.id + '\')" title="Hapus" aria-label="Hapus anggota" class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div></td>' +
           '</tr>';
         });
         tbody.innerHTML = html;
@@ -2738,7 +2784,7 @@
         return '<span class="type-badge inline-block px-3 py-1 rounded-[10px] text-[10px] font-black border ' + badgeClass + '" style="--hl:' + hl + '">' + type + '</span>';
       }
 
-      // Kolom Bulan pada Pemasukan: rentang jadi huruf (Okt s/d Des), bulan tunggal tetap angka
+      // Kolom Bulan: 2026-10 s/d 2026-12 tampil sebagai Okt s.d. Des 2026, bulan tunggal sebagai Okt 2026
       var MONTH_SHORT_ID = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
       function incomeMonthLabel(monthPaid) {
         if (!monthPaid || monthPaid === '-') return '-';
@@ -2746,12 +2792,12 @@
         function shortMonth(ym) { return MONTH_SHORT_ID[parseInt(ym.substring(5, 7), 10) - 1] || ym; }
         if (parts.length < 2) {
           var one = parts[0].trim();
-          return 's/d ' + shortMonth(one) + ' ' + one.substring(0, 4);
+          return shortMonth(one) + ' ' + one.substring(0, 4);
         }
         var a = parts[0].trim(), b = parts[1].trim();
         var ya = a.substring(0, 4), yb = b.substring(0, 4);
-        if (ya === yb) return shortMonth(a) + ' s/d ' + shortMonth(b) + ' ' + yb;
-        return shortMonth(a) + ' ' + ya + ' s/d ' + shortMonth(b) + ' ' + yb;
+        if (ya === yb) return shortMonth(a) + ' s.d. ' + shortMonth(b) + ' ' + yb;
+        return shortMonth(a) + ' ' + ya + ' s.d. ' + shortMonth(b) + ' ' + yb;
       }
 
       function renderIncomeView() {
@@ -2777,7 +2823,7 @@
         var mbSel = document.getElementById('filterIncMember');
         if (mbSel) {
           var prevM = mbSel.value || 'ALL';
-          var mbHtml = '<option value="ALL">Semua Orang</option><option value="__BUNGA__">Bunga Rekening</option>';
+          var mbHtml = '<option value="ALL">Semua Nama</option><option value="__BUNGA__">Bunga Rekening</option>';
           appState.members.forEach(function(m) { mbHtml += '<option value="' + m.name + '">' + m.name + '</option>'; });
           mbSel.innerHTML = mbHtml;
           mbSel.value = Array.prototype.some.call(mbSel.options, function(o) { return o.value === prevM; }) ? prevM : 'ALL';
@@ -2804,11 +2850,13 @@
         list.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
 
         var total = list.reduce(function(sum, tx) { return sum + (Number(tx.amount) || 0); }, 0);
+        var totalView = document.getElementById('incomeTotalView');
+        if (totalView) totalView.textContent = 'Total: ' + formatRupiah(total) + ' · ' + list.length + ' transaksi';
         var badge = document.getElementById('incomeTotalBadge');
         if (badge) badge.textContent = 'Total: ' + formatRupiah(total);
 
         if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" class="py-8 text-center text-slate-400 font-bold">Tidak ada pemasukan pada filter ini.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" class="py-8 text-center text-slate-400 font-bold">Tidak ada pemasukan untuk pilihan ini.</td></tr>';
           return;
         }
         var editBtnClass = (currentRole === 'ADMIN') ? '' : 'hidden';
@@ -2816,14 +2864,14 @@
         list.forEach(function(tx) {
           var badgeClass = tx.type === 'Pemasukan Kas' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-sky-50 text-sky-700 border-sky-300';
           html += '<tr class="hover:bg-slate-50/90 transition-colors">' +
-            '<td class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + tx.date + '</td>' +
-            '<td class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
-            '<td class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
-            '<td class="py-4 px-5 font-semibold text-slate-700 whitespace-normal break-words">' + (tx.memberName || '-') + '</td>' +
-            '<td class="py-4 px-5 text-slate-500 font-semibold">' + incomeMonthLabel(tx.monthPaid) + '</td>' +
-            '<td class="py-4 px-5 text-right font-black text-emerald-600">+' + formatRupiah(tx.amount) + '</td>' +
-            '<td class="py-4 px-5 text-slate-500 italic font-medium max-w-xs truncate">' + (tx.note || '-') + '</td>' +
-            '<td class="py-4 px-5 text-center admin-only-cell no-print ' + editBtnClass + '"><div class="flex items-center justify-center space-x-2"><button onclick="editTx(\'' + tx.id + '\')" class="w-8 h-8 rounded-[10px] bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button><button onclick="deleteTx(\'' + tx.id + '\')" class="w-8 h-8 rounded-[10px] bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div></td>' +
+            '<td data-label="Tanggal" class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + formatDateId(tx.date) + '</td>' +
+            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
+            '<td data-label="Kategori" class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
+            '<td data-label="Nama" class="py-4 px-5 font-semibold text-slate-700 whitespace-normal break-words">' + (tx.memberName || '-') + '</td>' +
+            '<td data-label="Bulan" class="py-4 px-5 text-slate-500 font-semibold">' + incomeMonthLabel(tx.monthPaid) + '</td>' +
+            '<td data-label="Jumlah" class="py-4 px-5 text-right font-black text-emerald-600">+' + formatRupiah(tx.amount) + '</td>' +
+            '<td data-label="Keterangan" class="py-4 px-5 text-slate-500 italic font-medium max-w-xs truncate">' + (tx.note || '-') + '</td>' +
+            '<td data-label="Aksi" class="py-4 px-5 text-center admin-only-cell no-print ' + editBtnClass + '"><div class="flex items-center justify-center space-x-2"><button onclick="editTx(\'' + tx.id + '\')" title="Ubah" aria-label="Ubah transaksi" class="w-8 h-8 rounded-[10px] bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button><button onclick="deleteTx(\'' + tx.id + '\')" title="Hapus" aria-label="Hapus transaksi" class="w-8 h-8 rounded-[10px] bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div></td>' +
           '</tr>';
         });
         tbody.innerHTML = html;
@@ -2857,11 +2905,13 @@
         list.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
 
         var total = list.reduce(function(sum, tx) { return sum + (Number(tx.amount) || 0); }, 0);
+        var totalView = document.getElementById('expenseTotalView');
+        if (totalView) totalView.textContent = 'Total: ' + formatRupiah(total) + ' · ' + list.length + ' transaksi';
         var badge = document.getElementById('expenseTotalBadge');
         if (badge) badge.textContent = 'Total: ' + formatRupiah(total);
 
         if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-400 font-bold">Tidak ada pengeluaran pada filter ini.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-400 font-bold">Tidak ada pengeluaran untuk pilihan ini.</td></tr>';
           return;
         }
         var editBtnClass = (currentRole === 'ADMIN') ? '' : 'hidden';
@@ -2869,12 +2919,12 @@
         list.forEach(function(tx) {
           var badgeClass = tx.type === 'Pengeluaran Kas' ? 'bg-amber-50 text-amber-800 border-amber-300' : 'bg-rose-50 text-rose-700 border-rose-300';
           html += '<tr class="hover:bg-slate-50/90 transition-colors">' +
-            '<td class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + tx.date + '</td>' +
-            '<td class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
-            '<td class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
-            '<td class="py-4 px-5 text-slate-500 italic font-medium max-w-xs truncate">' + (tx.note || '-') + '</td>' +
-            '<td class="py-4 px-5 text-right font-black text-rose-600">-' + formatRupiah(tx.amount) + '</td>' +
-            '<td class="py-4 px-5 text-center admin-only-cell no-print ' + editBtnClass + '"><div class="flex items-center justify-center space-x-2"><button onclick="editTx(\'' + tx.id + '\')" class="w-8 h-8 rounded-[10px] bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button><button onclick="deleteTx(\'' + tx.id + '\')" class="w-8 h-8 rounded-[10px] bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div></td>' +
+            '<td data-label="Tanggal" class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + formatDateId(tx.date) + '</td>' +
+            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
+            '<td data-label="Kategori" class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
+            '<td data-label="Keterangan" class="py-4 px-5 text-slate-500 italic font-medium max-w-xs truncate">' + (tx.note || '-') + '</td>' +
+            '<td data-label="Jumlah" class="py-4 px-5 text-right font-black text-rose-600">-' + formatRupiah(tx.amount) + '</td>' +
+            '<td data-label="Aksi" class="py-4 px-5 text-center admin-only-cell no-print ' + editBtnClass + '"><div class="flex items-center justify-center space-x-2"><button onclick="editTx(\'' + tx.id + '\')" title="Ubah" aria-label="Ubah transaksi" class="w-8 h-8 rounded-[10px] bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button><button onclick="deleteTx(\'' + tx.id + '\')" title="Hapus" aria-label="Hapus transaksi" class="w-8 h-8 rounded-[10px] bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div></td>' +
           '</tr>';
         });
         tbody.innerHTML = html;
@@ -2924,7 +2974,7 @@
 
         filteredTx.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
         if (filteredTx.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" class="py-8 text-center text-slate-400 font-bold">Tidak ada riwayat transaksi pada filter ini.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" class="py-8 text-center text-slate-400 font-bold">Tidak ada transaksi untuk pilihan ini.</td></tr>';
           return;
         }
 
@@ -2945,14 +2995,14 @@
           var editBtnClass = (currentRole === 'ADMIN') ? '' : 'hidden';
 
           html += '<tr class="hover:bg-slate-50/90 transition-colors">' +
-            '<td class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + tx.date + '</td>' +
-            '<td class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
-            '<td class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
-            '<td class="py-4 px-5 font-semibold text-slate-700 whitespace-normal break-words">' + (tx.memberName || '-') + '</td>' +
-            '<td class="py-4 px-5 text-slate-500 font-semibold">' + (tx.monthPaid || '-') + '</td>' +
-            '<td class="py-4 px-5 text-right font-black ' + (isIncome ? 'text-emerald-600' : 'text-rose-600') + '">' + (isIncome ? '+' : '-') + formatRupiah(tx.amount) + '</td>' +
-            '<td class="py-4 px-5 text-slate-500 italic font-medium max-w-xs truncate">' + (tx.note || '-') + '</td>' +
-            '<td class="py-4 px-5 text-center admin-only-cell no-print ' + editBtnClass + '"><div class="flex items-center justify-center space-x-2"><button onclick="editTx(\'' + tx.id + '\')" class="w-8 h-8 rounded-[10px] bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button><button onclick="deleteTx(\'' + tx.id + '\')" class="w-8 h-8 rounded-[10px] bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div></td>' +
+            '<td data-label="Tanggal" class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + formatDateId(tx.date) + '</td>' +
+            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
+            '<td data-label="Kategori" class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
+            '<td data-label="Nama" class="py-4 px-5 font-semibold text-slate-700 whitespace-normal break-words">' + (tx.memberName || '-') + '</td>' +
+            '<td data-label="Bulan" class="py-4 px-5 text-slate-500 font-semibold">' + incomeMonthLabel(tx.monthPaid) + '</td>' +
+            '<td data-label="Jumlah" class="py-4 px-5 text-right font-black ' + (isIncome ? 'text-emerald-600' : 'text-rose-600') + '">' + (isIncome ? '+' : '-') + formatRupiah(tx.amount) + '</td>' +
+            '<td data-label="Keterangan" class="py-4 px-5 text-slate-500 italic font-medium max-w-xs truncate">' + (tx.note || '-') + '</td>' +
+            '<td data-label="Aksi" class="py-4 px-5 text-center admin-only-cell no-print ' + editBtnClass + '"><div class="flex items-center justify-center space-x-2"><button onclick="editTx(\'' + tx.id + '\')" title="Ubah" aria-label="Ubah transaksi" class="w-8 h-8 rounded-[10px] bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button><button onclick="deleteTx(\'' + tx.id + '\')" title="Hapus" aria-label="Hapus transaksi" class="w-8 h-8 rounded-[10px] bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-xs flex items-center justify-center"><svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div></td>' +
           '</tr>';
         });
         tbody.innerHTML = html;
@@ -2965,9 +3015,9 @@
         var titleEl = document.getElementById('modalMemberListDetailTitle');
         if (titleEl) {
           if (type === 'PAID') {
-            titleEl.innerHTML = '<svg class="ico w-[1em] h-[1em] shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg><span>Daftar Orang Lunas (' + monthLabel(indexToYm(getStatusMonthIndex())) + ')</span>';
+            titleEl.innerHTML = '<svg class="ico w-[1em] h-[1em] shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg><span>Anggota Lunas (' + monthLabel(indexToYm(getStatusMonthIndex())) + ')</span>';
           } else {
-            titleEl.innerHTML = '<svg class="ico w-[1em] h-[1em] shrink-0 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><span>Daftar Orang Menunggak (' + monthLabel(indexToYm(getStatusMonthIndex())) + ')</span>';
+            titleEl.innerHTML = '<svg class="ico w-[1em] h-[1em] shrink-0 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><span>Anggota Menunggak (' + monthLabel(indexToYm(getStatusMonthIndex())) + ')</span>';
           }
         }
         renderMemberDetailListModalItems();
@@ -2984,7 +3034,7 @@
         });
 
         if (names.length === 0) {
-          container.innerHTML = '<p class="py-6 text-center text-xs text-slate-400 font-semibold">Tidak ada nama orang yang ditemukan.</p>';
+          container.innerHTML = '<p class="py-6 text-center text-xs text-slate-400 font-semibold">Nama anggota tidak ditemukan.</p>';
           return;
         }
 
@@ -3070,10 +3120,10 @@
         var tdR = 'class="py-1 px-1.5 border-b border-slate-200 text-right"';
 
         var incRows = inc.map(function(tx) {
-          return '<tr><td ' + td + '>' + tx.date + '</td><td ' + td + '>' + typeBadgeHtml(tx.type, '') + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.memberName || '-') + '</td><td ' + td + '>' + incomeMonthLabel(tx.monthPaid) + '</td><td ' + tdR + '>+' + formatRupiah(tx.amount) + '</td><td ' + td + '>' + (tx.note || '-') + '</td></tr>';
+          return '<tr><td ' + td + '>' + formatDateId(tx.date) + '</td><td ' + td + '>' + typeBadgeHtml(tx.type, '') + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.memberName || '-') + '</td><td ' + td + '>' + incomeMonthLabel(tx.monthPaid) + '</td><td ' + tdR + '>+' + formatRupiah(tx.amount) + '</td><td ' + td + '>' + (tx.note || '-') + '</td></tr>';
         }).join('') || '<tr><td colspan="7" ' + td + '>Tidak ada pemasukan pada bulan ini.</td></tr>';
         var expRows = exp.map(function(tx) {
-          return '<tr><td ' + td + '>' + tx.date + '</td><td ' + td + '>' + typeBadgeHtml(tx.type, '') + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.note || '-') + '</td><td ' + tdR + '>-' + formatRupiah(tx.amount) + '</td></tr>';
+          return '<tr><td ' + td + '>' + formatDateId(tx.date) + '</td><td ' + td + '>' + typeBadgeHtml(tx.type, '') + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.note || '-') + '</td><td ' + tdR + '>-' + formatRupiah(tx.amount) + '</td></tr>';
         }).join('') || '<tr><td colspan="5" ' + td + '>Tidak ada pengeluaran pada bulan ini.</td></tr>';
 
         return '<div class="mt-4"><h4 class="mb-1 print-inc-title" style="font-size:11px;font-weight:900"><svg class="ico print-title-ico" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;width:1em;height:1em;vertical-align:-2px;margin-right:4px;flex:none"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Pemasukan ' + label + ' (Total: ' + formatRupiah(sum(inc)) + ')</h4>' +
@@ -3093,9 +3143,9 @@
           document.body.classList.add('print-mode-table');
           var extrasEl = document.getElementById('statusPrintExtras');
           if (extrasEl) extrasEl.innerHTML = statusPrintExtrasHtml();
-          if (reportTitleEl) reportTitleEl.textContent = 'Laporan Detail Status Pembayaran (' + selectedYearStr + ')';
+          if (reportTitleEl) reportTitleEl.textContent = 'Laporan Rincian Status Pembayaran (' + selectedYearStr + ')';
           var svTitle = document.getElementById('statusViewTitle');
-          if (svTitle) { svTitle.dataset.orig = svTitle.textContent; svTitle.textContent = 'Detail Status Pembayaran (' + selectedYearStr + ')'; }
+          if (svTitle) { svTitle.dataset.orig = svTitle.textContent; svTitle.textContent = 'Rincian Status Pembayaran (' + selectedYearStr + ')'; }
         } else if (tabMode === 'HISTORY') {
           document.body.classList.add('print-mode-history');
           if (reportTitleEl) reportTitleEl.textContent = 'Laporan Riwayat Transaksi (' + selectedYearStr + ')';
@@ -3111,7 +3161,9 @@
         }
 
         var originalTitle = document.title;
-        document.title = 'Laporan_' + tabMode + '_' + selectedYearStr;
+        // Judul halaman ini menjadi nama berkas PDF yang disarankan browser
+        var printFileNames = { TABLE: 'Status_Pembayaran', HISTORY: 'Riwayat_Transaksi', INCOME: 'Pemasukan', EXPENSE: 'Pengeluaran' };
+        document.title = 'Laporan_' + printFileNames[tabMode] + '_' + selectedYearStr;
         
         // Allow CSS to apply
         setTimeout(function(){
@@ -3280,7 +3332,7 @@
 
         document.getElementById('txAmount').value = tx.amount;
         document.getElementById('txNote').value = tx.note;
-        document.getElementById('modalTxTitle').textContent = 'Edit Transaksi';
+        document.getElementById('modalTxTitle').textContent = 'Ubah Transaksi';
         openModal('modalTx');
       }
 
@@ -3301,7 +3353,7 @@
         document.getElementById('memberStatus').value = 'AKTIF';
         document.getElementById('memberResignedMonth').value = '';
         document.getElementById('memberResignedWrapper').classList.add('hidden');
-        document.getElementById('modalMemberTitle').textContent = 'Tambah Orang Baru';
+        document.getElementById('modalMemberTitle').textContent = 'Tambah Anggota Baru';
         openModal('modalMember');
       }
 
@@ -3348,7 +3400,7 @@
           appState.members.push(data);
         }
         closeModal('modalMember');
-        showCustomToast(id ? 'Data orang berhasil diperbarui!' : 'Orang baru berhasil ditambahkan!', true);
+        showCustomToast(id ? 'Data anggota berhasil diperbarui.' : 'Anggota baru berhasil ditambahkan.', true);
         syncWrite(id ? 'updateMember' : 'addMember', [data]);
       }
 
@@ -3374,21 +3426,21 @@
         document.getElementById('memberStatus').value = m.status || 'AKTIF';
         document.getElementById('memberResignedMonth').value = m.resignedMonth || '';
         onMemberStatusChange();
-        document.getElementById('modalMemberTitle').textContent = 'Edit Data Orang';
+        document.getElementById('modalMemberTitle').textContent = 'Ubah Data Anggota';
         openModal('modalMember');
       }
 
       function deleteMember(id) {
-        showCustomConfirm('Apakah Anda yakin ingin menghapus orang ini?', function() {
+        showCustomConfirm('Apakah Anda yakin ingin menghapus anggota ini?', function() {
           appState.members = appState.members.filter(function(m) { return m.id !== id; });
-          showCustomToast('Orang berhasil dihapus!', true);
+          showCustomToast('Anggota berhasil dihapus.', true);
           syncWrite('deleteMember', [id]);
         });
       }
 
       function tryOpenDeleteMember() {
         if (currentRole !== 'ADMIN') {
-          showCustomToast('hanya Admin yang boleh menghapus Orang', 'warning');
+          showCustomToast('Hanya admin yang dapat menghapus anggota.', 'warning');
           return;
         }
         renderDeleteMemberList();
@@ -3398,7 +3450,7 @@
       function renderDeleteMemberList() {
         var c = document.getElementById('deleteMemberList');
         if (appState.members.length === 0) {
-          c.innerHTML = '<p class="py-6 text-center text-xs text-slate-400 font-semibold">Tidak ada anggota.</p>';
+          c.innerHTML = '<p class="py-6 text-center text-xs text-slate-400 font-semibold">Belum ada data anggota.</p>';
           return;
         }
         c.innerHTML = appState.members.map(function(m) {
@@ -3426,11 +3478,11 @@
 
       function tryOpenMemberChooser() {
         if (currentRole !== 'ADMIN') {
-          showCustomToast('hanya Admin yang boleh mengelola Orang', 'warning');
+          showCustomToast('Hanya admin yang dapat mengelola anggota.', 'warning');
           return;
         }
-        openChooser('Anggota', [
-          { label: 'Tambah / Edit Anggota', desc: 'Tambah orang baru atau edit data anggota yang ada.', action: 'openModalMember()', cls: 'border-emerald-200 bg-emerald-50/60', textCls: 'text-emerald-700' },
+        openChooser('Kelola Anggota', [
+          { label: 'Tambah Anggota', desc: 'Daftarkan anggota baru. Untuk mengubah data, buka Status Pembayaran lalu tekan ikon pensil.', action: 'openModalMember()', cls: 'border-emerald-200 bg-emerald-50/60', textCls: 'text-emerald-700' },
           { label: 'Hapus Anggota', desc: 'Pilih anggota yang akan dihapus.', action: 'tryOpenDeleteMember()', cls: 'border-rose-200 bg-rose-50/60', textCls: 'text-rose-700' }
         ]);
       }
@@ -3471,10 +3523,33 @@
           if (mainEl) mainEl.scrollTop = keepScroll;
         } else {
           // Pertama kali aplikasi dibuka: tampilkan Dashboard
-          navigateTo('dashboard', 'Dashboard');
+          navigateTo('dashboard', 'Beranda');
           appInitialized = true;
         }
       }
+
+      // Tombol ikon silang diberi nama agar terbaca pembaca layar
+      document.querySelectorAll('button[onclick^="close"]').forEach(function(btn) {
+        if (!btn.textContent.trim()) btn.setAttribute('aria-label', 'Tutup');
+      });
+
+      // Tombol Esc menutup popup yang sedang terbuka
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape') return;
+        function isOpen(id) { var el = document.getElementById(id); return el && !el.classList.contains('hidden'); }
+        if (isOpen('customToastModal')) return closeCustomToast();
+        if (isOpen('customConfirmModal')) return closeCustomConfirm();
+        if (isOpen('modalBreakdown')) return closeBreakdownModal();
+        ['modalLogin', 'modalChangePassword', 'modalResetPassword', 'modalTx', 'modalMember', 'modalCategory', 'modalMemberListDetail', 'modalDeleteMember', 'modalChooser'].forEach(function(id) {
+          if (isOpen(id)) closeModal(id);
+        });
+      });
+
+      // Popup tanpa isian ikut tertutup saat area gelap di luarnya ditekan
+      ['modalMemberListDetail', 'modalDeleteMember', 'modalChooser'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('click', function(e) { if (e.target === el) closeModal(id); });
+      });
 
       (function startApp() {
         var cached = loadLocalCache();

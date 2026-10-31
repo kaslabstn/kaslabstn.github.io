@@ -55,10 +55,12 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
 - **Penghubung**: `window.google.script.run` adalah *shim* (Proxy) yang meneruskan ke `gasCall(action, args)` via `fetch`. Kode lama yang memanggil `google.script.run.xxx()` tetap jalan.
 - **Instant UX**:
   - Data terakhir disimpan di localStorage (`kaslabstn_data_v1`) → tampil seketika saat dibuka, lalu `fetchData({silent:true})`.
-  - Simpan/edit/hapus: ubah `appState` dulu → `syncWrite(action, args)` mengirim di latar belakang secara berurutan (`writeQueue`), menampilkan penanda "Menyimpan ke Google Sheets…", lalu refresh senyap. Jika gagal → popup Gagal + ambil ulang data server.
+  - Simpan/edit/hapus: ubah `appState` dulu → `syncWrite(action, args)` mengirim di latar belakang secara berurutan (`writeQueue`), menampilkan penanda "Menyimpan perubahan…", lalu refresh senyap. Jika gagal → popup Gagal + ambil ulang data server.
   - `initAppView()` mempertahankan halaman aktif (`currentView`/`currentTitle`) dan posisi scroll; hanya pemuatan pertama ke Dashboard (`appInitialized`).
-- **Popup**: `showCustomToast(pesan, jenis, callback)` — jenis: `'success'` (hijau, tutup otomatis 1,2 dtk) / `'notice'` (Himbauan, hijau ⓘ) / `'warning'` (kuning) / `'error'` (merah). `true` = success, `false` = error. Konfirmasi hapus (`showCustomConfirm`) berwarna merah.
+- **Popup**: `showCustomToast(pesan, jenis, callback)` — jenis: `'success'` (hijau, tutup otomatis 1,2 dtk) / `'notice'` (Informasi, hijau ⓘ) / `'warning'` (kuning) / `'error'` (merah). `true` = success, `false` = error. Konfirmasi hapus (`showCustomConfirm`) berwarna merah.
 - **Tambah transaksi**: tombol `.add-btn` di header Pemasukan & Pengeluaran (terlihat semua orang; non-admin dapat popup Peringatan). `openModalTx('INCOME'|'EXPENSE')` + `setTxTypeOptions()` membatasi Jenis Tipe. Fitur "Edit Transaksi per Orang" sudah dihapus.
+- **Istilah UI**: pakai "Anggota" (bukan "Orang"), "Masuk" (bukan "Login"), "Beranda" (bukan "Dashboard"), "Tren" (bukan "Trend"). Nilai data (`Pemasukan Kas`, `AKTIF`, `YYYY-MM`, ` s/d `) jangan diubah; ubah tampilannya saja lewat `formatDateId`, `formatMonthId`, `incomeMonthLabel`.
+- **Tabel di HP**: tabel `.m-cards` tampil sebagai kartu di layar ≤640px; label tiap baris berasal dari atribut `data-label` pada `<td>`.
 - **Mobile**: header kartu satu baris (judul kiri, tombol kanan); filter `.filter-bar` = grid 2 kolom di HP (`sm:` kembali ke flex). Input/select di HP 16px (cegah zoom iOS), target sentuh ≥44px.
 - Efek hover tombol dibungkus `@media (hover: hover)` agar tidak "tersangkut" di HP.
 - Cetak PDF: kelas `body.print-mode-*` + `.no-print`. Pastikan perubahan tampilan tidak merusak hasil cetak.
