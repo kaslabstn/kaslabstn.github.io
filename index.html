@@ -80,7 +80,7 @@
           height: 100% !important;
           overflow: visible !important;
         }
-        aside, header, #mobileSidebarOverlay, #modalLogin, #modalChangePassword, #modalResetPassword, #modalTx, #modalMember, #modalCategory, #modalMemberListDetail, #modalBreakdown, #modalTxPerMember, #modalDeleteMember, #modalChooser, #customToastModal, #customConfirmModal, #loaderOverlay, .no-print {
+        aside, header, #mobileSidebarOverlay, #modalLogin, #modalChangePassword, #modalResetPassword, #modalTx, #modalMember, #modalCategory, #modalCardColor, #modalMemberListDetail, #modalBreakdown, #modalTxPerMember, #modalDeleteMember, #modalChooser, #customToastModal, #customConfirmModal, #loaderOverlay, .no-print {
           display: none !important;
         }
         /* Hide all views by default in print, explicitly show later */
@@ -433,6 +433,19 @@
       @media (hover: hover) { .member-icon:hover { transform: translateY(-2px); opacity: 1; } }
       @media (min-width: 768px) { .member-icon { width: 36px; } }
       @media (min-width: 1280px) { .member-icons { gap: 8px 6px; } .member-icon { width: 46px; } }
+      /* Aksen sudut kartu saldo: warna pekat di sudut, memudar ke tepi lengkungan */
+      .saldo-accent { background: radial-gradient(circle at 100% 0%, var(--accent-from) 0%, var(--accent-to) 100%); }
+      /* Aksen kartu ringkasan: satu warna (pilihan di Pengaturan) yang memudar dari sudut */
+      .summary-accent {
+        width: min(70%, 520px);
+        background: radial-gradient(circle at 100% 0%, rgb(var(--summary-rgb, 96 165 250) / .32) 0%, rgb(var(--summary-rgb, 96 165 250) / 0) 68%);
+      }
+      /* Pilihan warna di Pengaturan */
+      .color-swatch { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; }
+      .color-swatch > span { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; color: #ffffff; transition: transform .15s ease; }
+      .color-swatch[aria-pressed="true"] > span { outline: 2px solid currentColor; outline-offset: 2px; }
+      @media (hover: hover) { .color-swatch:hover > span { transform: scale(1.12); } }
+      @media (min-width: 768px) { .color-swatch { width: 36px; height: 36px; } }
       /* Pil saring anggota: terisi penuh saat aktif */
       .member-pill { cursor: pointer; transition: background-color .2s ease, color .2s ease, transform .2s ease; -webkit-tap-highlight-color: transparent; }
       .member-pill:active { transform: scale(.97); }
@@ -502,6 +515,7 @@
         html.dark .member-initial { fill: #f0f0f0; }
         html.dark .member-badge { stroke: #1e1e1e; }
         html.dark .member-mark { stroke: #111111; }
+        html.dark .summary-accent { opacity: .6; }
         html.dark .member-pill.is-paid[aria-pressed="true"] { background: #4ade9d; color: #111111; }
         html.dark .member-pill.is-unpaid[aria-pressed="true"] { background: #dcdcdc; color: #111111; }
         html.dark .member-pill[aria-pressed="false"]:hover { filter: brightness(1.15); }
@@ -729,9 +743,9 @@
           <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-6">
             
             <div onclick="showBreakdownModal('OPENING')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-              <div class="absolute top-0 right-0 w-24 h-24 bg-slate-100 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
+              <div class="absolute top-0 right-0 w-24 h-24 saldo-accent card-accent-opening rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
               <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="w-10 h-10 rounded-[12px] bg-slate-200 text-slate-600 flex items-center justify-center text-lg">
+                <div class="card-ico-opening w-10 h-10 rounded-[12px] text-white flex items-center justify-center text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 10c0-3-3-5-7-5-4 0-7 2-7 5 0 1 .3 2 1 3v3h3v-1h4v1h3v-3a5 5 0 0 0 0-3"/><path d="M16 10h.01"/><path d="M3 11h2"/></svg>
                 </div>
                 <div class="bg-slate-100 text-slate-600 border border-slate-200 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -745,9 +759,9 @@
             </div>
 
             <div onclick="showBreakdownModal('INCOME')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-              <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
+              <div class="absolute top-0 right-0 w-24 h-24 saldo-accent card-accent-income rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
               <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="w-10 h-10 rounded-[12px] bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
+                <div class="card-ico-income w-10 h-10 rounded-[12px] text-white flex items-center justify-center text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
                 </div>
                 <div class="bg-emerald-50 text-emerald-600 border border-emerald-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -761,9 +775,9 @@
             </div>
             
             <div onclick="showBreakdownModal('EXPENSE')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-               <div class="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
+               <div class="absolute top-0 right-0 w-24 h-24 saldo-accent card-accent-expense rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
               <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="w-10 h-10 rounded-[12px] bg-rose-100 text-rose-600 flex items-center justify-center text-lg">
+                <div class="card-ico-expense w-10 h-10 rounded-[12px] text-white flex items-center justify-center text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>
                 </div>
                 <div class="bg-rose-50 text-rose-600 border border-rose-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -777,9 +791,9 @@
             </div>
 
             <div onclick="showBreakdownModal('BALANCE')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-              <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
+              <div class="absolute top-0 right-0 w-24 h-24 saldo-accent card-accent-balance rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
               <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="w-10 h-10 rounded-[12px] bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
+                <div class="card-ico-balance w-10 h-10 rounded-[12px] text-white flex items-center justify-center text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg>
                 </div>
                 <div class="bg-blue-50 text-blue-600 border border-blue-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -796,14 +810,8 @@
           <!-- HIGHLIGHT STATS METRICS SUMMARY -->
           <div class="grid grid-cols-1 gap-4">
             <div class="relative overflow-hidden group bg-white rounded-[24px] p-5 sm:p-6 border border-slate-200/60 shadow-sm">
-              <!-- Hiasan sudut berlapis, senada dengan kartu saldo -->
-              <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-                <div class="absolute top-0 right-0 w-36 h-36 sm:w-56 sm:h-56 bg-emerald-50 rounded-bl-[224px] transition-transform duration-300 group-hover:scale-105 origin-top-right"></div>
-                <div class="absolute top-0 right-0 w-24 h-24 sm:w-36 sm:h-36 bg-sky-100 rounded-bl-[144px] transition-transform duration-300 group-hover:scale-110 origin-top-right"></div>
-                <div class="absolute top-0 right-0 w-12 h-12 sm:w-[72px] sm:h-[72px] bg-amber-200 rounded-bl-[72px] transition-transform duration-300 group-hover:scale-110 origin-top-right"></div>
-                <div class="hidden xl:block absolute top-4 right-[240px] w-3.5 h-3.5 rounded-full bg-rose-200"></div>
-                <div class="hidden xl:block absolute top-[158px] right-[92px] w-2.5 h-2.5 rounded-full bg-blue-200"></div>
-              </div>
+              <!-- Hiasan sudut: gradasi satu warna -->
+              <div class="summary-accent absolute top-0 right-0 bottom-0 pointer-events-none transition-transform duration-300 group-hover:scale-105 origin-top-right" aria-hidden="true"></div>
               <h3 class="relative font-black text-slate-800 text-base sm:text-lg flex flex-wrap items-center gap-x-2 leading-snug mb-4">
                 <svg class="ico w-[1em] h-[1em] shrink-0 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6h10M11 12h10M11 18h10"/><path d="m3 6 1.5 1.5L7 5"/><path d="m3 12 1.5 1.5L7 11"/><path d="M3 18h4"/></svg>
                 <span>Ringkasan Status Pembayaran</span>
@@ -1155,9 +1163,9 @@
         <div id="view-settings" class="hidden">
            <div class="bg-white rounded-[24px] border border-slate-200/60 shadow-sm p-6 sm:p-8 max-w-4xl mx-auto">
              <h3 class="font-black text-slate-800 text-xl mb-2">Pengaturan Admin</h3>
-             <p class="text-sm text-slate-500 mb-8">Kelola data anggota dan kategori. Transaksi ditambahkan dari halaman Pemasukan atau Pengeluaran.</p>
+             <p class="text-sm text-slate-500 mb-8">Kelola data anggota, kategori, dan warna kartu. Transaksi ditambahkan dari halaman Pemasukan atau Pengeluaran.</p>
              
-             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 <!-- Card Tambah Orang -->
                 <div onclick="tryOpenMemberChooser()" class="group cursor-pointer rounded-[20px] border border-slate-200 bg-slate-50 p-6 hover:bg-white hover:border-emerald-300 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center">
                    <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
@@ -1175,9 +1183,17 @@
                    <h4 class="font-bold text-slate-800 text-base mb-2">Tambah Kategori</h4>
                    <p class="text-xs text-slate-500 leading-relaxed">Buat kategori baru untuk pengelompokan transaksi.</p>
                 </div>
+
+                <!-- Card Warna Kartu -->
+                <div onclick="tryOpenCardColorModal()" class="group cursor-pointer rounded-[20px] border border-slate-200 bg-slate-50 p-6 hover:bg-white hover:border-indigo-300 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center">
+                   <div class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                     <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 2-.8 2-1.8 0-1.2-1-1.7-1-2.7 0-1 .8-1.5 1.8-1.5H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11.5" r="1"/><circle cx="10.5" cy="7.5" r="1"/><circle cx="15.5" cy="7.5" r="1"/></svg>
+                   </div>
+                   <h4 class="font-bold text-slate-800 text-base mb-2">Warna Kartu</h4>
+                   <p class="text-xs text-slate-500 leading-relaxed">Pilih tema atau warna kartu di Beranda.</p>
+                </div>
              </div>
-           </div>
-        </div>
+           </div>        </div>
 
       </main>
     </div>
@@ -1443,6 +1459,19 @@
       </div>
     </div>
 
+    <!-- MODAL POPUP: WARNA KARTU (ADMIN) -->
+    <div id="modalCardColor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+      <div class="bg-white rounded-[20px] max-w-2xl w-full p-6 shadow-2xl border border-slate-100 relative space-y-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="font-black text-slate-800 text-base">Warna Kartu</h3>
+          <button onclick="closeModal('modalCardColor')" class="text-slate-400 hover:text-slate-600 p-1">
+            <svg class="ico w-[1em] h-[1em] shrink-0 text-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div id="cardColorPanel"></div>
+      </div>
+    </div>
+
     <!-- MODAL POPUP: DAFTAR NAMA ORANG LUNAS / MENUNGGAK -->
     <div id="modalMemberListDetail" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
       <div class="bg-white rounded-[20px] max-w-md w-full p-6 shadow-2xl border border-slate-100 relative space-y-4">
@@ -1588,6 +1617,7 @@
             members: appState.members,
             categories: appState.categories,
             transactions: appState.transactions,
+            cardColors: appState.cardColors,
             savedAt: Date.now()
           }));
         } catch (e) { /* penyimpanan lokal tidak tersedia: abaikan */ }
@@ -2163,6 +2193,8 @@
         document.documentElement.classList.toggle('dark', mode === 'dark');
         try { localStorage.setItem('kaslabstn_theme', mode); } catch (e) {}
         updateThemeSwitch();
+        applyCardColors();
+        renderCardColorPanel();
         // Warna grafik dan transaksi terbaru ditulis saat digambar, jadi perlu digambar ulang
         if (appInitialized) renderChartsAndTables();
       }
@@ -2206,7 +2238,7 @@
                 'expenses': 'Daftar pengeluaran kas dan WiFi.',
                 'transactions': 'Semua catatan pemasukan dan pengeluaran.',
                 'charts': 'Perkembangan saldo, pemasukan, dan pengeluaran.',
-                'settings': 'Kelola data anggota dan kategori.'
+                'settings': 'Kelola data anggota, kategori, dan warna kartu.'
             };
             subEl.textContent = subs[viewId] || '';
         }
@@ -2316,6 +2348,10 @@
             appState.members = data.members || [];
             appState.categories = data.categories || [];
             appState.transactions = data.transactions || [];
+            if (data.cardColors) {
+              appState.cardColors = data.cardColors;
+              applyCardColors();
+            }
             saveLocalCache();
 
             var after = JSON.stringify([appState.members, appState.categories, appState.transactions]);
@@ -2788,6 +2824,148 @@
         return { paid: paid, unpaid: unpaid };
       }
 
+      // ===== Warna kartu Beranda: dipilih admin di Pengaturan, disimpan di sheet Pengaturan =====
+      // ico = kotak ikon; light/dark = aksen sudut (pekat ke pudar); rgb = aksen kartu ringkasan
+      var CARD_COLORS = {
+        gray:   { name: 'Abu-abu', ico: ['#9ca3af', '#4b5563'], light: ['#cbd5e1', '#f1f5f9'], dark: ['#4b5563', '#2a2a2a'], rgb: '148 163 184' },
+        green:  { name: 'Hijau',   ico: ['#34d399', '#059669'], light: ['#a7f3d0', '#ecfdf5'], dark: ['#0f5f49', '#15352b'], rgb: '52 211 153' },
+        teal:   { name: 'Toska',   ico: ['#2dd4bf', '#0d9488'], light: ['#99f6e4', '#f0fdfa'], dark: ['#0f5f5a', '#123633'], rgb: '45 212 191' },
+        blue:   { name: 'Biru',    ico: ['#60a5fa', '#2563eb'], light: ['#bfdbfe', '#eff6ff'], dark: ['#1e3f86', '#1a2845'], rgb: '96 165 250' },
+        indigo: { name: 'Nila',    ico: ['#818cf8', '#4f46e5'], light: ['#c7d2fe', '#eef2ff'], dark: ['#33358a', '#20224a'], rgb: '129 140 248' },
+        purple: { name: 'Ungu',    ico: ['#c084fc', '#9333ea'], light: ['#e9d5ff', '#faf5ff'], dark: ['#5b2a86', '#2c1c40'], rgb: '192 132 252' },
+        pink:   { name: 'Merah Muda', ico: ['#f472b6', '#db2777'], light: ['#fbcfe8', '#fdf2f8'], dark: ['#7a2356', '#3a1a2c'], rgb: '244 114 182' },
+        red:    { name: 'Merah',   ico: ['#fb7185', '#e11d48'], light: ['#fecdd3', '#fff1f2'], dark: ['#7f1d36', '#3f1a24'], rgb: '251 113 133' },
+        orange: { name: 'Oranye',  ico: ['#fb923c', '#ea580c'], light: ['#fed7aa', '#fff7ed'], dark: ['#7c3a12', '#3a2214'], rgb: '251 146 60' },
+        amber:  { name: 'Kuning',  ico: ['#fbbf24', '#d97706'], light: ['#fde68a', '#fffbeb'], dark: ['#6e5210', '#33280f'], rgb: '251 191 36' }
+      };
+      var CARD_TARGETS = [
+        { key: 'opening', label: 'Saldo Awal' },
+        { key: 'income', label: 'Total Pemasukan' },
+        { key: 'expense', label: 'Total Pengeluaran' },
+        { key: 'balance', label: 'Saldo Akhir' },
+        { key: 'summary', label: 'Ringkasan Status Pembayaran' }
+      ];
+      var CARD_THEMES = [
+        { name: 'Standar', colors: { opening: 'gray', income: 'green', expense: 'red', balance: 'blue', summary: 'blue' } },
+        { name: 'Laut', colors: { opening: 'indigo', income: 'teal', expense: 'blue', balance: 'teal', summary: 'blue' } },
+        { name: 'Hutan', colors: { opening: 'amber', income: 'green', expense: 'orange', balance: 'teal', summary: 'green' } },
+        { name: 'Senja', colors: { opening: 'orange', income: 'amber', expense: 'pink', balance: 'purple', summary: 'orange' } },
+        { name: 'Lavender', colors: { opening: 'indigo', income: 'purple', expense: 'pink', balance: 'indigo', summary: 'purple' } },
+        { name: 'Netral', colors: { opening: 'gray', income: 'gray', expense: 'gray', balance: 'gray', summary: 'gray' } }
+      ];
+      var cardColorDraft = null;
+      appState.cardColors = {};
+
+      function cardColorFor(colors, key) {
+        var standard = CARD_THEMES[0].colors[key];
+        return CARD_COLORS[colors && colors[key]] || CARD_COLORS[standard];
+      }
+
+      function applyCardColors() {
+        CARD_TARGETS.forEach(function(t) {
+          var c = cardColorFor(appState.cardColors, t.key);
+          var accent = isDarkTheme() ? c.dark : c.light;
+          document.querySelectorAll('.card-accent-' + t.key).forEach(function(el) {
+            el.style.setProperty('--accent-from', accent[0]);
+            el.style.setProperty('--accent-to', accent[1]);
+          });
+          document.querySelectorAll('.card-ico-' + t.key).forEach(function(el) {
+            el.style.background = 'linear-gradient(135deg, ' + c.ico[0] + ', ' + c.ico[1] + ')';
+            el.style.boxShadow = '0 6px 14px -6px ' + c.ico[1];
+          });
+        });
+        var summary = document.querySelector('.summary-accent');
+        if (summary) summary.style.setProperty('--summary-rgb', cardColorFor(appState.cardColors, 'summary').rgb);
+      }
+
+      function currentCardDraft() {
+        if (!cardColorDraft) {
+          cardColorDraft = {};
+          CARD_TARGETS.forEach(function(t) {
+            cardColorDraft[t.key] = CARD_COLORS[appState.cardColors[t.key]] ? appState.cardColors[t.key] : CARD_THEMES[0].colors[t.key];
+          });
+        }
+        return cardColorDraft;
+      }
+
+      function canEditCardColors() {
+        if (currentRole === 'ADMIN') return true;
+        showCustomToast('Hanya admin yang dapat mengubah warna kartu.', 'warning');
+        return false;
+      }
+
+      // Pilihan yang belum disimpan dibuang setiap popup dibuka kembali
+      function tryOpenCardColorModal() {
+        if (!canEditCardColors()) return;
+        cardColorDraft = null;
+        renderCardColorPanel();
+        openModal('modalCardColor');
+      }
+
+      function pickCardColor(key, color) {
+        if (!canEditCardColors()) return;
+        currentCardDraft()[key] = color;
+        renderCardColorPanel();
+      }
+
+      function pickCardTheme(index) {
+        if (!canEditCardColors()) return;
+        cardColorDraft = Object.assign({}, CARD_THEMES[index].colors);
+        renderCardColorPanel();
+      }
+
+      function saveCardColorDraft() {
+        if (!canEditCardColors()) return;
+        appState.cardColors = Object.assign({}, currentCardDraft());
+        applyCardColors();
+        closeModal('modalCardColor');
+        showCustomToast('Warna kartu berhasil disimpan.', true);
+        syncWrite('saveCardColors', [appState.cardColors]);
+      }
+
+      function renderCardColorPanel() {
+        var panel = document.getElementById('cardColorPanel');
+        if (!panel) return;
+        var draft = currentCardDraft();
+        var dark = isDarkTheme();
+        var check = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+        var themes = CARD_THEMES.map(function(theme, i) {
+          var active = CARD_TARGETS.every(function(t) { return theme.colors[t.key] === draft[t.key]; });
+          var dots = CARD_TARGETS.slice(0, 4).map(function(t) {
+            return '<span class="w-3.5 h-3.5 rounded-full -ml-1 first:ml-0 border-2 border-white" style="background:' + CARD_COLORS[theme.colors[t.key]].ico[1] + '"></span>';
+          }).join('');
+          return '<button type="button" onclick="pickCardTheme(' + i + ')" aria-pressed="' + active + '" class="min-h-[44px] flex items-center gap-2 pl-3 pr-4 py-2 rounded-full border text-xs font-bold transition-colors ' + (active ? 'border-slate-800 text-slate-800' : 'border-slate-200 text-slate-600 hover:border-slate-400') + '"><span class="flex items-center pl-1">' + dots + '</span>' + theme.name + '</button>';
+        }).join('');
+
+        var rows = CARD_TARGETS.map(function(t) {
+          var chosen = CARD_COLORS[draft[t.key]];
+          var accent = dark ? chosen.dark : chosen.light;
+          var swatches = Object.keys(CARD_COLORS).map(function(id) {
+            var c = CARD_COLORS[id];
+            var on = id === draft[t.key];
+            return '<button type="button" class="color-swatch text-slate-800" onclick="pickCardColor(\'' + t.key + '\', \'' + id + '\')" aria-pressed="' + on + '" aria-label="' + t.label + ': ' + c.name + '" title="' + c.name + '"><span style="background:linear-gradient(135deg,' + c.ico[0] + ',' + c.ico[1] + ')">' + (on ? check : '') + '</span></button>';
+          }).join('');
+          return '<div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 py-3 border-t border-slate-100">' +
+            '<div class="flex items-center gap-3 md:w-60 shrink-0">' +
+              '<span class="w-9 h-9 rounded-[10px] shrink-0" style="background:radial-gradient(circle at 100% 0%,' + accent[0] + ',' + accent[1] + ');box-shadow:inset 0 0 0 1px rgb(148 163 184 / .25)"></span>' +
+              '<span class="text-xs font-bold text-slate-700">' + t.label + '</span>' +
+            '</div>' +
+            '<div class="flex flex-wrap items-center" role="group" aria-label="Warna ' + t.label + '">' + swatches + '</div>' +
+          '</div>';
+        }).join('');
+
+        panel.innerHTML =
+          '<p class="text-xs text-slate-500 mb-4">Atur warna kartu di Beranda. Warna yang disimpan tampil untuk semua pengunjung.</p>' +
+          '<p class="text-xs font-bold text-slate-700 mb-2">Tema siap pakai</p>' +
+          '<div class="flex flex-wrap gap-2 mb-5">' + themes + '</div>' +
+          '<p class="text-xs font-bold text-slate-700 mb-1">Warna tiap kartu</p>' + rows +
+          '<div class="flex flex-wrap items-center gap-2 pt-4 border-t border-slate-100">' +
+            '<button type="button" onclick="saveCardColorDraft()" class="min-h-[44px] px-5 rounded-full bg-[#32599C] hover:bg-[#264579] text-white font-bold text-xs transition-colors">Simpan Warna</button>' +
+            '<button type="button" onclick="pickCardTheme(0)" class="min-h-[44px] px-5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors">Kembalikan Standar</button>' +
+          '</div>';
+      }
+
       // Keterangan ikon anggota: menunggak = nama + tunggakan, lunas = nama saja.
       // Muncul saat kursor mengarah ke ikon, saat ikon disentuh/diklik, dan saat fokus keyboard.
       function hideMemberTip() {
@@ -2802,7 +2980,7 @@
           tip.id = 'memberTip';
           tip.setAttribute('role', 'tooltip');
           tip.className = 'no-print fixed z-[60] hidden pointer-events-none max-w-[260px] bg-white border border-slate-200 rounded-[12px] shadow-lg px-3 py-2';
-          tip.innerHTML = '<div id="memberTipName" class="text-xs font-black text-slate-800"></div><div id="memberTipDebt" class="text-sm font-black text-rose-600 mt-0.5"></div>';
+          tip.innerHTML = '<div id="memberTipName" class="text-xs font-black text-slate-800"></div><div id="memberTipDebt" class="text-xs font-black text-rose-600 mt-0.5"></div>';
           document.body.appendChild(tip);
         }
         var shortage = Number(icon.dataset.shortage) || 0;
@@ -3657,6 +3835,8 @@
         var icon = document.getElementById('breakdownIcon');
 
         iconWrapper.className = 'w-12 h-12 rounded-[14px] flex items-center justify-center text-white shadow-lg shrink-0 ' + data.bgClass;
+        var cardColor = cardColorFor(appState.cardColors, { OPENING: 'opening', INCOME: 'income', EXPENSE: 'expense', BALANCE: 'balance' }[type]);
+        iconWrapper.style.background = 'linear-gradient(135deg, ' + cardColor.ico[0] + ', ' + cardColor.ico[1] + ')';
         icon.innerHTML = ICON_SVG[data.icon.replace('fa-', '')] || '';
 
         var modal = document.getElementById('modalBreakdown');
@@ -4130,7 +4310,7 @@
         if (isOpen('customToastModal')) return closeCustomToast();
         if (isOpen('customConfirmModal')) return closeCustomConfirm();
         if (isOpen('modalBreakdown')) return closeBreakdownModal();
-        ['modalLogin', 'modalChangePassword', 'modalResetPassword', 'modalTx', 'modalMember', 'modalCategory', 'modalMemberListDetail', 'modalDeleteMember', 'modalChooser'].forEach(function(id) {
+        ['modalLogin', 'modalChangePassword', 'modalResetPassword', 'modalTx', 'modalMember', 'modalCategory', 'modalCardColor', 'modalMemberListDetail', 'modalDeleteMember', 'modalChooser'].forEach(function(id) {
           if (isOpen(id)) closeModal(id);
         });
       });
@@ -4142,6 +4322,7 @@
       });
 
       updateThemeSwitch();
+      applyCardColors();
       renderPasswordStrength(document.getElementById('inputNewPin'));
       renderPasswordStrength(document.getElementById('inputResetNewPin'));
 
@@ -4151,6 +4332,8 @@
           appState.members = cached.members || [];
           appState.categories = cached.categories || [];
           appState.transactions = cached.transactions || [];
+          appState.cardColors = cached.cardColors || {};
+          applyCardColors();
           showLoader(false);
           initAppView();               // tampil seketika dari data terakhir
           fetchData({ silent: true }); // segarkan dari server di latar belakang

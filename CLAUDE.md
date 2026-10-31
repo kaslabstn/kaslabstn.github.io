@@ -33,7 +33,7 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
 
 ## Aturan keamanan (wajib dipertahankan)
 
-1. **PIN admin tidak pernah dikirim ke browser.** `getAppData()` hanya mengembalikan `members`, `categories`, `transactions`.
+1. **PIN admin tidak pernah dikirim ke browser.** `getAppData()` hanya mengembalikan `members`, `categories`, `transactions`, dan `cardColors` (warna kartu, bukan rahasia).
 2. **PIN dicek di server**: login → `verifyPin`; setiap aksi tulis di `doPost` wajib `payload.pin` yang cocok (`checkPin_`).
    Batas 5x salah / 10 menit.
 3. PIN disimpan di sheet **Pengaturan**, baris `ADMIN_PIN` (kolom Nilai). Tidak ada PIN cadangan (`'1234'` sudah dihapus — jangan dikembalikan).
@@ -44,7 +44,7 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
 
 - `doGet(e)`: `?action=getAppData` → data dashboard (lewat cache `getAppDataCached_`, CacheService dipecah per 90 KB, TTL 5 menit).
 - `doPost(e)`: body JSON `{action, args, pin}` (Content-Type `text/plain`), dispatch lewat tabel `ACTIONS`:
-  - Tulis (admin + lock + hapus cache): `addTransaction`, `updateTransaction`, `deleteTransaction`, `addMember`, `updateMember`, `deleteMember`, `addCategory`
+  - Tulis (admin + lock + hapus cache): `addTransaction`, `updateTransaction`, `deleteTransaction`, `addMember`, `updateMember`, `deleteMember`, `addCategory`, `saveCardColors`
   - Lainnya: `verifyPin`, `changeAdminPin` (cek oldPin), `sendResetPinEmail` (OTP via email, jeda 60 dtk), `resetAdminPinWithOtp` (OTP di cache 10 menit, sekali pakai)
 - ID dibuat di frontend (`TX-<ms>`, `MB-<ms>`, `CAT-<ms>`) dan dipakai server lewat `safeId_()` agar cocok dengan tampilan optimistic.
 - `setupSecrets()` (sekali): simpan SPREADSHEET_ID ke Script Properties. `clearCache()`: paksa data terbaru tampil setelah edit manual di Sheets.
@@ -64,6 +64,7 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
 - **Ketentuan password baru**: minimal 8 karakter dengan huruf, angka, dan simbol. Dicek di `Kode.gs` (`validateNewPassword_`, penentu akhir) dan di form (`passwordRules`, `renderPasswordStrength`); ubah keduanya bersamaan. Bar: Lemah merah dan Sedang kuning ditolak, Kuat hijau dan Sangat Kuat (≥12 karakter) hijau tua diterima.
 - **Ikon anggota di Beranda** (`renderMemberIcons`; inisial dari kolom Inisial sheet `Orang`, cadangan `MEMBER_INITIALS`): kartu "Ringkasan Status Pembayaran (sampai bulan terpilih)" berisi satu baris anggota aktif menurut urutan data dan pil Anggota Lunas/Menunggak di bawahnya, yang bisa diklik untuk menyaring (`setMemberFilter`); lunas hijau bercentang, menunggak abu-abu. Keterangan ikon (`showMemberTip`) muncul saat kursor mengarah, disentuh/diklik, atau fokus keyboard: menunggak = nama + tunggakan (bulannya sudah tampil di judul kartu), lunas = nama saja. Popup daftar nama (`showMemberDetailListModal`, `modalMemberListDetail`) sudah tidak dipanggil.
 - **Grafik Saldo Bersih** (`renderBalanceChart`, halaman Grafik Keuangan): saldo harian dari seluruh transaksi, rentang 1/3/6 bulan, 1 tahun, Maks; tidak mengikuti filter tahun di header. Hanya digambar saat halamannya terbuka (`navigateTo` memanggilnya lagi).
+- **Warna kartu** (Pengaturan → kartu Warna Kartu membuka popup `modalCardColor`, hanya admin; `CARD_COLORS`, `CARD_THEMES`, `applyCardColors`): warna empat kartu saldo dan aksen ringkasan, disimpan admin di baris `CARD_COLORS` sheet Pengaturan dan berlaku untuk semua pengunjung.
 - **Mode gelap**: pilihan Terang/Gelap di kaki menu samping (`setTheme`, localStorage `kaslabstn_theme`). Warna `slate` dan warna pucat dipetakan ke variabel CSS lewat `tailwind.config`; nilai gelapnya ada di blok `@media screen` pada `html.dark`, jadi hasil cetak selalu terang. Warna yang ditulis di JS (grafik, transaksi terbaru) memakai `isDarkTheme()`.
 - **Tabel di HP**: tabel `.m-cards` tampil sebagai kartu di layar ≤640px; label tiap baris berasal dari atribut `data-label` pada `<td>`.
 - **Mobile**: header kartu satu baris (judul kiri, tombol kanan); filter `.filter-bar` = grid 2 kolom di HP (`sm:` kembali ke flex). Input/select form di HP 16px (cegah zoom iOS), kecuali filter halaman 13px (iPhone dicegah zoom lewat `maximum-scale` di `<head>`); target sentuh ≥44px.
