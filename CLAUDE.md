@@ -64,7 +64,7 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
 - **Ketentuan password baru**: minimal 8 karakter dengan huruf, angka, dan simbol. Dicek di `Kode.gs` (`validateNewPassword_`, penentu akhir) dan di form (`passwordRules`, `renderPasswordStrength`); ubah keduanya bersamaan. Bar: Lemah merah dan Sedang kuning ditolak, Kuat hijau dan Sangat Kuat (≥12 karakter) hijau tua diterima.
 - **Mode gelap**: pilihan Terang/Gelap di kaki menu samping (`setTheme`, localStorage `kaslabstn_theme`). Warna `slate` dan warna pucat dipetakan ke variabel CSS lewat `tailwind.config`; nilai gelapnya ada di blok `@media screen` pada `html.dark`, jadi hasil cetak selalu terang. Warna yang ditulis di JS (grafik, transaksi terbaru) memakai `isDarkTheme()`.
 - **Tabel di HP**: tabel `.m-cards` tampil sebagai kartu di layar ≤640px; label tiap baris berasal dari atribut `data-label` pada `<td>`.
-- **Mobile**: header kartu satu baris (judul kiri, tombol kanan); filter `.filter-bar` = grid 2 kolom di HP (`sm:` kembali ke flex). Input/select di HP 16px (cegah zoom iOS), target sentuh ≥44px.
+- **Mobile**: header kartu satu baris (judul kiri, tombol kanan); filter `.filter-bar` = grid 2 kolom di HP (`sm:` kembali ke flex). Input/select form di HP 16px (cegah zoom iOS), kecuali filter halaman 13px (iPhone dicegah zoom lewat `maximum-scale` di `<head>`); target sentuh ≥44px.
 - Efek hover tombol dibungkus `@media (hover: hover)` agar tidak "tersangkut" di HP.
 - Cetak PDF: kelas `body.print-mode-*` + `.no-print`. Pastikan perubahan tampilan tidak merusak hasil cetak.
 

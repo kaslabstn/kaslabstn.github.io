@@ -28,6 +28,10 @@
           blue: palette('blue', { 50: '239 246 255', 100: '219 234 254', 200: '191 219 254', 300: '147 197 253' }),
           indigo: palette('indigo', { 50: '238 242 255', 100: '224 231 255', 200: '199 210 254', 300: '165 180 252' })
         } } } };
+        // iPhone/iPad memperbesar halaman saat menyentuh pilihan di bawah 16px; pinch-zoom tetap bisa
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+          document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover');
+        }
         // Pasang tema sebelum halaman digambar agar tidak berkedip putih
         try {
           if (localStorage.getItem('kaslabstn_theme') === 'dark') document.documentElement.classList.add('dark');
@@ -394,6 +398,8 @@
       /* iOS memperbesar input di bawah 16px; paksa 16px agar tidak zoom */
       @media (max-width: 640px) {
         input, select, textarea { font-size: 16px !important; }
+        /* Filter halaman lebih kecil; iPhone dicegah zoom lewat viewport di <head> */
+        .filter-bar select, #statusMonthFilter, #yearFilterMobile { font-size: 13px !important; }
       }
       .print-btn { -webkit-tap-highlight-color: transparent; }
       @keyframes spin { to { transform: rotate(360deg); } }
