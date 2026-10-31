@@ -56,7 +56,7 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
 - **Instant UX**:
   - Data terakhir disimpan di localStorage (`kaslabstn_data_v1`) → tampil seketika saat dibuka, lalu `fetchData({silent:true})`.
   - Simpan/edit/hapus: ubah `appState` dulu → `syncWrite(action, args)` mengirim di latar belakang secara berurutan (`writeQueue`), menampilkan penanda "Menyimpan perubahan…", lalu refresh senyap. Jika gagal → popup Gagal + ambil ulang data server.
-  - `initAppView()` mempertahankan halaman aktif (`currentView`/`currentTitle`) dan posisi scroll; hanya pemuatan pertama ke Dashboard (`appInitialized`).
+  - `initAppView()` mempertahankan halaman aktif (`currentView`/`currentTitle`) dan posisi scroll; pemuatan pertama membuka halaman terakhir di tab itu (`sessionStorage`, kunci `kaslabstn_last_view`), atau Beranda jika belum ada.
 - **Popup**: `showCustomToast(pesan, jenis, callback)` — jenis: `'success'` (hijau, tutup otomatis 1,2 dtk) / `'notice'` (Informasi, hijau ⓘ) / `'warning'` (kuning) / `'error'` (merah). `true` = success, `false` = error. Konfirmasi hapus (`showCustomConfirm`) berwarna merah.
 - **Tambah transaksi**: tombol `.add-btn` di header Pemasukan & Pengeluaran (terlihat semua orang; non-admin dapat popup Peringatan). `openModalTx('INCOME'|'EXPENSE')` + `setTxTypeOptions()` membatasi Jenis Tipe. Fitur "Edit Transaksi per Orang" sudah dihapus.
 - **Istilah UI**: pakai "Anggota" (bukan "Orang"), "Masuk" (bukan "Login"), "Beranda" (bukan "Dashboard"), "Tren" (bukan "Trend"). Nilai data (`Pemasukan Kas`, `AKTIF`, `YYYY-MM`, ` s/d `) jangan diubah; ubah tampilannya saja lewat `formatDateId`, `formatMonthId`, `incomeMonthLabel`.
