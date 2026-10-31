@@ -1343,7 +1343,7 @@
 
     <!-- MODAL POPUP: TAMBAH / EDIT ORANG -->
     <div id="modalMember" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-      <div class="bg-white rounded-[20px] max-w-sm w-full p-6 shadow-2xl border border-slate-100 relative space-y-4">
+      <div class="bg-white rounded-[20px] max-w-sm w-full p-6 shadow-2xl border border-slate-100 relative space-y-4 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <h3 id="modalMemberTitle" class="font-black text-slate-800 text-base">Kelola Anggota</h3>
           <button onclick="closeModal('modalMember')" class="text-slate-400 hover:text-slate-600 p-1">
@@ -1356,7 +1356,13 @@
 
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Nama Anggota</label>
-            <input type="text" id="memberName" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold" />
+            <input type="text" id="memberName" required oninput="suggestMemberInitials()" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold" />
+          </div>
+
+          <div>
+            <label for="memberInitialsInput" class="block text-xs font-bold text-slate-700 mb-1">Inisial</label>
+            <input type="text" id="memberInitialsInput" required maxlength="3" pattern="[A-Za-z]{1,3}" title="Isi 1 sampai 3 huruf" placeholder="misal: RG" autocomplete="off" oninput="onMemberInitialsInput(this)" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none font-bold uppercase" />
+            <p class="text-[11px] font-semibold text-slate-500 mt-1">1 sampai 3 huruf, tampil pada ikon anggota di Beranda.</p>
           </div>
 
           <div>
@@ -2780,14 +2786,33 @@
         'M. Ihwan Pansori': 'IP', 'M. Khairil Anshor': 'KA', 'Eko Haryanto': 'EH'
       };
 
-      function memberInitials(name) {
+      function initialsFromName(name) {
         var key = String(name).trim();
         if (MEMBER_INITIALS[key]) return MEMBER_INITIALS[key];
         var words = key.replace(/^M\.\s*/, '').split(/\s+/);
-        return (words.slice(0, 2).map(function(w) { return w.charAt(0); }).join('')).toUpperCase().replace(/[^A-Z0-9]/g, '') || '?';
+        return (words.slice(0, 2).map(function(w) { return w.charAt(0); }).join('')).toUpperCase().replace(/[^A-Z]/g, '');
       }
 
-      function memberIconHtml(name, lit, kind) {
+      // Inisial dari sheet Orang diutamakan; data lama tanpa inisial memakai daftar di atas
+      function memberInitials(m) {
+        return m.initials || initialsFromName(m.name) || '?';
+      }
+
+      var memberInitialsEdited = false;
+
+      function onMemberInitialsInput(input) {
+        input.value = input.value.toUpperCase().replace(/[^A-Z]/g, '');
+        memberInitialsEdited = true;
+      }
+
+      // Saat menambah anggota, isi inisial otomatis dari nama selama belum diketik sendiri
+      function suggestMemberInitials() {
+        if (memberInitialsEdited || document.getElementById('memberId').value) return;
+        document.getElementById('memberInitialsInput').value = initialsFromName(document.getElementById('memberName').value).substring(0, 3);
+      }
+
+      function memberIconHtml(m, lit, kind) {
+        var name = m.name;
         var statusText = kind === 'PAID' ? (lit ? 'lunas' : 'belum lunas') : (lit ? 'menunggak' : 'tidak menunggak');
         var mark = kind === 'PAID' ? '<path d="m30.6 30 2.5 2.5 4.4-5"/>' : '<path d="m31.4 27.4 5.2 5.2m0-5.2-5.2 5.2"/>';
         var label = String(name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + ': ' + statusText;
@@ -2795,7 +2820,7 @@
           '<title>' + label + '</title>' +
           '<circle class="member-head" cx="19" cy="13" r="11.5"/>' +
           '<path class="member-line" d="M3.5 38c0-7.8 5.6-13 12.5-13.8"/>' +
-          '<text class="member-initial" x="19" y="16.8" text-anchor="middle">' + memberInitials(name) + '</text>' +
+          '<text class="member-initial" x="19" y="16.8" text-anchor="middle"' + (memberInitials(m).length > 2 ? ' style="font-size:8.5px"' : '') + '>' + memberInitials(m) + '</text>' +
           (lit ? '<circle class="member-badge" cx="34" cy="30" r="8"/><g class="member-mark">' + mark + '</g>' : '') +
           '</svg>';
       }
@@ -2809,7 +2834,7 @@
           if (!box) return;
           box.setAttribute('aria-label', c[2].length + ' dari ' + active.length + ' anggota aktif ' + c[3]);
           box.innerHTML = active.length
-            ? active.map(function(m) { return memberIconHtml(m.name, c[2].indexOf(m.name) !== -1, c[1]); }).join('')
+            ? active.map(function(m) { return memberIconHtml(m, c[2].indexOf(m.name) !== -1, c[1]); }).join('')
             : '<p class="text-xs font-semibold text-slate-400">Belum ada anggota aktif.</p>';
         });
       }
@@ -3822,6 +3847,8 @@
       function openModalMember() {
         document.getElementById('memberId').value = '';
         document.getElementById('memberName').value = '';
+        document.getElementById('memberInitialsInput').value = '';
+        memberInitialsEdited = false;
         document.getElementById('memberFeeKas').value = '30000';
         document.getElementById('memberFeeWifi').value = '30000';
         document.getElementById('memberJoinedMonth').value = new Date().toISOString().substring(0, 7);
@@ -3853,6 +3880,7 @@
           id: id || ('MB-' + new Date().getTime()),
           oldName: oldName,
           name: newName,
+          initials: document.getElementById('memberInitialsInput').value.toUpperCase(),
           feeKas: Number(document.getElementById('memberFeeKas').value) || 0,
           feeWifi: Number(document.getElementById('memberFeeWifi').value) || 0,
           joinedMonth: document.getElementById('memberJoinedMonth').value,
@@ -3895,6 +3923,8 @@
         if (!m) return;
         document.getElementById('memberId').value = m.id;
         document.getElementById('memberName').value = m.name;
+        document.getElementById('memberInitialsInput').value = memberInitials(m) === '?' ? '' : memberInitials(m);
+        memberInitialsEdited = true;
         document.getElementById('memberFeeKas').value = m.feeKas;
         document.getElementById('memberFeeWifi').value = m.feeWifi;
         document.getElementById('memberJoinedMonth').value = m.joinedMonth;

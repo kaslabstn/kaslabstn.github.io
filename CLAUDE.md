@@ -48,7 +48,7 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
   - Lainnya: `verifyPin`, `changeAdminPin` (cek oldPin), `sendResetPinEmail` (OTP via email, jeda 60 dtk), `resetAdminPinWithOtp` (OTP di cache 10 menit, sekali pakai)
 - ID dibuat di frontend (`TX-<ms>`, `MB-<ms>`, `CAT-<ms>`) dan dipakai server lewat `safeId_()` agar cocok dengan tampilan optimistic.
 - `setupSecrets()` (sekali): simpan SPREADSHEET_ID ke Script Properties. `clearCache()`: paksa data terbaru tampil setelah edit manual di Sheets.
-- Sheet: `Transaksi` (ID, Tanggal, Jenis Tipe, Kategori, Nama Orang, Bulan Dibayar, Jumlah, Keterangan), `Orang` (ID, Nama, Kas, WiFi, Masuk YYYY-MM, Status AKTIF/BERHENTI, Keluar), `Kategori` (ID, Jenis, Nama), `Pengaturan` (Kunci, Nilai).
+- Sheet: `Transaksi` (ID, Tanggal, Jenis Tipe, Kategori, Nama Orang, Bulan Dibayar, Jumlah, Keterangan), `Orang` (ID, Nama, Kas, WiFi, Masuk YYYY-MM, Status AKTIF/BERHENTI, Keluar, Inisial 1-3 huruf), `Kategori` (ID, Jenis, Nama), `Pengaturan` (Kunci, Nilai).
 
 ## Frontend (index.html) — pola penting
 
@@ -62,7 +62,7 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
 - **Istilah UI**: pakai "Anggota" (bukan "Orang"), "Masuk" (bukan "Login"), "Beranda" (bukan "Dashboard"), "Tren" (bukan "Trend"). Nilai data (`Pemasukan Kas`, `AKTIF`, `YYYY-MM`, ` s/d `) jangan diubah; ubah tampilannya saja lewat `formatDateId`, `formatMonthId`, `incomeMonthLabel`.
 - **PIN = Password**: semua teks yang dilihat pengguna memakai kata "Password". Nama internal tetap memakai "pin" (`sessionPin`, `payload.pin`, `verifyPin`, `checkPin_`, baris sheet `ADMIN_PIN`); jangan diganti tanpa memperbarui backend dan sheet sekaligus. Aturan keamanan di atas berlaku untuk password ini.
 - **Ketentuan password baru**: minimal 8 karakter dengan huruf, angka, dan simbol. Dicek di `Kode.gs` (`validateNewPassword_`, penentu akhir) dan di form (`passwordRules`, `renderPasswordStrength`); ubah keduanya bersamaan. Bar: Lemah merah dan Sedang kuning ditolak, Kuat hijau dan Sangat Kuat (≥12 karakter) hijau tua diterima.
-- **Ikon anggota di Beranda** (`renderMemberIcons`, `MEMBER_INITIALS`): kartu Lunas dan Menunggak menampilkan semua anggota aktif pada bulan terpilih; yang sesuai kartu menyala hijau/merah, sisanya abu-abu padam. Popup daftar nama (`showMemberDetailListModal`, `modalMemberListDetail`) sudah tidak dipanggil.
+- **Ikon anggota di Beranda** (`renderMemberIcons`; inisial dari kolom Inisial sheet `Orang`, cadangan `MEMBER_INITIALS`): kartu Lunas dan Menunggak menampilkan semua anggota aktif pada bulan terpilih; yang sesuai kartu menyala hijau/merah, sisanya abu-abu padam. Popup daftar nama (`showMemberDetailListModal`, `modalMemberListDetail`) sudah tidak dipanggil.
 - **Grafik Saldo Bersih** (`renderBalanceChart`, halaman Grafik Keuangan): saldo harian dari seluruh transaksi, rentang 1/3/6 bulan, 1 tahun, Maks; tidak mengikuti filter tahun di header. Hanya digambar saat halamannya terbuka (`navigateTo` memanggilnya lagi).
 - **Mode gelap**: pilihan Terang/Gelap di kaki menu samping (`setTheme`, localStorage `kaslabstn_theme`). Warna `slate` dan warna pucat dipetakan ke variabel CSS lewat `tailwind.config`; nilai gelapnya ada di blok `@media screen` pada `html.dark`, jadi hasil cetak selalu terang. Warna yang ditulis di JS (grafik, transaksi terbaru) memakai `isDarkTheme()`.
 - **Tabel di HP**: tabel `.m-cards` tampil sebagai kartu di layar ≤640px; label tiap baris berasal dari atribut `data-label` pada `<td>`.
