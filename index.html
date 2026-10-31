@@ -1792,7 +1792,6 @@
             })
             .changeAdminPin({ oldPin: oldPin, newPin: newPin });
         } else {
-          appState.adminPin = newPin;
           showCustomToast('PIN Admin berhasil diperbarui!', true);
           closeModal('modalChangePassword');
         }
@@ -1832,7 +1831,6 @@
               showLoader(false);
               if (res.success) {
                 showCustomToast(res.message, true);
-                appState.adminPin = newPin;
                 closeModal('modalResetPassword');
               } else {
                 showCustomToast(res.message, false);
@@ -1844,7 +1842,6 @@
             })
             .resetAdminPinWithOtp({ otpCode: otpCode, newPin: newPin });
         } else {
-          appState.adminPin = newPin;
           showCustomToast('PIN Admin berhasil direset!', true);
           closeModal('modalResetPassword');
         }
