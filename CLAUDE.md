@@ -1,0 +1,91 @@
+# CLAUDE.md — Kas LabSTN
+
+Catatan proyek untuk Claude Code. Baca ini sebelum mengubah apa pun.
+
+## Tentang proyek & pengguna
+
+- **Kas LabSTN**: dashboard laporan arus kas & WiFi Lab STN (iuran anggota, pemasukan, pengeluaran, status pembayaran, cetak PDF).
+- Situs: **https://kaslabstn.github.io** (repo GitHub `kaslabstn/kaslabstn.github.io`, branch `main`, GitHub Pages dari root).
+- Pemilik/admin: Rabatang. **Bukan programmer** — jelaskan dalam **Bahasa Indonesia**, langkah kecil, dan bahasa sederhana.
+- Komputer: **Windows**, terminal **PowerShell**. Folder proyek: `D:\Dashboard Kas_LabSTN\kas-labstn-frontend`.
+
+## Arsitektur
+
+```
+Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Google Sheets (dikunci, hanya pemilik)
+```
+
+- **Frontend**: satu file `index.html` (HTML + CSS + JS inline, Tailwind Play CDN, font Plus Jakarta Sans). Tidak ada build step.
+- **Backend**: `Kode.gs` di proyek Google Apps Script, deploy sebagai Web App
+  (**Jalankan sebagai: Saya**, **Akses: Siapa saja**).
+- **URL /exec** ada di `index.html` → variabel `GAS_URL`.
+- Spreadsheet sudah **Dibatasi** (hanya pemilik). Situs tetap jalan karena Apps Script berjalan atas nama pemilik.
+
+## File di folder ini
+
+| File | Keterangan |
+|---|---|
+| `index.html` | Seluruh aplikasi frontend |
+| `favicon.svg`, `apple-touch-icon.png` | Ikon (logo dompet) |
+| `README.md`, `PANDUAN-INSTALASI.md` | Dokumentasi untuk pengguna |
+| `.gitignore` | Mengabaikan `*.gs`, `appsscript.json`, screenshot (`cmp-*.png`, `popup-*.png`) |
+| `Kode.gs` | **Salinan lokal backend — sengaja diabaikan Git, JANGAN di-commit** |
+
+## Aturan keamanan (wajib dipertahankan)
+
+1. **PIN admin tidak pernah dikirim ke browser.** `getAppData()` hanya mengembalikan `members`, `categories`, `transactions`.
+2. **PIN dicek di server**: login → `verifyPin`; setiap aksi tulis di `doPost` wajib `payload.pin` yang cocok (`checkPin_`).
+   Batas 5x salah / 10 menit.
+3. PIN disimpan di sheet **Pengaturan**, baris `ADMIN_PIN` (kolom Nilai). Tidak ada PIN cadangan (`'1234'` sudah dihapus — jangan dikembalikan).
+4. Di browser, PIN hanya ada di variabel memori `sessionPin` (hilang saat tab ditutup). **Jangan** simpan PIN ke localStorage.
+5. **Jangan** commit `Kode.gs`, ID spreadsheet, atau email admin ke repo (repo publik).
+
+## Backend (Kode.gs) — ringkas
+
+- `doGet(e)`: `?action=getAppData` → data dashboard (lewat cache `getAppDataCached_`, CacheService dipecah per 90 KB, TTL 5 menit).
+- `doPost(e)`: body JSON `{action, args, pin}` (Content-Type `text/plain`), dispatch lewat tabel `ACTIONS`:
+  - Tulis (admin + lock + hapus cache): `addTransaction`, `updateTransaction`, `deleteTransaction`, `addMember`, `updateMember`, `deleteMember`, `addCategory`
+  - Lainnya: `verifyPin`, `changeAdminPin` (cek oldPin), `sendResetPinEmail` (OTP via email, jeda 60 dtk), `resetAdminPinWithOtp` (OTP di cache 10 menit, sekali pakai)
+- ID dibuat di frontend (`TX-<ms>`, `MB-<ms>`, `CAT-<ms>`) dan dipakai server lewat `safeId_()` agar cocok dengan tampilan optimistic.
+- `setupSecrets()` (sekali): simpan SPREADSHEET_ID ke Script Properties. `clearCache()`: paksa data terbaru tampil setelah edit manual di Sheets.
+- Sheet: `Transaksi` (ID, Tanggal, Jenis Tipe, Kategori, Nama Orang, Bulan Dibayar, Jumlah, Keterangan), `Orang` (ID, Nama, Kas, WiFi, Masuk YYYY-MM, Status AKTIF/BERHENTI, Keluar), `Kategori` (ID, Jenis, Nama), `Pengaturan` (Kunci, Nilai).
+
+## Frontend (index.html) — pola penting
+
+- **Penghubung**: `window.google.script.run` adalah *shim* (Proxy) yang meneruskan ke `gasCall(action, args)` via `fetch`. Kode lama yang memanggil `google.script.run.xxx()` tetap jalan.
+- **Instant UX**:
+  - Data terakhir disimpan di localStorage (`kaslabstn_data_v1`) → tampil seketika saat dibuka, lalu `fetchData({silent:true})`.
+  - Simpan/edit/hapus: ubah `appState` dulu → `syncWrite(action, args)` mengirim di latar belakang secara berurutan (`writeQueue`), menampilkan penanda "Menyimpan ke Google Sheets…", lalu refresh senyap. Jika gagal → popup Gagal + ambil ulang data server.
+  - `initAppView()` mempertahankan halaman aktif (`currentView`/`currentTitle`) dan posisi scroll; hanya pemuatan pertama ke Dashboard (`appInitialized`).
+- **Popup**: `showCustomToast(pesan, jenis, callback)` — jenis: `'success'` (hijau, tutup otomatis 1,2 dtk) / `'notice'` (Himbauan, hijau ⓘ) / `'warning'` (kuning) / `'error'` (merah). `true` = success, `false` = error. Konfirmasi hapus (`showCustomConfirm`) berwarna merah.
+- **Tambah transaksi**: tombol `.add-btn` di header Pemasukan & Pengeluaran (terlihat semua orang; non-admin dapat popup Peringatan). `openModalTx('INCOME'|'EXPENSE')` + `setTxTypeOptions()` membatasi Jenis Tipe. Fitur "Edit Transaksi per Orang" sudah dihapus.
+- **Mobile**: header kartu satu baris (judul kiri, tombol kanan); filter `.filter-bar` = grid 2 kolom di HP (`sm:` kembali ke flex). Input/select di HP 16px (cegah zoom iOS), target sentuh ≥44px.
+- Efek hover tombol dibungkus `@media (hover: hover)` agar tidak "tersangkut" di HP.
+- Cetak PDF: kelas `body.print-mode-*` + `.no-print`. Pastikan perubahan tampilan tidak merusak hasil cetak.
+
+## Cara deploy
+
+**Frontend** (dari folder proyek di PowerShell):
+```
+cd "D:\Dashboard Kas_LabSTN\kas-labstn-frontend"
+git add .
+git commit -m "keterangan perubahan"
+git push
+```
+Tunggu 1–2 menit, buka situs, tekan Ctrl+Shift+R.
+
+**Backend**: tempel `Kode.gs` ke editor Apps Script → Simpan → **Terapkan → Kelola deployment → Edit → Versi baru → Terapkan**.
+**Jangan** pakai "New deployment" (URL /exec berubah dan situs putus).
+Jika frontend dan backend sama-sama berubah, pasang backend lebih dulu.
+
+## Saat mengubah kode
+
+- Ubah seminimal mungkin; desain & teks UI dalam Bahasa Indonesia, gaya yang ada (rounded, Tailwind, ikon SVG inline — bukan emoji).
+- Setelah mengedit `index.html`: cek sintaks script, uji tampilan HP (≈390px) dan desktop, uji alur admin (login, tambah, edit, hapus) dan hasil cetak.
+- Jangan menyalakan kembali pemindai banner Google Apps Script (MutationObserver/setInterval 150 ms) — sudah dihapus karena membebani browser.
+
+## Ide yang ditunda
+
+- **Pengingat otomatis untuk anggota yang menunggak** (Email/WhatsApp): ditunda — pemilik khawatir mengganggu anggota.
+  Jika dilanjutkan: mulai dari tombol WhatsApp manual di dashboard, nada informatif, maksimal sebulan sekali.
+  Perlu kolom kontak di sheet `Orang` dan logika status menunggak dipindah ke `Kode.gs`.
