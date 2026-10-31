@@ -420,6 +420,18 @@
       .theme-switch button { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #5f5f5f; transition: background-color .2s ease, color .2s ease; }
       .theme-switch button[aria-pressed="true"] { background: #111111; color: #ffffff; }
       @media (max-width: 767px) { .theme-switch button { min-height: 44px; } }
+      /* Ikon anggota berinisial di Beranda: menyala sesuai status, selain itu abu-abu dan padam */
+      .member-icons { display: flex; flex-wrap: wrap; gap: 6px 4px; }
+      .member-icon { --c: #9ca3af; width: 34px; height: auto; flex: none; opacity: .45; overflow: visible; transition: transform .2s ease; }
+      #statPaidMembers .member-icon.is-lit { --c: #16A34A; opacity: 1; }
+      #statUnpaidMembers .member-icon.is-lit { --c: #E60023; opacity: 1; }
+      .member-head { fill: color-mix(in srgb, var(--c) 10%, transparent); stroke: var(--c); stroke-width: 2.6; }
+      .member-line { fill: none; stroke: var(--c); stroke-width: 2.6; stroke-linecap: round; }
+      .member-initial { font-size: 10.5px; font-weight: 800; letter-spacing: -.02em; fill: #111111; }
+      .member-badge { fill: var(--c); stroke: #ffffff; stroke-width: 2; }
+      .member-mark { fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      @media (hover: hover) { .member-icon.is-lit:hover { transform: translateY(-2px); } }
+      @media (min-width: 1280px) { .member-icon { width: 38px; } }
       /* Pilihan rentang waktu grafik Saldo Bersih */
       .range-switch { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #efefef; }
       .range-switch button { flex: 1 1 0; min-width: 44px; min-height: 32px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #5f5f5f; white-space: nowrap; transition: background-color .2s ease, color .2s ease; }
@@ -429,7 +441,7 @@
       @media screen and (min-width: 768px) {
         h3 > svg.ico { width: 1.35em !important; height: 1.35em !important; }
         main .rounded-\[12px\].text-lg > svg.ico { width: 1.35em !important; height: 1.35em !important; }
-        main .rounded-\[14px\].text-xl > svg.ico { width: 1.35em !important; height: 1.35em !important; }
+        .member-card-ico > svg.ico { width: 1.35em !important; height: 1.35em !important; }
         .filter-bar > span > svg.ico { width: 16px !important; height: 16px !important; }
         header svg.ico.text-xs, .status-month-wrap > svg.ico { width: 16px !important; height: 16px !important; }
       }
@@ -478,6 +490,12 @@
         html.dark #view-charts svg rect[stroke="#e2e8f0"] { stroke: #444444; }
         html.dark #view-charts svg rect[fill="#ffffff"], html.dark #view-charts svg circle[fill="#ffffff"] { fill: #1e1e1e; }
         html.dark #view-charts svg text[fill="#334155"] { fill: #dcdcdc; }
+        html.dark .member-icon { --c: #8f8f8f; }
+        html.dark #statPaidMembers .member-icon.is-lit { --c: #4ade9d; }
+        html.dark #statUnpaidMembers .member-icon.is-lit { --c: #ff5a6e; }
+        html.dark .member-initial { fill: #f0f0f0; }
+        html.dark .member-badge { stroke: #1e1e1e; }
+        html.dark .member-mark { stroke: #111111; }
         html.dark .range-switch { background: #2b2b2b; }
         html.dark .range-switch button { color: #b5b5b5; }
         html.dark .range-switch button[aria-pressed="true"] { background: #ffffff; color: #111111; }
@@ -767,35 +785,31 @@
           </div>
 
           <!-- HIGHLIGHT STATS METRICS SUMMARY -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div onclick="showMemberDetailListModal('PAID')" class="bg-white rounded-[20px] p-5 border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-between group">
-              <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-[14px] bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+          <div class="grid grid-cols-1 gap-4">
+            <div class="bg-white rounded-[20px] p-5 border border-slate-200/60 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
+              <div class="flex items-center space-x-3 shrink-0 md:w-52">
+                <div class="member-card-ico shrink-0 text-emerald-600 flex items-center justify-center text-base">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="m16 11 2 2 4-4"/></svg>
                 </div>
                 <div>
                   <p class="text-xs font-bold text-slate-500 mb-0.5">Anggota Lunas</p>
-                  <h4 id="statPaidMembersCount" class="text-lg font-black text-slate-800 leading-none">0 Orang</h4><p class="statMonthLabel text-[11px] font-semibold text-slate-400 mt-1"></p>
+                  <p class="statMonthLabel text-[11px] font-semibold text-slate-400"></p>
                 </div>
               </div>
-              <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
-                 <svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-              </div>
+              <div id="statPaidMembers" class="member-icons min-w-0 flex-1" role="group"></div>
             </div>
 
-            <div onclick="showMemberDetailListModal('UNPAID')" class="bg-white rounded-[20px] p-5 border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-between group">
-              <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-[14px] bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
+            <div class="bg-white rounded-[20px] p-5 border border-slate-200/60 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
+              <div class="flex items-center space-x-3 shrink-0 md:w-52">
+                <div class="member-card-ico shrink-0 text-rose-600 flex items-center justify-center text-base">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 11h6"/></svg>
                 </div>
                 <div>
                   <p class="text-xs font-bold text-slate-500 mb-0.5">Anggota Menunggak</p>
-                  <h4 id="statUnpaidMembersCount" class="text-lg font-black text-slate-800 leading-none">0 Orang</h4><p class="statMonthLabel text-[11px] font-semibold text-slate-400 mt-1"></p>
+                  <p class="statMonthLabel text-[11px] font-semibold text-slate-400"></p>
                 </div>
               </div>
-              <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-rose-50 group-hover:text-rose-600 transition-colors">
-                 <svg class="ico w-[1em] h-[1em] shrink-0 text-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-              </div>
+              <div id="statUnpaidMembers" class="member-icons min-w-0 flex-1" role="group"></div>
             </div>
           </div>
 
@@ -2632,9 +2646,7 @@
           });
         });
 
-        var staticLists = currentStatusLists();
-        document.getElementById('statPaidMembersCount').textContent = staticLists.paid.length + ' Orang';
-        document.getElementById('statUnpaidMembersCount').textContent = staticLists.unpaid.length + ' Orang';
+        renderMemberIcons();
         document.querySelectorAll('.statMonthLabel').forEach(function(el) { el.textContent = 'Sampai ' + monthLabel(indexToYm(getStatusMonthIndex())); });
 
         renderMemberStatusTable(memberStats);
@@ -2758,6 +2770,48 @@
           if (st.shortage === 0) paid.push(m.name); else unpaid.push(m.name);
         });
         return { paid: paid, unpaid: unpaid };
+      }
+
+      // Inisial anggota di Beranda. Anggota baru tanpa daftar di sini memakai huruf awal dua kata pertama.
+      var MEMBER_INITIALS = {
+        'Firman Muttaqin': 'FM', 'Heriyanto': 'HR', 'Irpan Hermawan': 'IH', 'Rabatang': 'RG', 'Pandu Kuncoroningrat': 'PK',
+        'Wardian Sardi': 'WS', 'Clinton Siregar': 'CS', 'Abdul Latif': 'AL', 'Fandy Fahrizal': 'FF', 'Hermi Jumiati': 'HJ',
+        'Juli Yanto': 'JY', 'Refi Abidzar Aulia': 'RA', 'Rifatder Pakenden': 'RP', 'Sappe Supiani': 'SS', 'Wiwi Rahayu': 'WR',
+        'M. Ihwan Pansori': 'IP', 'M. Khairil Anshor': 'KA', 'Eko Haryanto': 'EH'
+      };
+
+      function memberInitials(name) {
+        var key = String(name).trim();
+        if (MEMBER_INITIALS[key]) return MEMBER_INITIALS[key];
+        var words = key.replace(/^M\.\s*/, '').split(/\s+/);
+        return (words.slice(0, 2).map(function(w) { return w.charAt(0); }).join('')).toUpperCase().replace(/[^A-Z0-9]/g, '') || '?';
+      }
+
+      function memberIconHtml(name, lit, kind) {
+        var statusText = kind === 'PAID' ? (lit ? 'lunas' : 'belum lunas') : (lit ? 'menunggak' : 'tidak menunggak');
+        var mark = kind === 'PAID' ? '<path d="m30.6 30 2.5 2.5 4.4-5"/>' : '<path d="m31.4 27.4 5.2 5.2m0-5.2-5.2 5.2"/>';
+        var label = String(name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + ': ' + statusText;
+        return '<svg class="member-icon' + (lit ? ' is-lit' : '') + '" viewBox="0 0 44 40" role="img" aria-label="' + label + '">' +
+          '<title>' + label + '</title>' +
+          '<circle class="member-head" cx="19" cy="13" r="11.5"/>' +
+          '<path class="member-line" d="M3.5 38c0-7.8 5.6-13 12.5-13.8"/>' +
+          '<text class="member-initial" x="19" y="16.8" text-anchor="middle">' + memberInitials(name) + '</text>' +
+          (lit ? '<circle class="member-badge" cx="34" cy="30" r="8"/><g class="member-mark">' + mark + '</g>' : '') +
+          '</svg>';
+      }
+
+      // Kedua kartu menampilkan semua anggota aktif pada bulan terpilih; hanya yang sesuai kartu yang menyala
+      function renderMemberIcons() {
+        var lists = currentStatusLists();
+        var active = appState.members.filter(function(m) { return lists.paid.indexOf(m.name) !== -1 || lists.unpaid.indexOf(m.name) !== -1; });
+        [['statPaidMembers', 'PAID', lists.paid, 'lunas'], ['statUnpaidMembers', 'UNPAID', lists.unpaid, 'menunggak']].forEach(function(c) {
+          var box = document.getElementById(c[0]);
+          if (!box) return;
+          box.setAttribute('aria-label', c[2].length + ' dari ' + active.length + ' anggota aktif ' + c[3]);
+          box.innerHTML = active.length
+            ? active.map(function(m) { return memberIconHtml(m.name, c[2].indexOf(m.name) !== -1, c[1]); }).join('')
+            : '<p class="text-xs font-semibold text-slate-400">Belum ada anggota aktif.</p>';
+        });
       }
 
       function statusCellHtml(m, S) {
