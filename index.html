@@ -425,6 +425,14 @@
       .range-switch button { flex: 1 1 0; min-width: 44px; min-height: 32px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #5f5f5f; white-space: nowrap; transition: background-color .2s ease, color .2s ease; }
       .range-switch button[aria-pressed="true"] { background: #111111; color: #ffffff; }
       @media (max-width: 767px) { .range-switch button { min-height: 44px; padding: 0 4px; } }
+      /* Tampilan desktop: ikon di samping keterangan dibuat seimbang dengan tulisannya. Hasil cetak tidak berubah. */
+      @media screen and (min-width: 768px) {
+        h3 > svg.ico { width: 1.35em !important; height: 1.35em !important; }
+        main .rounded-\[12px\].text-lg > svg.ico { width: 1.35em !important; height: 1.35em !important; }
+        main .rounded-\[14px\].text-xl > svg.ico { width: 1.35em !important; height: 1.35em !important; }
+        .filter-bar > span > svg.ico { width: 16px !important; height: 16px !important; }
+        header svg.ico.text-xs, .status-month-wrap > svg.ico { width: 16px !important; height: 16px !important; }
+      }
       /* Mode gelap hanya untuk layar; hasil cetak selalu terang */
       @media screen {
         html.dark {
