@@ -422,16 +422,24 @@
       @media (max-width: 767px) { .theme-switch button { min-height: 44px; } }
       /* Ikon anggota berinisial di Beranda: menyala sesuai status, selain itu abu-abu dan padam */
       .member-icons { display: flex; flex-wrap: wrap; gap: 6px 4px; }
-      .member-icon { --c: #9ca3af; width: 34px; height: auto; flex: none; opacity: .45; overflow: visible; transition: transform .2s ease; }
-      #statPaidMembers .member-icon.is-lit { --c: #16A34A; opacity: 1; }
-      #statUnpaidMembers .member-icon.is-lit { --c: #E60023; opacity: 1; }
+      .member-icon { --c: #9ca3af; width: 34px; height: auto; flex: none; opacity: .6; overflow: visible; cursor: pointer; outline: none; transition: transform .2s ease; -webkit-tap-highlight-color: transparent; }
+      .member-icon:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; border-radius: 8px; }
+      .member-icon.is-lit { --c: #16A34A; opacity: 1; }
       .member-head { fill: color-mix(in srgb, var(--c) 10%, transparent); stroke: var(--c); stroke-width: 2.6; }
       .member-line { fill: none; stroke: var(--c); stroke-width: 2.6; stroke-linecap: round; }
       .member-initial { font-size: 10.5px; font-weight: 800; letter-spacing: -.02em; fill: #111111; }
       .member-badge { fill: var(--c); stroke: #ffffff; stroke-width: 2; }
       .member-mark { fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-      @media (hover: hover) { .member-icon.is-lit:hover { transform: translateY(-2px); } }
-      @media (min-width: 1280px) { .member-icon { width: 38px; } }
+      @media (hover: hover) { .member-icon:hover { transform: translateY(-2px); opacity: 1; } }
+      @media (min-width: 768px) { .member-icon { width: 36px; } }
+      @media (min-width: 1280px) { .member-icons { gap: 8px 6px; } .member-icon { width: 46px; } }
+      /* Pil saring anggota: terisi penuh saat aktif */
+      .member-pill { cursor: pointer; transition: background-color .2s ease, color .2s ease, transform .2s ease; -webkit-tap-highlight-color: transparent; }
+      .member-pill:active { transform: scale(.97); }
+      .member-pill.is-paid[aria-pressed="true"] { background: #16A34A; color: #ffffff; }
+      .member-pill.is-unpaid[aria-pressed="true"] { background: #6b7280; color: #ffffff; }
+      @media (hover: hover) { .member-pill[aria-pressed="false"]:hover { filter: brightness(.96); } }
+      @media (max-width: 767px) { .member-pill { min-height: 44px; } }
       /* Pilihan rentang waktu grafik Saldo Bersih */
       .range-switch { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #efefef; }
       .range-switch button { flex: 1 1 0; min-width: 44px; min-height: 32px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #5f5f5f; white-space: nowrap; transition: background-color .2s ease, color .2s ease; }
@@ -441,7 +449,6 @@
       @media screen and (min-width: 768px) {
         h3 > svg.ico { width: 1.35em !important; height: 1.35em !important; }
         main .rounded-\[12px\].text-lg > svg.ico { width: 1.35em !important; height: 1.35em !important; }
-        .member-card-ico > svg.ico { width: 1.35em !important; height: 1.35em !important; }
         .filter-bar > span > svg.ico { width: 16px !important; height: 16px !important; }
         header svg.ico.text-xs, .status-month-wrap > svg.ico { width: 16px !important; height: 16px !important; }
       }
@@ -491,11 +498,13 @@
         html.dark #view-charts svg rect[fill="#ffffff"], html.dark #view-charts svg circle[fill="#ffffff"] { fill: #1e1e1e; }
         html.dark #view-charts svg text[fill="#334155"] { fill: #dcdcdc; }
         html.dark .member-icon { --c: #8f8f8f; }
-        html.dark #statPaidMembers .member-icon.is-lit { --c: #4ade9d; }
-        html.dark #statUnpaidMembers .member-icon.is-lit { --c: #ff5a6e; }
+        html.dark .member-icon.is-lit { --c: #4ade9d; }
         html.dark .member-initial { fill: #f0f0f0; }
         html.dark .member-badge { stroke: #1e1e1e; }
         html.dark .member-mark { stroke: #111111; }
+        html.dark .member-pill.is-paid[aria-pressed="true"] { background: #4ade9d; color: #111111; }
+        html.dark .member-pill.is-unpaid[aria-pressed="true"] { background: #dcdcdc; color: #111111; }
+        html.dark .member-pill[aria-pressed="false"]:hover { filter: brightness(1.15); }
         html.dark .range-switch { background: #2b2b2b; }
         html.dark .range-switch button { color: #b5b5b5; }
         html.dark .range-switch button[aria-pressed="true"] { background: #ffffff; color: #111111; }
@@ -720,12 +729,12 @@
           <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-6">
             
             <div onclick="showBreakdownModal('OPENING')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-              <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
+              <div class="absolute top-0 right-0 w-24 h-24 bg-slate-100 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
               <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="w-10 h-10 rounded-[12px] bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
+                <div class="w-10 h-10 rounded-[12px] bg-slate-200 text-slate-600 flex items-center justify-center text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 10c0-3-3-5-7-5-4 0-7 2-7 5 0 1 .3 2 1 3v3h3v-1h4v1h3v-3a5 5 0 0 0 0-3"/><path d="M16 10h.01"/><path d="M3 11h2"/></svg>
                 </div>
-                <div class="bg-emerald-50 text-emerald-600 border border-emerald-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="bg-slate-100 text-slate-600 border border-slate-200 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
               </div>
@@ -736,12 +745,12 @@
             </div>
 
             <div onclick="showBreakdownModal('INCOME')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-              <div class="absolute top-0 right-0 w-24 h-24 bg-teal-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
+              <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
               <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="w-10 h-10 rounded-[12px] bg-teal-100 text-teal-600 flex items-center justify-center text-lg">
+                <div class="w-10 h-10 rounded-[12px] bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
                 </div>
-                <div class="bg-teal-50 text-teal-600 border border-teal-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="bg-emerald-50 text-emerald-600 border border-emerald-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
               </div>
@@ -752,12 +761,12 @@
             </div>
             
             <div onclick="showBreakdownModal('EXPENSE')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-               <div class="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
+               <div class="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
               <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="w-10 h-10 rounded-[12px] bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
+                <div class="w-10 h-10 rounded-[12px] bg-rose-100 text-rose-600 flex items-center justify-center text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>
                 </div>
-                <div class="bg-amber-50 text-amber-600 border border-amber-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="bg-rose-50 text-rose-600 border border-rose-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
               </div>
@@ -786,30 +795,31 @@
 
           <!-- HIGHLIGHT STATS METRICS SUMMARY -->
           <div class="grid grid-cols-1 gap-4">
-            <div class="bg-white rounded-[20px] p-5 border border-slate-200/60 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
-              <div class="flex items-center space-x-3 shrink-0 md:w-52">
-                <div class="member-card-ico shrink-0 text-emerald-600 flex items-center justify-center text-base">
-                  <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="m16 11 2 2 4-4"/></svg>
-                </div>
-                <div>
-                  <p class="text-xs font-bold text-slate-500 mb-0.5">Anggota Lunas</p>
-                  <p class="statMonthLabel text-[11px] font-semibold text-slate-400"></p>
-                </div>
+            <div class="relative overflow-hidden group bg-white rounded-[24px] p-5 sm:p-6 border border-slate-200/60 shadow-sm">
+              <!-- Hiasan sudut berlapis, senada dengan kartu saldo -->
+              <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+                <div class="absolute top-0 right-0 w-36 h-36 sm:w-56 sm:h-56 bg-emerald-50 rounded-bl-[224px] transition-transform duration-300 group-hover:scale-105 origin-top-right"></div>
+                <div class="absolute top-0 right-0 w-24 h-24 sm:w-36 sm:h-36 bg-sky-100 rounded-bl-[144px] transition-transform duration-300 group-hover:scale-110 origin-top-right"></div>
+                <div class="absolute top-0 right-0 w-12 h-12 sm:w-[72px] sm:h-[72px] bg-amber-200 rounded-bl-[72px] transition-transform duration-300 group-hover:scale-110 origin-top-right"></div>
+                <div class="hidden xl:block absolute top-4 right-[240px] w-3.5 h-3.5 rounded-full bg-rose-200"></div>
+                <div class="hidden xl:block absolute top-[158px] right-[92px] w-2.5 h-2.5 rounded-full bg-blue-200"></div>
               </div>
-              <div id="statPaidMembers" class="member-icons min-w-0 flex-1" role="group"></div>
-            </div>
-
-            <div class="bg-white rounded-[20px] p-5 border border-slate-200/60 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
-              <div class="flex items-center space-x-3 shrink-0 md:w-52">
-                <div class="member-card-ico shrink-0 text-rose-600 flex items-center justify-center text-base">
-                  <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 11h6"/></svg>
-                </div>
-                <div>
-                  <p class="text-xs font-bold text-slate-500 mb-0.5">Anggota Menunggak</p>
-                  <p class="statMonthLabel text-[11px] font-semibold text-slate-400"></p>
-                </div>
+              <h3 class="relative font-black text-slate-800 text-base sm:text-lg flex flex-wrap items-center gap-x-2 leading-snug mb-4">
+                <svg class="ico w-[1em] h-[1em] shrink-0 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6h10M11 12h10M11 18h10"/><path d="m3 6 1.5 1.5L7 5"/><path d="m3 12 1.5 1.5L7 11"/><path d="M3 18h4"/></svg>
+                <span>Ringkasan Status Pembayaran</span>
+                <span class="statMonthLabel text-xs font-semibold text-slate-400"></span>
+              </h3>
+              <div id="statMembers" class="member-icons relative" role="group"></div>
+              <div class="relative flex flex-wrap items-center gap-2 mt-4">
+                <button type="button" id="memberPillPaid" onclick="setMemberFilter('PAID')" aria-pressed="false" class="member-pill is-paid inline-flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold">
+                  <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="m16 11 2 2 4-4"/></svg>
+                  Anggota Lunas
+                </button>
+                <button type="button" id="memberPillUnpaid" onclick="setMemberFilter('UNPAID')" aria-pressed="false" class="member-pill is-unpaid inline-flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
+                  <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 11h6"/></svg>
+                  Anggota Menunggak
+                </button>
               </div>
-              <div id="statUnpaidMembers" class="member-icons min-w-0 flex-1" role="group"></div>
             </div>
           </div>
 
@@ -2482,9 +2492,9 @@
         renderBalanceChart();
 
         window.financialBreakdown = {
-          OPENING: { kas: openingKas, wifi: openingWifi, total: openingTotal, title: 'Saldo Awal', icon: 'fa-piggy-bank', bgClass: 'bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-200/50' },
-          INCOME: { kas: displayIncomeKas, wifi: displayIncomeWifi, total: displayTotalIncome, title: 'Total Pemasukan', icon: 'fa-money-bill-wave', bgClass: 'bg-gradient-to-br from-teal-400 to-teal-600 shadow-teal-200/50' },
-          EXPENSE: { kas: displayExpenseKas, wifi: displayExpenseWifi, total: displayTotalExpense, title: 'Total Pengeluaran', icon: 'fa-receipt', bgClass: 'bg-gradient-to-br from-amber-400 to-orange-500 shadow-amber-200/50' },
+          OPENING: { kas: openingKas, wifi: openingWifi, total: openingTotal, title: 'Saldo Awal', icon: 'fa-piggy-bank', bgClass: 'bg-gradient-to-br from-gray-400 to-gray-600 shadow-gray-200/50' },
+          INCOME: { kas: displayIncomeKas, wifi: displayIncomeWifi, total: displayTotalIncome, title: 'Total Pemasukan', icon: 'fa-money-bill-wave', bgClass: 'bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-200/50' },
+          EXPENSE: { kas: displayExpenseKas, wifi: displayExpenseWifi, total: displayTotalExpense, title: 'Total Pengeluaran', icon: 'fa-receipt', bgClass: 'bg-gradient-to-br from-rose-400 to-rose-600 shadow-rose-200/50' },
           BALANCE: { kas: displayFinalKas, wifi: displayFinalWifi, total: displayFinalTotal, title: 'Saldo Akhir', icon: 'fa-wallet', bgClass: 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-blue-200/50' }
         };
 
@@ -2653,7 +2663,7 @@
         });
 
         renderMemberIcons();
-        document.querySelectorAll('.statMonthLabel').forEach(function(el) { el.textContent = 'Sampai ' + monthLabel(indexToYm(getStatusMonthIndex())); });
+        document.querySelectorAll('.statMonthLabel').forEach(function(el) { el.textContent = '(sampai ' + monthLabel(indexToYm(getStatusMonthIndex())) + ')'; });
 
         renderMemberStatusTable(memberStats);
         renderEmbeddedTransactionsTable();
@@ -2778,6 +2788,64 @@
         return { paid: paid, unpaid: unpaid };
       }
 
+      // Keterangan ikon anggota: menunggak = nama + tunggakan, lunas = nama saja.
+      // Muncul saat kursor mengarah ke ikon, saat ikon disentuh/diklik, dan saat fokus keyboard.
+      function hideMemberTip() {
+        var tip = document.getElementById('memberTip');
+        if (tip) tip.classList.add('hidden');
+      }
+
+      function showMemberTip(icon) {
+        var tip = document.getElementById('memberTip');
+        if (!tip) {
+          tip = document.createElement('div');
+          tip.id = 'memberTip';
+          tip.setAttribute('role', 'tooltip');
+          tip.className = 'no-print fixed z-[60] hidden pointer-events-none max-w-[260px] bg-white border border-slate-200 rounded-[12px] shadow-lg px-3 py-2';
+          tip.innerHTML = '<div id="memberTipName" class="text-xs font-black text-slate-800"></div><div id="memberTipDebt" class="text-sm font-black text-rose-600 mt-0.5"></div>';
+          document.body.appendChild(tip);
+        }
+        var shortage = Number(icon.dataset.shortage) || 0;
+        var debtEl = document.getElementById('memberTipDebt');
+        document.getElementById('memberTipName').textContent = icon.dataset.name;
+        debtEl.textContent = shortage ? 'Kurang ' + formatRupiah(shortage) : '';
+        debtEl.style.display = shortage ? '' : 'none';
+
+        tip.classList.remove('hidden');
+        var r = icon.getBoundingClientRect();
+        var left = Math.max(8, Math.min(window.innerWidth - tip.offsetWidth - 8, r.left + r.width / 2 - tip.offsetWidth / 2));
+        var top = r.top - tip.offsetHeight - 8;
+        if (top < 8) top = r.bottom + 8;
+        tip.style.left = left + 'px';
+        tip.style.top = top + 'px';
+      }
+
+      function memberIconFrom(node) {
+        return node && node.closest ? node.closest('.member-icon') : null;
+      }
+
+      document.addEventListener('pointerover', function(e) {
+        if (e.pointerType !== 'mouse') return;
+        var icon = memberIconFrom(e.target);
+        if (icon) showMemberTip(icon);
+      });
+      document.addEventListener('pointerout', function(e) {
+        if (e.pointerType === 'mouse' && memberIconFrom(e.target) && memberIconFrom(e.target) !== memberIconFrom(e.relatedTarget)) hideMemberTip();
+      });
+      document.addEventListener('click', function(e) {
+        var icon = memberIconFrom(e.target);
+        if (icon) showMemberTip(icon); else hideMemberTip();
+      });
+      document.addEventListener('focusin', function(e) {
+        var icon = memberIconFrom(e.target);
+        if (icon && icon.matches(':focus-visible')) showMemberTip(icon);
+      });
+      document.addEventListener('focusout', function(e) {
+        if (memberIconFrom(e.target)) hideMemberTip();
+      });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') hideMemberTip(); });
+      window.addEventListener('scroll', hideMemberTip, true);
+
       // Inisial anggota di Beranda. Anggota baru tanpa daftar di sini memakai huruf awal dua kata pertama.
       var MEMBER_INITIALS = {
         'Firman Muttaqin': 'FM', 'Heriyanto': 'HR', 'Irpan Hermawan': 'IH', 'Rabatang': 'RG', 'Pandu Kuncoroningrat': 'PK',
@@ -2811,13 +2879,15 @@
         document.getElementById('memberInitialsInput').value = initialsFromName(document.getElementById('memberName').value).substring(0, 3);
       }
 
-      function memberIconHtml(m, lit, kind) {
+      function memberIconHtml(m, lit) {
         var name = m.name;
-        var statusText = kind === 'PAID' ? (lit ? 'lunas' : 'belum lunas') : (lit ? 'menunggak' : 'tidak menunggak');
-        var mark = kind === 'PAID' ? '<path d="m30.6 30 2.5 2.5 4.4-5"/>' : '<path d="m31.4 27.4 5.2 5.2m0-5.2-5.2 5.2"/>';
-        var label = String(name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + ': ' + statusText;
-        return '<svg class="member-icon' + (lit ? ' is-lit' : '') + '" viewBox="0 0 44 40" role="img" aria-label="' + label + '">' +
-          '<title>' + label + '</title>' +
+        var statusText = lit ? 'lunas' : 'menunggak';
+        var mark = '<path d="m30.6 30 2.5 2.5 4.4-5"/>';
+        var selIdx = getStatusMonthIndex();
+        var shortage = memberStatusThrough(m, selIdx).shortage;
+        var safeName = String(name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+        var label = safeName + ': ' + statusText + (shortage ? ', kurang ' + formatRupiah(shortage) + ' sampai ' + monthLabel(indexToYm(selIdx)) : '');
+        return '<svg class="member-icon' + (lit ? ' is-lit' : '') + '" viewBox="0 0 44 40" role="img" tabindex="0" aria-label="' + label + '" data-name="' + safeName + '" data-shortage="' + shortage + '">' +
           '<circle class="member-head" cx="19" cy="13" r="11.5"/>' +
           '<path class="member-line" d="M3.5 38c0-7.8 5.6-13 12.5-13.8"/>' +
           '<text class="member-initial" x="19" y="16.8" text-anchor="middle"' + (memberInitials(m).length > 2 ? ' style="font-size:8.5px"' : '') + '>' + memberInitials(m) + '</text>' +
@@ -2825,18 +2895,32 @@
           '</svg>';
       }
 
-      // Kedua kartu menampilkan semua anggota aktif pada bulan terpilih; hanya yang sesuai kartu yang menyala
+      // Pil keterangan menyaring ikon: ALL | PAID | UNPAID. Menekan pil yang aktif menampilkan semua lagi.
+      var memberFilter = 'ALL';
+
+      function setMemberFilter(filter) {
+        memberFilter = memberFilter === filter ? 'ALL' : filter;
+        renderMemberIcons();
+      }
+
+      // Semua anggota aktif pada bulan terpilih dalam satu baris: lunas hijau, menunggak abu-abu
       function renderMemberIcons() {
+        hideMemberTip();
+        var box = document.getElementById('statMembers');
+        if (!box) return;
         var lists = currentStatusLists();
-        var active = appState.members.filter(function(m) { return lists.paid.indexOf(m.name) !== -1 || lists.unpaid.indexOf(m.name) !== -1; });
-        [['statPaidMembers', 'PAID', lists.paid, 'lunas'], ['statUnpaidMembers', 'UNPAID', lists.unpaid, 'menunggak']].forEach(function(c) {
-          var box = document.getElementById(c[0]);
-          if (!box) return;
-          box.setAttribute('aria-label', c[2].length + ' dari ' + active.length + ' anggota aktif ' + c[3]);
-          box.innerHTML = active.length
-            ? active.map(function(m) { return memberIconHtml(m, c[2].indexOf(m.name) !== -1, c[1]); }).join('')
-            : '<p class="text-xs font-semibold text-slate-400">Belum ada anggota aktif.</p>';
+        var shown = appState.members.filter(function(m) {
+          var isPaid = lists.paid.indexOf(m.name) !== -1;
+          var isUnpaid = lists.unpaid.indexOf(m.name) !== -1;
+          return memberFilter === 'PAID' ? isPaid : (memberFilter === 'UNPAID' ? isUnpaid : (isPaid || isUnpaid));
         });
+        var emptyText = { ALL: 'Belum ada anggota aktif.', PAID: 'Belum ada anggota yang lunas.', UNPAID: 'Tidak ada anggota yang menunggak.' }[memberFilter];
+        box.setAttribute('aria-label', lists.paid.length + ' anggota lunas dan ' + lists.unpaid.length + ' anggota menunggak');
+        box.innerHTML = shown.length
+          ? shown.map(function(m) { return memberIconHtml(m, lists.paid.indexOf(m.name) !== -1); }).join('')
+          : '<p class="py-2 text-xs font-semibold text-slate-400">' + emptyText + '</p>';
+        document.getElementById('memberPillPaid').setAttribute('aria-pressed', String(memberFilter === 'PAID'));
+        document.getElementById('memberPillUnpaid').setAttribute('aria-pressed', String(memberFilter === 'UNPAID'));
       }
 
       function statusCellHtml(m, S) {
