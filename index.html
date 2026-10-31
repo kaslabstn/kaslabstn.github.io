@@ -8,6 +8,33 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Warna terang tetap bawaan Tailwind; mode gelap hanya mengganti variabel --warna-nomor di CSS.
+      (function() {
+        function palette(name, levels) {
+          var out = {};
+          Object.keys(levels).forEach(function(n) {
+            out[n] = 'rgb(var(--' + name + '-' + n + ', ' + levels[n] + ') / <alpha-value>)';
+          });
+          return out;
+        }
+        tailwind.config = { theme: { extend: { colors: {
+          slate: palette('slate', { 50: '248 250 252', 100: '241 245 249', 200: '226 232 240', 300: '203 213 225', 400: '148 163 184', 500: '100 116 139', 600: '71 85 105', 700: '51 65 85', 800: '30 41 59', 900: '15 23 42' }),
+          emerald: palette('emerald', { 50: '236 253 245', 100: '209 250 229', 200: '167 243 208', 300: '110 231 183' }),
+          teal: palette('teal', { 50: '240 253 250', 100: '204 251 241', 200: '153 246 228', 300: '94 234 212' }),
+          amber: palette('amber', { 50: '255 251 235', 100: '254 243 199', 200: '253 230 138', 300: '252 211 77' }),
+          rose: palette('rose', { 50: '255 241 242', 100: '255 228 230', 200: '254 205 211', 300: '253 164 175' }),
+          sky: palette('sky', { 50: '240 249 255', 100: '224 242 254', 200: '186 230 253', 300: '125 211 252' }),
+          blue: palette('blue', { 50: '239 246 255', 100: '219 234 254', 200: '191 219 254', 300: '147 197 253' }),
+          indigo: palette('indigo', { 50: '238 242 255', 100: '224 231 255', 200: '199 210 254', 300: '165 180 252' })
+        } } } };
+        // Pasang tema sebelum halaman digambar agar tidak berkedip putih
+        try {
+          if (localStorage.getItem('kaslabstn_theme') === 'dark') document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="theme-color" content="#f8fafc">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -382,6 +409,60 @@
         .add-btn:hover .add-badge { background: #ffffff; color: var(--ab); box-shadow: 0 8px 16px -6px color-mix(in srgb, var(--ab) 40%, transparent); transform: translateY(-2px) rotate(90deg); }
       }
       .add-btn:focus-visible .add-badge { outline: 2px solid var(--ab); outline-offset: 2px; }
+      /* Pilihan tampilan: tombol pil Terang/Gelap di menu samping */
+      .theme-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 999px; background: #efefef; }
+      .theme-switch button { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #5f5f5f; transition: background-color .2s ease, color .2s ease; }
+      .theme-switch button[aria-pressed="true"] { background: #111111; color: #ffffff; }
+      @media (max-width: 767px) { .theme-switch button { min-height: 44px; } }
+      /* Mode gelap hanya untuk layar; hasil cetak selalu terang */
+      @media screen {
+        html.dark {
+          color-scheme: dark;
+          --slate-50: 17 17 17; --slate-100: 38 38 38; --slate-200: 51 51 51; --slate-300: 68 68 68; --slate-400: 143 143 143;
+          --slate-500: 171 171 171; --slate-600: 196 196 196; --slate-700: 220 220 220; --slate-800: 240 240 240; --slate-900: 250 250 250;
+          --emerald-50: 16 42 33; --emerald-100: 20 58 44; --emerald-200: 28 82 62; --emerald-300: 38 110 84;
+          --teal-50: 15 42 40; --teal-100: 18 58 55; --teal-200: 25 82 78; --teal-300: 34 110 104;
+          --amber-50: 48 36 14; --amber-100: 66 49 16; --amber-200: 90 67 20; --amber-300: 120 88 24;
+          --rose-50: 52 20 28; --rose-100: 72 26 38; --rose-200: 98 34 50; --rose-300: 130 44 64;
+          --sky-50: 16 38 54; --sky-100: 20 52 74; --sky-200: 26 72 100; --sky-300: 34 96 132;
+          --blue-50: 20 32 60; --blue-100: 26 42 82; --blue-200: 34 56 110; --blue-300: 44 74 144;
+          --indigo-50: 28 28 62; --indigo-100: 36 36 84; --indigo-200: 48 48 112; --indigo-300: 62 62 148;
+        }
+        html.dark .bg-white, html.dark .hover\:bg-white:hover { background-color: #1e1e1e; }
+        html.dark input, html.dark textarea, html.dark select:not(.bg-transparent) { background-color: #262626; }
+        html.dark .bg-slate-900\/40 { background-color: rgb(0 0 0 / .55); }
+        html.dark .bg-slate-900\/50 { background-color: rgb(0 0 0 / .6); }
+        html.dark .bg-slate-900\/60 { background-color: rgb(0 0 0 / .7); }
+        html.dark .bg-slate-800 { background-color: #ffffff; color: #111111; }
+        html.dark .hover\:bg-slate-900:hover { background-color: #e2e2e2; }
+        /* Warna tulisan dibuat lebih terang agar terbaca di latar gelap */
+        html.dark .text-emerald-600, html.dark .text-emerald-700 { color: #4ade9d; }
+        html.dark .text-teal-600 { color: #4fd8c7; }
+        html.dark .text-amber-600, html.dark .text-amber-800 { color: #f5c04e; }
+        html.dark .text-rose-600, html.dark .text-rose-700 { color: #ff7d93; }
+        html.dark .text-sky-600, html.dark .text-sky-700 { color: #5cc6f5; }
+        html.dark .text-blue-600, html.dark .text-blue-700, html.dark .text-blue-600\/80 { color: #7cb0ff; }
+        html.dark .text-indigo-600, html.dark .text-indigo-700 { color: #a5a8ff; }
+        html.dark .text-\[\#32599C\] { color: #8fb0e8; }
+        html.dark .text-\[\#4E7A14\] { color: #a9d65a; }
+        html.dark .text-\[\#DA251C\] { color: #ff6b61; }
+        html.dark .text-\[\#E60023\] { color: #ff5a6e; }
+        /* Tombol ubah/hapus tetap berubah warna saat disentuh */
+        html.dark .hover\:bg-indigo-600:hover { background-color: #4f46e5; }
+        html.dark .hover\:bg-rose-600:hover { background-color: #e11d48; }
+        html.dark .hover\:text-white:hover { color: #ffffff; }
+        html.dark aside nav button:hover { color: #7cb0ff; background-color: rgb(var(--blue-50)); }
+        html.dark .print-btn, html.dark .print-btn:hover, html.dark .add-btn { color: #ababab; }
+        html.dark #syncIndicator { background: #262626 !important; border-color: #444444 !important; color: #dcdcdc !important; }
+        /* Grafik */
+        html.dark #view-charts svg line[stroke="#e2e8f0"] { stroke: #333333; }
+        html.dark #view-charts svg rect[stroke="#e2e8f0"] { stroke: #444444; }
+        html.dark #view-charts svg rect[fill="#ffffff"], html.dark #view-charts svg circle[fill="#ffffff"] { fill: #1e1e1e; }
+        html.dark #view-charts svg text[fill="#334155"] { fill: #dcdcdc; }
+        html.dark .theme-switch { background: #2b2b2b; }
+        html.dark .theme-switch button { color: #b5b5b5; }
+        html.dark .theme-switch button[aria-pressed="true"] { background: #ffffff; color: #111111; }
+      }
       /* Penanda fokus saat memakai keyboard */
       button:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
       /* Tabel di HP tampil sebagai kartu agar semua kolom terbaca tanpa geser. Hanya layar; hasil cetak tetap tabel. */
@@ -510,6 +591,10 @@
 
       <!-- Sidebar Footer Auth -->
       <div class="shrink-0 p-4 border-t border-slate-100 bg-slate-50/50">
+         <div class="theme-switch mb-3" role="group" aria-label="Pilihan tampilan">
+           <button type="button" id="themeBtnLight" onclick="setTheme('light')" aria-pressed="true"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Terang</span></button>
+           <button type="button" id="themeBtnDark" onclick="setTheme('dark')" aria-pressed="false"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span>Gelap</span></button>
+         </div>
          <div id="authStatusBtnContainerSidebar">
            <!-- Populated via JS -->
          </div>
@@ -1043,8 +1128,8 @@
 
         <form onsubmit="handleLoginSubmit(event)" class="space-y-3">
           <div>
-            <div class="flex items-center justify-between mb-1"><label class="block text-xs font-bold text-slate-700">PIN Admin</label><button type="button" onclick="openModalResetPassword()" class="text-[11px] font-bold text-[#E60023] hover:underline">Lupa PIN?</button></div>
-            <input type="password" id="inputAdminPin" required placeholder="Masukkan PIN Admin" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none font-bold" />
+            <div class="flex items-center justify-between mb-1"><label class="block text-xs font-bold text-slate-700">Password Admin</label><button type="button" onclick="openModalResetPassword()" class="text-[11px] font-bold text-[#E60023] hover:underline">Lupa Password?</button></div>
+            <input type="password" id="inputAdminPin" required placeholder="Masukkan password admin" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none font-bold" />
           </div>
           <button type="submit" class="w-full py-2.5 rounded-[12px] bg-[#32599C] hover:bg-[#264579] text-white font-bold text-xs shadow-md rounded-full transition-all">
             Masuk
@@ -1056,11 +1141,11 @@
 
     <!-- MODAL POPUP: GANTI PIN -->
     <div id="modalChangePassword" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-      <div class="bg-white rounded-[20px] max-w-sm w-full p-6 shadow-2xl border border-slate-100 relative space-y-4">
+      <div class="bg-white rounded-[20px] max-w-sm w-full p-6 shadow-2xl border border-slate-100 relative space-y-4 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <h3 class="font-black text-slate-800 text-base flex items-center space-x-2">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-[#32599C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 9.2-9.2M16 7l3 3M14 9l2 2"/></svg>
-            <span>Ganti PIN Admin</span>
+            <span>Ganti Password Admin</span>
           </h3>
           <button onclick="closeModal('modalChangePassword')" class="text-slate-400 hover:text-slate-600 p-1">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -1069,15 +1154,16 @@
 
         <form onsubmit="handleChangePasswordSubmit(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">PIN Lama</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password Lama</label>
             <input type="password" id="inputOldPin" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none" />
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">PIN Baru</label>
-            <input type="password" id="inputNewPin" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password Baru</label>
+            <input type="password" id="inputNewPin" required autocomplete="new-password" oninput="renderPasswordStrength(this)" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none" />
+            <div id="inputNewPinStrength" class="mt-2"></div>
           </div>
           <button type="submit" class="w-full py-2.5 rounded-[12px] bg-[#32599C] hover:bg-[#264579] text-white font-bold text-xs shadow-md">
-            Simpan PIN Baru
+            Simpan Password Baru
           </button>
         </form>
       </div>
@@ -1085,11 +1171,11 @@
 
     <!-- MODAL POPUP: RESET PIN OTP -->
     <div id="modalResetPassword" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-      <div class="bg-white rounded-[20px] max-w-sm w-full p-6 shadow-2xl border border-slate-100 relative space-y-4">
+      <div class="bg-white rounded-[20px] max-w-sm w-full p-6 shadow-2xl border border-slate-100 relative space-y-4 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <h3 class="font-black text-slate-800 text-base flex items-center space-x-2">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-[#32599C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/><path d="m9 15 2 2 4-4"/></svg>
-            <span>Atur Ulang PIN</span>
+            <span>Atur Ulang Password</span>
           </h3>
           <button onclick="closeModal('modalResetPassword')" class="text-slate-400 hover:text-slate-600 p-1">
             <svg class="ico w-[1em] h-[1em] shrink-0 text-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -1108,11 +1194,12 @@
               <input type="text" id="inputResetOtp" placeholder="6 digit angka" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none" />
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">PIN Baru</label>
-              <input type="password" id="inputResetNewPin" required class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none" />
+              <label class="block text-xs font-bold text-slate-700 mb-1">Password Baru</label>
+              <input type="password" id="inputResetNewPin" required autocomplete="new-password" oninput="renderPasswordStrength(this)" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none" />
+              <div id="inputResetNewPinStrength" class="mt-2"></div>
             </div>
             <button type="submit" class="w-full py-2.5 rounded-[12px] bg-[#32599C] hover:bg-[#264579] text-white font-bold text-xs shadow-md">
-              Simpan PIN Baru
+              Simpan Password Baru
             </button>
           </form>
         </div>
@@ -1796,42 +1883,92 @@
           } else {
             closeModal('modalLogin');
             // Pesan server dipakai untuk kasus khusus, mis. terlalu banyak percobaan salah
-            var loginMsg = (res && res.message && res.message !== 'PIN salah') ? res.message : 'PIN salah. Silakan coba lagi.';
+            var loginMsg = (res && res.message && res.message !== 'PIN salah' && res.message !== 'Password salah') ? res.message : 'Password salah. Silakan coba lagi.';
             showCustomToast(loginMsg, false, function() {
               openModal('modalLogin');
             });
           }
         }).catch(function(err) {
           showLoader(false);
-          showCustomToast('Gagal memeriksa PIN: ' + err.message, false);
+          showCustomToast('Gagal memeriksa password: ' + err.message, false);
         });
+      }
+
+      // Ketentuan password baru; sama dengan validateNewPassword_ di Kode.gs yang menjadi penentu akhir
+      function passwordRules(password) {
+        return [
+          { label: 'Minimal 8 karakter', ok: password.length >= 8 },
+          { label: 'Ada huruf', ok: /[A-Za-z]/.test(password) },
+          { label: 'Ada angka', ok: /[0-9]/.test(password) },
+          { label: 'Ada simbol (mis. ! @ # $)', ok: /[^A-Za-z0-9\s]/.test(password) }
+        ];
+      }
+
+      function isPasswordAccepted(password) {
+        return passwordRules(password).every(function(r) { return r.ok; });
+      }
+
+      // Lemah (merah) dan Sedang (kuning) ditolak; Kuat (hijau) dan Sangat Kuat (hijau tua) diterima
+      function passwordStrength(password) {
+        if (!password) return { bars: 0, label: 'Belum diisi', color: '#94a3b8' };
+        var met = passwordRules(password).filter(function(r) { return r.ok; }).length;
+        if (met === 4) {
+          return password.length >= 12
+            ? { bars: 4, label: 'Sangat Kuat', color: '#059669' }
+            : { bars: 3, label: 'Kuat', color: '#22C55E' };
+        }
+        return met === 3
+          ? { bars: 2, label: 'Sedang', color: '#EAB308' }
+          : { bars: 1, label: 'Lemah', color: '#DC2626' };
+      }
+
+      function renderPasswordStrength(input) {
+        var box = document.getElementById(input.id + 'Strength');
+        if (!box) return;
+        var s = passwordStrength(input.value);
+        var bars = '';
+        for (var i = 1; i <= 4; i++) {
+          bars += '<span class="h-1.5 flex-1 rounded-full bg-slate-200"' + (i <= s.bars ? ' style="background-color:' + s.color + '"' : '') + '></span>';
+        }
+        var rules = passwordRules(input.value).map(function(r) {
+          return '<li class="flex items-center gap-1.5 text-[11px] font-semibold ' + (r.ok ? 'text-emerald-600' : 'text-slate-500') + '">' +
+            '<svg class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (r.ok ? '<path d="M20 6 9 17l-5-5"/>' : '<circle cx="12" cy="12" r="8"/>') + '</svg>' + r.label + '</li>';
+        }).join('');
+        box.innerHTML = '<div class="flex items-center gap-1">' + bars + '</div>' +
+          '<p class="text-[11px] font-bold text-slate-500 mt-1.5" aria-live="polite">Kekuatan password: <span class="text-slate-800">' + s.label + '</span></p>' +
+          '<ul class="mt-1.5 space-y-1">' + rules + '</ul>';
       }
 
       function handleChangePasswordSubmit(e) {
         e.preventDefault();
         var oldPin = document.getElementById('inputOldPin').value;
-        var newPin = document.getElementById('inputNewPin').value;
+        var newPin = document.getElementById('inputNewPin').value.trim();
+        if (!isPasswordAccepted(newPin)) {
+          showCustomToast('Password ditolak. Gunakan minimal 8 karakter dengan campuran huruf, angka, dan simbol.', 'warning');
+          return;
+        }
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           showLoader(true);
           google.script.run
             .withSuccessHandler(function(res) {
               showLoader(false);
               if (res.success) {
-                showCustomToast('PIN admin berhasil diganti.', true);
+                showCustomToast('Password admin berhasil diganti.', true);
                 closeModal('modalChangePassword');
                 document.getElementById('inputOldPin').value = '';
                 document.getElementById('inputNewPin').value = '';
+                renderPasswordStrength(document.getElementById('inputNewPin'));
               } else {
-                showCustomToast(String(res.message).replace('Password / PIN', 'PIN'), false);
+                showCustomToast(res.message, false);
               }
             })
             .withFailureHandler(function(err) {
               showLoader(false);
-              showCustomToast('Gagal mengubah PIN: ' + err.message, false);
+              showCustomToast('Gagal mengganti password: ' + err.message, false);
             })
             .changeAdminPin({ oldPin: oldPin, newPin: newPin });
         } else {
-          showCustomToast('PIN Admin berhasil diperbarui!', true);
+          showCustomToast('Password admin berhasil diganti.', true);
           closeModal('modalChangePassword');
         }
       }
@@ -1862,14 +1999,21 @@
       function handleResetPasswordSubmit(e) {
         e.preventDefault();
         var otpCode = document.getElementById('inputResetOtp').value;
-        var newPin = document.getElementById('inputResetNewPin').value;
+        var newPin = document.getElementById('inputResetNewPin').value.trim();
+        if (!isPasswordAccepted(newPin)) {
+          showCustomToast('Password ditolak. Gunakan minimal 8 karakter dengan campuran huruf, angka, dan simbol.', 'warning');
+          return;
+        }
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           showLoader(true);
           google.script.run
             .withSuccessHandler(function(res) {
               showLoader(false);
               if (res.success) {
-                showCustomToast(res.message, true);
+                showCustomToast('Password admin berhasil diatur ulang. Silakan masuk dengan password baru.', true);
+                document.getElementById('inputResetOtp').value = '';
+                document.getElementById('inputResetNewPin').value = '';
+                renderPasswordStrength(document.getElementById('inputResetNewPin'));
                 closeModal('modalResetPassword');
               } else {
                 showCustomToast(res.message, false);
@@ -1877,11 +2021,11 @@
             })
             .withFailureHandler(function(err) {
               showLoader(false);
-              showCustomToast('Gagal mengatur ulang PIN: ' + err.message, false);
+              showCustomToast('Gagal mengatur ulang password: ' + err.message, false);
             })
             .resetAdminPinWithOtp({ otpCode: otpCode, newPin: newPin });
         } else {
-          showCustomToast('PIN Admin berhasil direset!', true);
+          showCustomToast('Password admin berhasil diatur ulang.', true);
           closeModal('modalResetPassword');
         }
       }
@@ -1898,7 +2042,7 @@
         var settingsNav = document.getElementById('nav-settings-container');
 
         if (currentRole === 'ADMIN') {
-          if (containerSidebar) containerSidebar.innerHTML = '<button onclick="openModal(\'modalChangePassword\')" class="w-full mb-2 px-3 py-2.5 rounded-[12px] bg-sky-100 hover:bg-sky-200 text-sky-700 font-bold text-sm transition-colors">Ganti PIN</button><button onclick="logout()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm px-4 py-3 rounded-[12px] transition-all flex items-center justify-center space-x-2"><svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Keluar Admin</span></button>';
+          if (containerSidebar) containerSidebar.innerHTML = '<button onclick="openModal(\'modalChangePassword\')" class="w-full mb-2 px-3 py-2.5 rounded-[12px] bg-sky-100 hover:bg-sky-200 text-sky-700 font-bold text-sm transition-colors">Ganti Password</button><button onclick="logout()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm px-4 py-3 rounded-[12px] transition-all flex items-center justify-center space-x-2"><svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Keluar Admin</span></button>';
           if (settingsNav) settingsNav.classList.remove('hidden');
         } else {
           if (containerSidebar) containerSidebar.innerHTML = '<button onclick="openModal(\'modalLogin\')" class="w-full bg-[#85C226] hover:bg-[#6FA31C] text-white font-bold text-sm px-4 py-3 rounded-full shadow-md transition-all flex items-center justify-center space-x-2"><svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Masuk Admin</span></button>';
@@ -1926,6 +2070,26 @@
           sidebar.classList.add('-translate-x-full');
           overlay.classList.add('hidden');
         }
+      }
+
+      function isDarkTheme() {
+        return document.documentElement.classList.contains('dark');
+      }
+
+      function updateThemeSwitch() {
+        var dark = isDarkTheme();
+        document.getElementById('themeBtnLight').setAttribute('aria-pressed', String(!dark));
+        document.getElementById('themeBtnDark').setAttribute('aria-pressed', String(dark));
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', dark ? '#111111' : '#f8fafc');
+      }
+
+      function setTheme(mode) {
+        document.documentElement.classList.toggle('dark', mode === 'dark');
+        try { localStorage.setItem('kaslabstn_theme', mode); } catch (e) {}
+        updateThemeSwitch();
+        // Warna grafik dan transaksi terbaru ditulis saat digambar, jadi perlu digambar ulang
+        if (appInitialized) renderChartsAndTables();
       }
 
       var LAST_VIEW_KEY = 'kaslabstn_last_view';
@@ -2441,7 +2605,8 @@
         var down = '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>';
         return list.map(function(tx) {
           var isIn = tx.type.indexOf('Pemasukan') === 0;
-          var c = tx.type === 'Pemasukan WiFi' ? '#32599C' : (isIn ? '#85C226' : '#DA251C');
+          var dark = isDarkTheme();
+          var c = tx.type === 'Pemasukan WiFi' ? (dark ? '#8FB0E8' : '#32599C') : (isIn ? '#85C226' : (dark ? '#FF6B61' : '#DA251C'));
           return '<div class="flex items-center gap-2 p-2 rounded-[14px] bg-white border border-slate-200/70 shadow-sm hover:shadow-md transition-shadow">' +
             '<span class="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style="background:' + c + '1f;color:' + c + '">' + (isIn ? up : down) + '</span>' +
             '<div class="min-w-0 flex-1">' +
@@ -2711,8 +2876,9 @@
           return svg;
         }
 
-        kasContainer.innerHTML = buildAreaChartSvg(kasIncArr, kasExpArr, '#059669', '#c2410c', 'kasIncGrad', 'kasExpGrad', 'kasIncShadow', 'kasExpShadow', chartVisibility.kasInc, chartVisibility.kasExp);
-        wifiContainer.innerHTML = buildAreaChartSvg(wifiIncArr, wifiExpArr, '#0284c7', '#e11d48', 'wifiIncGrad', 'wifiExpGrad', 'wifiIncShadow', 'wifiExpShadow', chartVisibility.wifiInc, chartVisibility.wifiExp);
+        var dark = isDarkTheme();
+        kasContainer.innerHTML = buildAreaChartSvg(kasIncArr, kasExpArr, dark ? '#34d399' : '#059669', dark ? '#fb923c' : '#c2410c', 'kasIncGrad', 'kasExpGrad', 'kasIncShadow', 'kasExpShadow', chartVisibility.kasInc, chartVisibility.kasExp);
+        wifiContainer.innerHTML = buildAreaChartSvg(wifiIncArr, wifiExpArr, dark ? '#38bdf8' : '#0284c7', dark ? '#fb7185' : '#e11d48', 'wifiIncGrad', 'wifiExpGrad', 'wifiIncShadow', 'wifiExpShadow', chartVisibility.wifiInc, chartVisibility.wifiExp);
       }
 
       function sumPaidByType(m, type) {
@@ -3563,6 +3729,10 @@
         var el = document.getElementById(id);
         if (el) el.addEventListener('click', function(e) { if (e.target === el) closeModal(id); });
       });
+
+      updateThemeSwitch();
+      renderPasswordStrength(document.getElementById('inputNewPin'));
+      renderPasswordStrength(document.getElementById('inputResetNewPin'));
 
       (function startApp() {
         var cached = loadLocalCache();
