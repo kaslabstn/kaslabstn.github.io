@@ -1,0 +1,15 @@
+# File yang TIDAK boleh ikut ke GitHub Pages (repo publik)
+
+# Kode backend Apps Script: tempel ke editor Apps Script, jangan di repo
+*.gs
+appsscript.json
+
+# Screenshot perbandingan / bahan kerja
+cmp-*.png
+popup-*.png
+screenshot*.png
+
+# File sistem
+Thumbs.db
+desktop.ini
+.DS_Store
