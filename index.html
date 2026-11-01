@@ -859,22 +859,24 @@
             <div class="relative overflow-hidden group bg-white rounded-[24px] p-5 sm:p-6 border border-slate-200/60 shadow-sm">
               <!-- Hiasan sudut: gradasi satu warna -->
               <div class="summary-accent absolute top-0 right-0 bottom-0 pointer-events-none transition-transform duration-300 group-hover:scale-105 origin-top-right" aria-hidden="true"></div>
-              <h3 class="relative font-black text-slate-800 text-base sm:text-lg flex flex-wrap items-center gap-x-2 leading-snug mb-4">
+              <div class="relative flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
+              <h3 class="font-black text-slate-800 text-base sm:text-lg flex flex-wrap items-center gap-x-2 leading-snug">
                 <svg class="ico w-[1em] h-[1em] shrink-0 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6h10M11 12h10M11 18h10"/><path d="m3 6 1.5 1.5L7 5"/><path d="m3 12 1.5 1.5L7 11"/><path d="M3 18h4"/></svg>
                 <span>Ringkasan Status Pembayaran</span>
                 <span class="statMonthLabel text-xs font-semibold text-slate-400"></span>
               </h3>
-              <div id="statMembers" class="member-icons relative" role="group"></div>
-              <div class="relative flex flex-wrap items-center gap-2 mt-4">
+              <div class="flex flex-wrap items-center gap-2">
                 <button type="button" id="memberPillPaid" onclick="setMemberFilter('PAID')" aria-pressed="false" class="member-pill is-paid inline-flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold">
                   <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="m16 11 2 2 4-4"/></svg>
-                  Anggota Lunas
+                  Lunas
                 </button>
                 <button type="button" id="memberPillUnpaid" onclick="setMemberFilter('UNPAID')" aria-pressed="false" class="member-pill is-unpaid inline-flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">
                   <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 11h6"/></svg>
-                  Anggota Menunggak
+                  Menunggak
                 </button>
               </div>
+              </div>
+              <div id="statMembers" class="member-icons relative" role="group"></div>
             </div>
           </div>
 
