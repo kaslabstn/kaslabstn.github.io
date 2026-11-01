@@ -387,13 +387,13 @@
         --pb: #E9E9E9;
         background: #E9E9E9;
         color: #111111;
-        transition: background-color .2s ease;
+        box-shadow: 0 5px 12px -3px rgba(17, 17, 17, .35);
+        transition: all .3s ease;
       }
       @media (hover: hover) {
-        .print-btn:hover .print-badge { --pb: #DADADA; background: #DADADA; }
+        .print-btn:hover .print-badge { --pb: #ffffff; background: #ffffff; box-shadow: 0 8px 16px -6px rgba(17, 17, 17, .3); transform: translateY(-2px) rotate(90deg); }
       }
-      .print-btn:focus-visible .print-badge,
-      .print-btn:active .print-badge { --pb: #DADADA; background: #DADADA; }
+      .print-btn:focus-visible .print-badge { outline: 2px solid #111111; outline-offset: 2px; }
       /* Dukungan HP Android & iOS */
       html, body { -webkit-text-size-adjust: 100%; }
       body { overflow-x: hidden; }
@@ -541,10 +541,11 @@
         html.dark .hover\:text-white:hover { color: #ffffff; }
         html.dark aside nav button:hover { color: #7cb0ff; background-color: rgb(var(--blue-50)); }
         html.dark .print-btn, html.dark .print-btn:hover, html.dark .add-btn { color: #ababab; }
-        html.dark .print-badge { --pb: #3A3A3A; background: #3A3A3A; color: #ffffff; }
-        html.dark .print-btn:hover .print-badge,
-        html.dark .print-btn:focus-visible .print-badge,
-        html.dark .print-btn:active .print-badge { --pb: #4A4A4A; background: #4A4A4A; }
+        html.dark .print-badge { --pb: #3A3A3A; background: #3A3A3A; color: #ffffff; box-shadow: 0 5px 12px -3px rgba(0, 0, 0, .7); }
+        @media (hover: hover) {
+          html.dark .print-btn:hover .print-badge { --pb: #ffffff; background: #ffffff; color: #111111; box-shadow: 0 8px 16px -6px rgba(0, 0, 0, .7); }
+        }
+        html.dark .print-btn:focus-visible .print-badge { outline-color: #ffffff; }
         html.dark #syncIndicator { background: #262626 !important; border-color: #444444 !important; color: #dcdcdc !important; }
         /* Grafik */
         html.dark #view-charts svg line[stroke="#e2e8f0"] { stroke: #333333; }
