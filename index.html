@@ -1382,7 +1382,7 @@
               <label class="block text-xs font-bold text-slate-700">Jumlah (Rp)</label>
               <span class="text-[10px] text-slate-500 font-semibold">Dihitung otomatis, bisa diubah</span>
             </div>
-            <input type="number" id="txAmount" required min="0" step="1000" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:outline-none font-bold" />
+            <input type="number" id="txAmount" required min="0" step="1" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:outline-none font-bold" />
           </div>
 
           <div>
@@ -4380,6 +4380,38 @@
         var el = document.getElementById(id);
         if (el) el.addEventListener('click', function(e) { if (e.target === el) closeModal(id); });
       });
+
+      // Petunjuk isian bawaan browser mengikuti bahasa browser; di sini diganti Bahasa Indonesia
+      function indonesianValidityMessage(el) {
+        var v = el.validity;
+        if (v.valueMissing) return el.tagName === 'SELECT' ? 'Silakan pilih salah satu.' : 'Kolom ini wajib diisi.';
+        if (v.badInput) return el.type === 'number' ? 'Masukkan angka yang benar.' : 'Isian belum lengkap atau belum benar.';
+        if (v.rangeUnderflow) return 'Nilai minimal ' + el.min + '.';
+        if (v.rangeOverflow) return 'Nilai maksimal ' + el.max + '.';
+        if (v.stepMismatch) return 'Masukkan bilangan bulat tanpa desimal.';
+        if (v.patternMismatch) return el.title || 'Format isian belum sesuai.';
+        if (v.typeMismatch) return 'Format isian belum sesuai.';
+        if (v.tooShort) return 'Isian minimal ' + el.minLength + ' karakter.';
+        if (v.tooLong) return 'Isian maksimal ' + el.maxLength + ' karakter.';
+        return 'Isian belum benar.';
+      }
+
+      document.addEventListener('invalid', function(e) {
+        e.target.setCustomValidity(indonesianValidityMessage(e.target));
+      }, true);
+      function clearCustomValidity(e) {
+        if (e.target.setCustomValidity) e.target.setCustomValidity('');
+      }
+      document.addEventListener('input', clearCustomValidity, true);
+      document.addEventListener('change', clearCustomValidity, true);
+      // Isian bisa berubah lewat hitungan otomatis, jadi pesan lama dibersihkan setiap kali mengirim
+      document.addEventListener('click', function(e) {
+        var btn = e.target.closest ? e.target.closest('button[type="submit"]') : null;
+        if (!btn || !btn.form) return;
+        Array.prototype.forEach.call(btn.form.elements, function(el) {
+          if (el.setCustomValidity) el.setCustomValidity('');
+        });
+      }, true);
 
       updateThemeSwitch();
       applyCardColors();
