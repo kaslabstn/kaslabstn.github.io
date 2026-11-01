@@ -269,15 +269,12 @@
         body.print-mode-table #statusPrintExtras * {
           color: #6B7280 !important;
         }
-        /* Jenis transaksi saat dicetak: tanpa kotak, hanya highlight pada tulisan */
-        .type-badge {
-          display: inline !important;
-          border: 0 !important;
-          border-radius: 2px !important;
-          padding: 1px 3px !important;
-          background-color: var(--hl, #e2e8f0) !important;
-          -webkit-box-decoration-break: clone;
-          box-decoration-break: clone;
+        /* Jenis transaksi saat dicetak: hanya warna tulisan */
+        body.print-mode-income #view-income table .type-badge,
+        body.print-mode-expense #view-expenses table .type-badge,
+        body.print-mode-history #view-transactions table .type-badge,
+        body.print-mode-table #statusPrintExtras .type-badge {
+          color: var(--tc) !important;
         }
         #printOnlyHeader {
           display: flex !important;
@@ -433,8 +430,30 @@
       @media (hover: hover) { .member-icon:hover { transform: translateY(-2px); opacity: 1; } }
       @media (min-width: 768px) { .member-icon { width: 36px; } }
       @media (min-width: 1280px) { .member-icons { gap: 8px 6px; } .member-icon { width: 46px; } }
-      /* Aksen sudut kartu saldo: warna pekat di sudut, memudar ke tepi lengkungan */
-      .saldo-accent { background: radial-gradient(circle at 100% 0%, var(--accent-from) 0%, var(--accent-to) 100%); }
+      /* Ikon garis besar di kartu saldo, dari tepi kanan sampai tengah kartu */
+      .saldo-mark { position: absolute; top: 0; right: 0; width: 50%; height: 100%; fill: none; stroke: currentColor; stroke-width: .9; opacity: .2; pointer-events: none; transition: transform .3s ease; }
+      @media (hover: hover) { .group:hover .saldo-mark { transform: scale(1.05); } }
+      /* Popup masuk dan transaksi: isian lembut berbentuk bulat, warna mengikuti --modal-accent */
+      #modalLogin { --modal-accent: #85C226; }
+      #modalTx { --modal-accent: #059669; }
+      #modalLogin input, #modalTx input:not([type="hidden"]), #modalTx select {
+        min-height: 44px;
+        border-radius: 16px;
+        border-color: transparent;
+        background-color: rgb(var(--slate-100, 241 245 249));
+        font-weight: 600;
+        transition: background-color .15s ease, box-shadow .15s ease;
+      }
+      #modalLogin input:focus, #modalTx input:focus, #modalTx select:focus {
+        outline: none;
+        background-color: transparent;
+        box-shadow: 0 0 0 2px var(--modal-accent);
+      }
+      #txAmount { color: var(--modal-accent); }
+      .modal-primary { background: var(--modal-accent); transition: filter .15s ease; }
+      @media (hover: hover) { .modal-primary:hover { filter: brightness(.92); } }
+      /* Jenis transaksi: hanya warna tulisan, tanpa kotak atau highlight */
+      .type-badge { color: var(--tc); }
       /* Aksen kartu ringkasan: satu warna (pilihan di Pengaturan) yang memudar dari sudut */
       .summary-accent {
         width: min(70%, 520px);
@@ -461,7 +480,7 @@
       /* Tampilan desktop: ikon di samping keterangan dibuat seimbang dengan tulisannya. Hasil cetak tidak berubah. */
       @media screen and (min-width: 768px) {
         h3 > svg.ico { width: 1.35em !important; height: 1.35em !important; }
-        main .rounded-\[12px\].text-lg > svg.ico { width: 1.35em !important; height: 1.35em !important; }
+        .saldo-ico > svg.ico { width: 1.35em !important; height: 1.35em !important; }
         .filter-bar > span > svg.ico { width: 16px !important; height: 16px !important; }
         header svg.ico.text-xs, .status-month-wrap > svg.ico { width: 16px !important; height: 16px !important; }
       }
@@ -516,6 +535,11 @@
         html.dark .member-badge { stroke: #1e1e1e; }
         html.dark .member-mark { stroke: #111111; }
         html.dark .summary-accent { opacity: .6; }
+        html.dark .saldo-mark { opacity: .28; }
+        html.dark #modalLogin input, html.dark #modalTx input:not([type="hidden"]), html.dark #modalTx select { background-color: #262626; }
+        html.dark #modalLogin input:focus, html.dark #modalTx input:focus, html.dark #modalTx select:focus { background-color: #1e1e1e; }
+        html.dark #txAmount { color: #f0f0f0; }
+        html.dark .type-badge { color: var(--tc-dark); }
         html.dark .member-pill.is-paid[aria-pressed="true"] { background: #4ade9d; color: #111111; }
         html.dark .member-pill.is-unpaid[aria-pressed="true"] { background: #dcdcdc; color: #111111; }
         html.dark .member-pill[aria-pressed="false"]:hover { filter: brightness(1.15); }
@@ -742,67 +766,67 @@
           <!-- 4 FINANCIAL MATRIX BOXES -->
           <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-6">
             
-            <div onclick="showBreakdownModal('OPENING')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-              <div class="absolute top-0 right-0 w-24 h-24 saldo-accent card-accent-opening rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
-              <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="card-ico-opening w-10 h-10 rounded-[12px] text-white flex items-center justify-center text-lg">
+            <div onclick="showBreakdownModal('OPENING')" class="bg-white rounded-[24px] p-4 sm:p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
+              <svg class="saldo-mark card-mark-opening" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 10c0-3-3-5-7-5-4 0-7 2-7 5 0 1 .3 2 1 3v3h3v-1h4v1h3v-3a5 5 0 0 0 0-3"/><path d="M16 10h.01"/><path d="M3 11h2"/></svg>
+              <div class="relative z-10 flex items-center gap-2 sm:gap-3 mb-2">
+                <div class="saldo-ico card-ico-opening shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] text-white flex items-center justify-center text-base sm:text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 10c0-3-3-5-7-5-4 0-7 2-7 5 0 1 .3 2 1 3v3h3v-1h4v1h3v-3a5 5 0 0 0 0-3"/><path d="M16 10h.01"/><path d="M3 11h2"/></svg>
                 </div>
-                <div class="bg-slate-100 text-slate-600 border border-slate-200 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <h4 class="cardOpeningBalance min-w-0 whitespace-nowrap text-[13px] sm:text-lg font-black text-slate-800 leading-tight">Rp 0</h4>
+                <div class="absolute -top-2 -right-2 bg-slate-100 text-slate-600 border border-slate-200 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
               </div>
               <div class="relative z-10">
-                <p class="text-xs font-bold text-slate-500 mb-1">Saldo Awal</p>
-                <h4 class="cardOpeningBalance whitespace-nowrap text-base sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <p class="text-xs font-bold text-slate-500">Saldo Awal</p>
               </div>
             </div>
 
-            <div onclick="showBreakdownModal('INCOME')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-              <div class="absolute top-0 right-0 w-24 h-24 saldo-accent card-accent-income rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
-              <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="card-ico-income w-10 h-10 rounded-[12px] text-white flex items-center justify-center text-lg">
+            <div onclick="showBreakdownModal('INCOME')" class="bg-white rounded-[24px] p-4 sm:p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
+              <svg class="saldo-mark card-mark-income" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+              <div class="relative z-10 flex items-center gap-2 sm:gap-3 mb-2">
+                <div class="saldo-ico card-ico-income shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] text-white flex items-center justify-center text-base sm:text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
                 </div>
-                <div class="bg-emerald-50 text-emerald-600 border border-emerald-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <h4 class="cardTotalIncome min-w-0 whitespace-nowrap text-[13px] sm:text-lg font-black text-slate-800 leading-tight">Rp 0</h4>
+                <div class="absolute -top-2 -right-2 bg-emerald-50 text-emerald-600 border border-emerald-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
               </div>
               <div class="relative z-10">
-                <p class="text-xs font-bold text-slate-500 mb-1">Total Pemasukan</p>
-                <h4 class="cardTotalIncome whitespace-nowrap text-base sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <p class="text-xs font-bold text-slate-500">Total Pemasukan</p>
               </div>
             </div>
             
-            <div onclick="showBreakdownModal('EXPENSE')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-               <div class="absolute top-0 right-0 w-24 h-24 saldo-accent card-accent-expense rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
-              <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="card-ico-expense w-10 h-10 rounded-[12px] text-white flex items-center justify-center text-lg">
+            <div onclick="showBreakdownModal('EXPENSE')" class="bg-white rounded-[24px] p-4 sm:p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
+              <svg class="saldo-mark card-mark-expense" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>
+              <div class="relative z-10 flex items-center gap-2 sm:gap-3 mb-2">
+                <div class="saldo-ico card-ico-expense shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] text-white flex items-center justify-center text-base sm:text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>
                 </div>
-                <div class="bg-rose-50 text-rose-600 border border-rose-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <h4 class="cardTotalExpense min-w-0 whitespace-nowrap text-[13px] sm:text-lg font-black text-slate-800 leading-tight">Rp 0</h4>
+                <div class="absolute -top-2 -right-2 bg-rose-50 text-rose-600 border border-rose-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
               </div>
               <div class="relative z-10">
-                <p class="text-xs font-bold text-slate-500 mb-1">Total Pengeluaran</p>
-                <h4 class="cardTotalExpense whitespace-nowrap text-base sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <p class="text-xs font-bold text-slate-500">Total Pengeluaran</p>
               </div>
             </div>
 
-            <div onclick="showBreakdownModal('BALANCE')" class="bg-white rounded-[24px] p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
-              <div class="absolute top-0 right-0 w-24 h-24 saldo-accent card-accent-balance rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 origin-top-right"></div>
-              <div class="relative z-10 flex items-start justify-between mb-4">
-                <div class="card-ico-balance w-10 h-10 rounded-[12px] text-white flex items-center justify-center text-lg">
+            <div onclick="showBreakdownModal('BALANCE')" class="bg-white rounded-[24px] p-4 sm:p-5 border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
+              <svg class="saldo-mark card-mark-balance" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg>
+              <div class="relative z-10 flex items-center gap-2 sm:gap-3 mb-2">
+                <div class="saldo-ico card-ico-balance shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] text-white flex items-center justify-center text-base sm:text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg>
                 </div>
-                <div class="bg-blue-50 text-blue-600 border border-blue-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <h4 class="cardFinalBalance min-w-0 whitespace-nowrap text-[13px] sm:text-lg font-black text-slate-800 leading-tight">Rp 0</h4>
+                <div class="absolute -top-2 -right-2 bg-blue-50 text-blue-600 border border-blue-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
               </div>
               <div class="relative z-10">
-                <p class="text-xs font-bold text-slate-500 mb-1">Saldo Akhir</p>
-                <h4 class="cardFinalBalance whitespace-nowrap text-base sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <p class="text-xs font-bold text-slate-500">Saldo Akhir</p>
               </div>
             </div>
           </div>
@@ -1216,7 +1240,7 @@
             <div class="flex items-center justify-between mb-1"><label class="block text-xs font-bold text-slate-700">Password Admin</label><button type="button" onclick="openModalResetPassword()" class="text-[11px] font-bold text-[#E60023] hover:underline">Lupa Password?</button></div>
             <input type="password" id="inputAdminPin" required placeholder="Masukkan password admin" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-[#32599C] focus:outline-none font-bold" />
           </div>
-          <button type="submit" class="w-full py-2.5 rounded-[12px] bg-[#32599C] hover:bg-[#264579] text-white font-bold text-xs shadow-md rounded-full transition-all">
+          <button type="submit" class="modal-primary w-full min-h-[44px] rounded-full text-white font-bold text-sm shadow-md">
             Masuk
           </button>
         </form>
@@ -1350,9 +1374,9 @@
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-bold text-slate-700">Jumlah (Rp)</label>
-              <span class="text-[10px] text-indigo-600 font-bold italic">Dihitung otomatis, bisa diubah</span>
+              <span class="text-[10px] text-slate-500 font-semibold">Dihitung otomatis, bisa diubah</span>
             </div>
-            <input type="number" id="txAmount" required min="0" step="1000" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none font-bold text-indigo-700" />
+            <input type="number" id="txAmount" required min="0" step="1000" class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:outline-none font-bold" />
           </div>
 
           <div>
@@ -1360,7 +1384,7 @@
             <input type="text" id="txNote" placeholder="Catatan tambahan..." class="w-full px-3.5 py-2.5 rounded-[12px] border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
           </div>
 
-          <button type="submit" class="w-full py-2.5 rounded-[12px] bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md mt-2">
+          <button type="submit" class="modal-primary w-full min-h-[44px] rounded-full text-white font-bold text-sm shadow-md mt-2">
             Simpan Transaksi
           </button>
         </form>
@@ -1951,6 +1975,7 @@
           EXPENSE: [['Pengeluaran Kas', 'Pengeluaran Kas'], ['Pengeluaran WiFi', 'Pengeluaran WiFi']]
         };
         var list = groups[mode] || groups.INCOME.concat(groups.EXPENSE);
+        document.getElementById('modalTx').style.setProperty('--modal-accent', mode === 'EXPENSE' ? '#E11D48' : '#059669');
         document.getElementById('txType').innerHTML = list.map(function(o) {
           return '<option value="' + o[0] + '">' + o[1] + '</option>';
         }).join('');
@@ -2825,7 +2850,7 @@
       }
 
       // ===== Warna kartu Beranda: dipilih admin di Pengaturan, disimpan di sheet Pengaturan =====
-      // ico = kotak ikon; light/dark = aksen sudut (pekat ke pudar); rgb = aksen kartu ringkasan
+      // ico = kotak ikon kartu saldo; rgb = aksen kartu ringkasan; light/dark = contoh warna ringkasan di popup
       var CARD_COLORS = {
         gray:   { name: 'Abu-abu', ico: ['#9ca3af', '#4b5563'], light: ['#cbd5e1', '#f1f5f9'], dark: ['#4b5563', '#2a2a2a'], rgb: '148 163 184' },
         green:  { name: 'Hijau',   ico: ['#34d399', '#059669'], light: ['#a7f3d0', '#ecfdf5'], dark: ['#0f5f49', '#15352b'], rgb: '52 211 153' },
@@ -2864,14 +2889,12 @@
       function applyCardColors() {
         CARD_TARGETS.forEach(function(t) {
           var c = cardColorFor(appState.cardColors, t.key);
-          var accent = isDarkTheme() ? c.dark : c.light;
-          document.querySelectorAll('.card-accent-' + t.key).forEach(function(el) {
-            el.style.setProperty('--accent-from', accent[0]);
-            el.style.setProperty('--accent-to', accent[1]);
-          });
           document.querySelectorAll('.card-ico-' + t.key).forEach(function(el) {
             el.style.background = 'linear-gradient(135deg, ' + c.ico[0] + ', ' + c.ico[1] + ')';
             el.style.boxShadow = '0 6px 14px -6px ' + c.ico[1];
+          });
+          document.querySelectorAll('.card-mark-' + t.key).forEach(function(el) {
+            el.style.color = isDarkTheme() ? c.ico[0] : c.ico[1];
           });
         });
         var summary = document.querySelector('.summary-accent');
@@ -2941,6 +2964,10 @@
         var rows = CARD_TARGETS.map(function(t) {
           var chosen = CARD_COLORS[draft[t.key]];
           var accent = dark ? chosen.dark : chosen.light;
+          // Contoh warna: kartu saldo = kotak ikon, kartu ringkasan = aksen sudut
+          var previewBg = t.key === 'summary'
+            ? 'radial-gradient(circle at 100% 0%,' + accent[0] + ',' + accent[1] + ')'
+            : 'linear-gradient(135deg,' + chosen.ico[0] + ',' + chosen.ico[1] + ')';
           var swatches = Object.keys(CARD_COLORS).map(function(id) {
             var c = CARD_COLORS[id];
             var on = id === draft[t.key];
@@ -2948,7 +2975,7 @@
           }).join('');
           return '<div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 py-3 border-t border-slate-100">' +
             '<div class="flex items-center gap-3 md:w-60 shrink-0">' +
-              '<span class="w-9 h-9 rounded-[10px] shrink-0" style="background:radial-gradient(circle at 100% 0%,' + accent[0] + ',' + accent[1] + ');box-shadow:inset 0 0 0 1px rgb(148 163 184 / .25)"></span>' +
+              '<span class="w-9 h-9 rounded-[10px] shrink-0" style="background:' + previewBg + ';box-shadow:inset 0 0 0 1px rgb(148 163 184 / .25)"></span>' +
               '<span class="text-xs font-bold text-slate-700">' + t.label + '</span>' +
             '</div>' +
             '<div class="flex flex-wrap items-center" role="group" aria-label="Warna ' + t.label + '">' + swatches + '</div>' +
@@ -3540,10 +3567,11 @@
         sel.value = (prev === 'ALL' || years.has(parseInt(prev, 10))) ? prev : 'ALL';
       }
 
-      // Label jenis transaksi; saat dicetak tampil sebagai teks dengan highlight (tanpa kotak)
-      function typeBadgeHtml(type, badgeClass) {
-        var hl = { 'Pemasukan Kas': '#bbf7d0', 'Pemasukan WiFi': '#bae6fd', 'Pengeluaran Kas': '#fde68a', 'Pengeluaran WiFi': '#fecdd3' }[type] || '#e2e8f0';
-        return '<span class="type-badge inline-block px-3 py-1 rounded-[10px] text-[10px] font-black border ' + badgeClass + '" style="--hl:' + hl + '">' + type + '</span>';
+      // Jenis transaksi hanya berupa tulisan berwarna: Pemasukan Kas, Pemasukan WiFi, dan semua Pengeluaran
+      function typeBadgeHtml(type) {
+        var isExpense = String(type).indexOf('Pengeluaran') === 0;
+        var tone = isExpense ? ['#e11d48', '#ff7d93'] : (type === 'Pemasukan WiFi' ? ['#0284c7', '#5cc6f5'] : ['#059669', '#4ade9d']);
+        return '<span class="type-badge text-[11px] font-bold" style="--tc:' + tone[0] + ';--tc-dark:' + tone[1] + '">' + type + '</span>';
       }
 
       // Kolom Bulan: 2026-10 s/d 2026-12 tampil sebagai Okt s.d. Des 2026, bulan tunggal sebagai Okt 2026
@@ -3624,10 +3652,9 @@
         var editBtnClass = (currentRole === 'ADMIN') ? '' : 'hidden';
         var html = '';
         list.forEach(function(tx) {
-          var badgeClass = tx.type === 'Pemasukan Kas' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-sky-50 text-sky-700 border-sky-300';
           html += '<tr class="hover:bg-slate-50/90 transition-colors">' +
             '<td data-label="Tanggal" class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + formatDateId(tx.date) + '</td>' +
-            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
+            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type) + '</td>' +
             '<td data-label="Kategori" class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
             '<td data-label="Nama" class="py-4 px-5 font-semibold text-slate-700 whitespace-normal break-words">' + (tx.memberName || '-') + '</td>' +
             '<td data-label="Bulan" class="py-4 px-5 text-slate-500 font-semibold">' + incomeMonthLabel(tx.monthPaid) + '</td>' +
@@ -3679,10 +3706,9 @@
         var editBtnClass = (currentRole === 'ADMIN') ? '' : 'hidden';
         var html = '';
         list.forEach(function(tx) {
-          var badgeClass = tx.type === 'Pengeluaran Kas' ? 'bg-amber-50 text-amber-800 border-amber-300' : 'bg-rose-50 text-rose-700 border-rose-300';
           html += '<tr class="hover:bg-slate-50/90 transition-colors">' +
             '<td data-label="Tanggal" class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + formatDateId(tx.date) + '</td>' +
-            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
+            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type) + '</td>' +
             '<td data-label="Kategori" class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
             '<td data-label="Keterangan" class="py-4 px-5 text-slate-500 italic font-medium max-w-xs truncate">' + (tx.note || '-') + '</td>' +
             '<td data-label="Jumlah" class="py-4 px-5 text-right font-black text-rose-600">-' + formatRupiah(tx.amount) + '</td>' +
@@ -3743,22 +3769,11 @@
         var html = '';
         filteredTx.forEach(function(tx) {
           var isIncome = tx.type.startsWith('Pemasukan');
-          var badgeClass = '';
-          if (tx.type === 'Pemasukan Kas') {
-            badgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-300';
-          } else if (tx.type === 'Pemasukan WiFi') {
-            badgeClass = 'bg-sky-50 text-sky-700 border-sky-300';
-          } else if (tx.type === 'Pengeluaran Kas') {
-            badgeClass = 'bg-amber-50 text-amber-800 border-amber-300';
-          } else {
-            badgeClass = 'bg-rose-50 text-rose-700 border-rose-300';
-          }
-
           var editBtnClass = (currentRole === 'ADMIN') ? '' : 'hidden';
 
           html += '<tr class="hover:bg-slate-50/90 transition-colors">' +
             '<td data-label="Tanggal" class="py-4 px-5 font-semibold text-slate-700 whitespace-nowrap">' + formatDateId(tx.date) + '</td>' +
-            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type, badgeClass) + '</td>' +
+            '<td data-label="Jenis" class="py-4 px-5">' + typeBadgeHtml(tx.type) + '</td>' +
             '<td data-label="Kategori" class="py-4 px-5 font-bold text-slate-800">' + tx.category + '</td>' +
             '<td data-label="Nama" class="py-4 px-5 font-semibold text-slate-700 whitespace-normal break-words">' + (tx.memberName || '-') + '</td>' +
             '<td data-label="Bulan" class="py-4 px-5 text-slate-500 font-semibold">' + incomeMonthLabel(tx.monthPaid) + '</td>' +
@@ -3884,10 +3899,10 @@
         var tdR = 'class="py-1 px-1.5 border-b border-slate-200 text-right"';
 
         var incRows = inc.map(function(tx) {
-          return '<tr><td ' + td + '>' + formatDateId(tx.date) + '</td><td ' + td + '>' + typeBadgeHtml(tx.type, '') + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.memberName || '-') + '</td><td ' + td + '>' + incomeMonthLabel(tx.monthPaid) + '</td><td ' + tdR + '>+' + formatRupiah(tx.amount) + '</td><td ' + td + '>' + (tx.note || '-') + '</td></tr>';
+          return '<tr><td ' + td + '>' + formatDateId(tx.date) + '</td><td ' + td + '>' + typeBadgeHtml(tx.type) + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.memberName || '-') + '</td><td ' + td + '>' + incomeMonthLabel(tx.monthPaid) + '</td><td ' + tdR + '>+' + formatRupiah(tx.amount) + '</td><td ' + td + '>' + (tx.note || '-') + '</td></tr>';
         }).join('') || '<tr><td colspan="7" ' + td + '>Tidak ada pemasukan pada bulan ini.</td></tr>';
         var expRows = exp.map(function(tx) {
-          return '<tr><td ' + td + '>' + formatDateId(tx.date) + '</td><td ' + td + '>' + typeBadgeHtml(tx.type, '') + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.note || '-') + '</td><td ' + tdR + '>-' + formatRupiah(tx.amount) + '</td></tr>';
+          return '<tr><td ' + td + '>' + formatDateId(tx.date) + '</td><td ' + td + '>' + typeBadgeHtml(tx.type) + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.note || '-') + '</td><td ' + tdR + '>-' + formatRupiah(tx.amount) + '</td></tr>';
         }).join('') || '<tr><td colspan="5" ' + td + '>Tidak ada pengeluaran pada bulan ini.</td></tr>';
 
         return '<div class="mt-4"><h4 class="mb-1 print-inc-title" style="font-size:11px;font-weight:900"><svg class="ico print-title-ico" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;width:1em;height:1em;vertical-align:-2px;margin-right:4px;flex:none"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Pemasukan ' + label + ' (Total: ' + formatRupiah(sum(inc)) + ')</h4>' +
