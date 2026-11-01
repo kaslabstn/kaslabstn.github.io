@@ -151,7 +151,7 @@
           background: transparent !important;
           color: #0f172a !important;
         }
-        body.print-mode-table #view-status > div > div:first-child {
+        body.print-mode-table #view-status > div:not(#statusPrintExtras) > div:first-child {
           padding: 6px 10px !important;
           gap: 4px !important;
         }
@@ -237,22 +237,43 @@
           padding-top: 3px !important;
           padding-bottom: 3px !important;
         }
-        /* Header kolom tabel Pemasukan & Pengeluaran pada hasil cetak Status: kotak biasa, seperti header status */
+        /* Tabel Pemasukan & Pengeluaran pada hasil cetak Status: kartu membulat, pita header, garis antarbaris */
+        body.print-mode-table #statusPrintExtras .print-tx-card {
+          margin-top: 12px !important;
+          background: #FFFFFF !important;
+          border: 1px solid #E2E8F0 !important;
+          border-radius: 14px !important;
+          overflow: hidden !important;
+        }
+        body.print-mode-table #statusPrintExtras .print-tx-head {
+          padding: 6px 10px !important;
+          break-after: avoid;
+          page-break-after: avoid;
+        }
         body.print-mode-table #statusPrintExtras table {
-          border-collapse: separate !important;
-          border-spacing: 2px 0 !important;
+          border-collapse: collapse !important;
+          border-spacing: 0 !important;
         }
         body.print-mode-table #statusPrintExtras thead th {
           background: #F8FAFC !important;
-          border: 1px solid #E2E8F0 !important;
+          border: 0 !important;
+          border-top: 1px solid #E2E8F0 !important;
+          border-bottom: 1px solid #E2E8F0 !important;
           border-radius: 0 !important;
-          padding: 3px 6px !important;
-          font-weight: 600 !important;
-          letter-spacing: .02em !important;
+          padding: 4px 10px !important;
+          font-weight: 500 !important;
+          letter-spacing: .04em !important;
+          text-transform: uppercase !important;
           box-shadow: none !important;
         }
-        body.print-mode-table #statusPrintExtras thead th:first-child { padding-left: 8px !important; }
-        body.print-mode-table #statusPrintExtras thead th:last-child { padding-right: 8px !important; }
+        body.print-mode-table #statusPrintExtras tbody td {
+          padding: 4px 10px !important;
+          border: 0 !important;
+          border-bottom: 1px solid #EEF2F6 !important;
+          font-weight: 400 !important;
+        }
+        body.print-mode-table #statusPrintExtras tbody tr:last-child td { border-bottom: 0 !important; }
+        body.print-mode-table #statusPrintExtras .type-badge { font-weight: 500 !important; }
         /* Judul Pemasukan (hijau) dan Pengeluaran (merah) pada hasil cetak Status */
         body.print-mode-table #statusPrintExtras h4.print-inc-title,
         body.print-mode-table #statusPrintExtras h4.print-exp-title { color: #000000 !important; }
@@ -3938,10 +3959,10 @@
         var inc = sorted.filter(function(tx) { return (tx.type || '').indexOf('Pemasukan') === 0 && inMonthByDate(tx); });
         var exp = sorted.filter(function(tx) { return (tx.type || '').indexOf('Pengeluaran') === 0 && inMonth(tx); });
         function sum(list) { return list.reduce(function(t, tx) { return t + (Number(tx.amount) || 0); }, 0); }
-        var th = 'class="text-left py-1 px-1.5 border-b border-slate-400"';
-        var thR = 'class="text-right py-1 px-1.5 border-b border-slate-400"';
-        var td = 'class="py-1 px-1.5 border-b border-slate-200"';
-        var tdR = 'class="py-1 px-1.5 border-b border-slate-200 text-right"';
+        var th = 'class="text-left"';
+        var thR = 'class="text-right"';
+        var td = 'class="text-left"';
+        var tdR = 'class="text-right"';
 
         var incRows = inc.map(function(tx) {
           return '<tr><td ' + td + '>' + formatDateId(tx.date) + '</td><td ' + td + '>' + typeBadgeHtml(tx.type) + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.memberName || '-') + '</td><td ' + td + '>' + incomeMonthLabel(tx.monthPaid) + '</td><td ' + tdR + '>+' + formatRupiah(tx.amount) + '</td><td ' + td + '>' + (tx.note || '-') + '</td></tr>';
@@ -3950,9 +3971,9 @@
           return '<tr><td ' + td + '>' + formatDateId(tx.date) + '</td><td ' + td + '>' + typeBadgeHtml(tx.type) + '</td><td ' + td + '>' + tx.category + '</td><td ' + td + '>' + (tx.note || '-') + '</td><td ' + tdR + '>-' + formatRupiah(tx.amount) + '</td></tr>';
         }).join('') || '<tr><td colspan="5" ' + td + '>Tidak ada pengeluaran pada bulan ini.</td></tr>';
 
-        return '<div class="mt-4"><h4 class="mb-1 print-inc-title" style="font-size:11px;font-weight:900"><svg class="ico print-title-ico" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;width:1em;height:1em;vertical-align:-2px;margin-right:4px;flex:none"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Pemasukan ' + label + ' (Total: ' + formatRupiah(sum(inc)) + ')</h4>' +
+        return '<div class="print-tx-card"><div class="print-tx-head"><h4 class="print-inc-title" style="font-size:11px;font-weight:800"><svg class="ico print-title-ico" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;width:1em;height:1em;vertical-align:-2px;margin-right:4px;flex:none"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Pemasukan ' + label + '</h4><p style="font-size:7.5px">Daftar pemasukan kas dan WiFi. Total: ' + formatRupiah(sum(inc)) + '</p></div>' +
           '<table class="w-full border-collapse"><thead><tr><th ' + th + '>Tanggal</th><th ' + th + '>Jenis</th><th ' + th + '>Kategori</th><th ' + th + '>Nama</th><th ' + th + '>Bulan</th><th ' + thR + '>Jumlah</th><th ' + th + '>Keterangan</th></tr></thead><tbody>' + incRows + '</tbody></table></div>' +
-          '<div class="mt-4"><h4 class="mb-1 print-exp-title" style="font-size:11px;font-weight:900"><svg class="ico print-title-ico" viewBox="0 0 24 24" fill="none" stroke="#E11D48" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;width:1em;height:1em;vertical-align:-2px;margin-right:4px;flex:none"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>Pengeluaran ' + label + ' (Total: ' + formatRupiah(sum(exp)) + ')</h4>' +
+          '<div class="print-tx-card"><div class="print-tx-head"><h4 class="print-exp-title" style="font-size:11px;font-weight:800"><svg class="ico print-title-ico" viewBox="0 0 24 24" fill="none" stroke="#E11D48" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;width:1em;height:1em;vertical-align:-2px;margin-right:4px;flex:none"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>Pengeluaran ' + label + '</h4><p style="font-size:7.5px">Daftar pengeluaran kas dan WiFi. Total: ' + formatRupiah(sum(exp)) + '</p></div>' +
           '<table class="w-full border-collapse"><thead><tr><th ' + th + '>Tanggal</th><th ' + th + '>Jenis</th><th ' + th + '>Kategori</th><th ' + th + '>Keterangan</th><th ' + thR + '>Jumlah</th></tr></thead><tbody>' + expRows + '</tbody></table></div>';
       }
 
