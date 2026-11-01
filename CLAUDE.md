@@ -67,7 +67,7 @@ Browser ──fetch──▶ Apps Script /exec (Kode.gs, REST JSON) ──▶ Go
 - **Petunjuk isian form** (`indonesianValidityMessage`): pesan validasi bawaan browser diganti Bahasa Indonesia untuk semua form.
 - **Jenis transaksi** (`typeBadgeHtml`): hanya warna tulisan, hijau Pemasukan Kas, biru Pemasukan WiFi, merah semua Pengeluaran; juga pada hasil cetak.
 - **Popup Masuk dan Transaksi**: warna tombol dan fokus isian dari `--modal-accent`; hijau untuk Masuk dan Pemasukan, merah untuk Pengeluaran.
-- **Nominal kartu saldo** (`setSaldoAmount`, `SALDO_DIGITS`): angka digambar sebagai SVG mengikuti contoh pemilik, bukan file font; teksnya ada di `aria-label`.
+- **Nominal kartu saldo** (`.saldo-amount`): font Kaushan Script dari Google Fonts (gratis), pengganti terdekat Mystical Woods Rough Script yang berbayar; format `Rp 1.234.000`.
 - **Warna kartu** (Pengaturan → kartu Warna Kartu membuka popup `modalCardColor`, hanya admin; `CARD_COLORS`, `CARD_THEMES`, `applyCardColors`): warna kotak ikon dan ikon garis besar empat kartu saldo serta aksen ringkasan, disimpan admin di baris `CARD_COLORS` sheet Pengaturan dan berlaku untuk semua pengunjung.
 - **Mode gelap**: pilihan Terang/Gelap di kaki menu samping (`setTheme`, localStorage `kaslabstn_theme`). Warna `slate` dan warna pucat dipetakan ke variabel CSS lewat `tailwind.config`; nilai gelapnya ada di blok `@media screen` pada `html.dark`, jadi hasil cetak selalu terang. Warna yang ditulis di JS (grafik, transaksi terbaru) memakai `isDarkTheme()`.
 - **Tabel di HP**: tabel `.m-cards` tampil sebagai kartu di layar ≤640px; label tiap baris berasal dari atribut `data-label` pada `<td>`.

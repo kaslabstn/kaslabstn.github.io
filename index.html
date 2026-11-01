@@ -39,7 +39,7 @@
       })();
     </script>
     <meta name="theme-color" content="#f8fafc">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
       body {
@@ -452,11 +452,7 @@
       @media (min-width: 768px) { .member-icon { width: 36px; } }
       @media (min-width: 1280px) { .member-icons { gap: 8px 6px; } .member-icon { width: 46px; } }
       /* Nominal kartu saldo: angka gambar membulat dengan garis lipatan tipis */
-      .saldo-amount { display: inline-flex; align-items: center; gap: .07em; }
-      .saldo-digit { width: .6em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 16; }
-      .saldo-space { width: .16em; flex: none; }
-      .saldo-dot { width: .17em; height: .17em; flex: none; align-self: flex-end; margin-bottom: .1em; border-radius: 999px; background: currentColor; }
-      .saldo-unit { font-size: .72em; }
+      .saldo-amount { font-family: 'Kaushan Script', cursive; font-weight: 400; }
       /* Ikon garis besar di kartu saldo, dari tepi kanan sampai tengah kartu */
       .saldo-mark { position: absolute; top: 0; right: 0; width: 50%; height: 100%; fill: none; stroke: currentColor; stroke-width: .9; opacity: .2; pointer-events: none; transition: transform .3s ease; }
       @media (hover: hover) { .group:hover .saldo-mark { transform: scale(1.05); } }
@@ -799,7 +795,7 @@
                 <div class="saldo-ico card-ico-opening shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] text-white flex items-center justify-center text-base sm:text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 10c0-3-3-5-7-5-4 0-7 2-7 5 0 1 .3 2 1 3v3h3v-1h4v1h3v-3a5 5 0 0 0 0-3"/><path d="M16 10h.01"/><path d="M3 11h2"/></svg>
                 </div>
-                <h4 class="cardOpeningBalance saldo-amount min-w-0 whitespace-nowrap text-[15px] sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <h4 class="cardOpeningBalance saldo-amount min-w-0 whitespace-nowrap text-[15px] sm:text-[22px] text-slate-800 leading-tight">Rp 0</h4>
                 <div class="absolute -top-2 -right-2 bg-slate-100 text-slate-600 border border-slate-200 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
@@ -815,7 +811,7 @@
                 <div class="saldo-ico card-ico-income shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] text-white flex items-center justify-center text-base sm:text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
                 </div>
-                <h4 class="cardTotalIncome saldo-amount min-w-0 whitespace-nowrap text-[15px] sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <h4 class="cardTotalIncome saldo-amount min-w-0 whitespace-nowrap text-[15px] sm:text-[22px] text-slate-800 leading-tight">Rp 0</h4>
                 <div class="absolute -top-2 -right-2 bg-emerald-50 text-emerald-600 border border-emerald-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
@@ -831,7 +827,7 @@
                 <div class="saldo-ico card-ico-expense shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] text-white flex items-center justify-center text-base sm:text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 6 6 4-4 8 8"/><path d="M14 17h7v-7"/></svg>
                 </div>
-                <h4 class="cardTotalExpense saldo-amount min-w-0 whitespace-nowrap text-[15px] sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <h4 class="cardTotalExpense saldo-amount min-w-0 whitespace-nowrap text-[15px] sm:text-[22px] text-slate-800 leading-tight">Rp 0</h4>
                 <div class="absolute -top-2 -right-2 bg-rose-50 text-rose-600 border border-rose-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
@@ -847,7 +843,7 @@
                 <div class="saldo-ico card-ico-balance shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] text-white flex items-center justify-center text-base sm:text-lg">
                   <svg class="ico w-[1em] h-[1em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg>
                 </div>
-                <h4 class="cardFinalBalance saldo-amount min-w-0 whitespace-nowrap text-[15px] sm:text-xl font-black text-slate-800 leading-tight">Rp 0</h4>
+                <h4 class="cardFinalBalance saldo-amount min-w-0 whitespace-nowrap text-[15px] sm:text-[22px] text-slate-800 leading-tight">Rp 0</h4>
                 <div class="absolute -top-2 -right-2 bg-blue-50 text-blue-600 border border-blue-100 w-6 h-6 rounded-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="ico w-[1em] h-[1em] shrink-0 -rotate-45 text-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </div>
@@ -2586,10 +2582,10 @@
           BALANCE: { kas: displayFinalKas, wifi: displayFinalWifi, total: displayFinalTotal, title: 'Saldo Akhir', icon: 'fa-wallet', bgClass: 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-blue-200/50' }
         };
 
-        document.querySelectorAll('.cardOpeningBalance').forEach(function(el) { setSaldoAmount(el, formatRupiah(openingTotal)); });
-        document.querySelectorAll('.cardTotalIncome').forEach(function(el) { setSaldoAmount(el, formatRupiah(displayTotalIncome)); });
-        document.querySelectorAll('.cardTotalExpense').forEach(function(el) { setSaldoAmount(el, formatRupiah(displayTotalExpense)); });
-        document.querySelectorAll('.cardFinalBalance').forEach(function(el) { setSaldoAmount(el, formatRupiah(displayFinalTotal)); });
+        document.querySelectorAll('.cardOpeningBalance').forEach(function(el) { el.textContent = formatRupiah(openingTotal); });
+        document.querySelectorAll('.cardTotalIncome').forEach(function(el) { el.textContent = formatRupiah(displayTotalIncome); });
+        document.querySelectorAll('.cardTotalExpense').forEach(function(el) { el.textContent = formatRupiah(displayTotalExpense); });
+        document.querySelectorAll('.cardFinalBalance').forEach(function(el) { el.textContent = formatRupiah(displayFinalTotal); });
 
         var overallBalanceEl = document.getElementById('printOverallBalance');
         if (overallBalanceEl) {
@@ -2874,45 +2870,6 @@
           if (st.shortage === 0) paid.push(m.name); else unpaid.push(m.name);
         });
         return { paid: paid, unpaid: unpaid };
-      }
-
-      // ===== Angka nominal kartu saldo: digambar sebagai SVG, membulat dengan garis lipatan tipis =====
-      // d = jalur angka pada kotak 60x100; cut = garis lipatan [x1, y1, x2, y2]
-      var SALDO_DIGITS = {
-        '0': { d: 'M8 30A22 22 0 0 1 52 30V70A22 22 0 0 1 8 70Z', cut: [23, 0, 23, 20] },
-        '1': { d: 'M6 24L36 8V100', cut: [24, 18, 48, 24] },
-        '2': { d: 'M8 30A22 22 0 0 1 52 30C52 52 8 58 8 84V92H54', cut: [0, 72, 20, 92] },
-        '3': { d: 'M8 10H32A19 19 0 0 1 32 48H18M32 48A22 22 0 0 1 30 92H8', cut: [38, 0, 44, 24] },
-        '4': { d: 'M13 2V50L24 64H42M50 8V100', cut: [2, 42, 24, 62] },
-        '5': { d: 'M54 10H10V48H32A22 22 0 0 1 30 92H6', cut: [24, 38, 24, 58] },
-        '6': { d: 'M52 28A22 22 0 0 0 8 30V70A22 22 0 0 0 52 70V62A22 22 0 0 0 8 62', cut: [0, 46, 30, 46] },
-        '7': { d: 'M6 10H52C48 30 30 60 28 100', cut: [28, 18, 50, 18] },
-        '8': { d: 'M30 8A20 20 0 0 1 30 48A20 20 0 0 1 30 8ZM30 48A22 22 0 0 1 52 70A22 22 0 0 1 8 70A22 22 0 0 1 30 48Z', cut: [6, 38, 38, 60] },
-        '9': { d: 'M8 72A22 22 0 0 0 52 70V30A22 22 0 0 0 8 30V38A22 22 0 0 0 52 38', cut: [26, 0, 26, 20] }
-      };
-
-      (function installSaldoDigitMasks() {
-        var masks = Object.keys(SALDO_DIGITS).map(function(n) {
-          var c = SALDO_DIGITS[n].cut;
-          return '<mask id="saldoDigitMask' + n + '" maskUnits="userSpaceOnUse" x="0" y="0" width="60" height="100"><rect width="60" height="100" fill="#fff"/>' +
-            '<path d="M' + c[0] + ' ' + c[1] + 'L' + c[2] + ' ' + c[3] + '" stroke="#000" stroke-width="3"/></mask>';
-        }).join('');
-        document.body.insertAdjacentHTML('beforeend', '<svg aria-hidden="true" style="position:absolute;width:0;height:0"><defs>' + masks + '</defs></svg>');
-      })();
-
-      // Teks tetap terbaca pembaca layar lewat aria-label; tampilannya memakai angka gambar
-      function setSaldoAmount(el, text) {
-        el.setAttribute('role', 'img');
-        el.setAttribute('aria-label', text);
-        var rupiahMark = '<svg class="saldo-digit" viewBox="0 0 60 100" aria-hidden="true"><path d="M10 100V8H30A21 21 0 0 1 30 50H12M30 50C46 52 50 62 50 76V100"/></svg>' +
-          '<svg class="saldo-digit" viewBox="0 0 60 100" aria-hidden="true"><path d="M10 100V8H30A21 21 0 0 1 30 50H12"/></svg><span class="saldo-space"></span>';
-        el.innerHTML = rupiahMark + String(text).replace(/^Rp\s*/, '').split('').map(function(ch) {
-          if (SALDO_DIGITS[ch]) {
-            return '<svg class="saldo-digit" viewBox="0 0 60 100" aria-hidden="true"><path d="' + SALDO_DIGITS[ch].d + '" mask="url(#saldoDigitMask' + ch + ')"/></svg>';
-          }
-          if (ch === '.') return '<span class="saldo-dot"></span>';
-          return '<span class="saldo-unit">' + ch + '</span>';
-        }).join('');
       }
 
       // ===== Warna kartu Beranda: dipilih admin di Pengaturan, disimpan di sheet Pengaturan =====
